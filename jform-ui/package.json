@@ -1,0 +1,60 @@
+{
+  "name": "@jvue/jform",
+  "description": "A Vue.js project",
+  "version": "1.0.8-test",
+  "author": "wx_83945105",
+  "license": "MIT",
+  "private": false,
+  "main": "dist/jvue.js",
+  "keywords": [
+    "vue",
+    "element-ui",
+    "form-design",
+    "dynamic-form",
+    "jform",
+    "jvue",
+    "jui"
+  ],
+  "files": [
+    "dist"
+  ],
+  "homepage": "https://github.com/83945105/jvue",
+  "bugs": {
+    "url": "https://github.com/83945105/jvue/issues",
+    "email": "18606167809@163.com"
+  },
+  "scripts": {
+    "analyz": "NODE_ENV=production npm_config_report=true npm run build",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+  },
+  "dependencies": {
+    "clipboard": "^2.0.6",
+    "deepmerge": "^4.2.2",
+    "vue": "^2.5.11"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
+  "devDependencies": {
+    "element-ui": "^2.14.1",
+    "vue-baidu-map": "^0.21.22",
+    "@tinymce/tinymce-vue": "^3.2.6",
+    "tinymce": "^5.5.1",
+    "webpack-bundle-analyzer": "^4.1.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-3": "^6.24.1",
+    "cross-env": "^5.0.5",
+    "css-loader": "^0.28.7",
+    "file-loader": "^1.1.4",
+    "url-loader": "^4.1.1",
+    "vue-loader": "^13.0.5",
+    "vue-template-compiler": "^2.4.4",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.9.1"
+  }
+}
