@@ -3,18 +3,19 @@
     <j-el-radio-group :data="radioGroupData" :data-prop="{label: 'label2', value: 'value2'}"></j-el-radio-group>
     <j-render :data="formData"></j-render>
     <j-el-select-tree :tree-data="treeData"
-                      :multiple="false" :disabled="false" :clearable="false" :collapse-tags="false"
+                      :multiple="true" :disabled="false" :clearable="true" :collapse-tags="false"
                       :multiple-limit="0" autocomplete="off" placeholder="请选择任务" :filterable="false"
                       :loading="false"
+                      :load="onLoadTree"
                       loading-text="加载中" :reserve-keyword="false" popper-append-to-body
                       :automatic-dropdown="false"
-                      :props="{label: 'name', value: 'id', disabled: 'disabled', isLeaf: 'hasChildren', children: 'children'}"
+                      :props="{label: 'name', value: 'id', disabled: 'disabled', isLeaf: 'leaf', children: 'children'}"
                       render-after-expand highlight-current :default-expand-all="false" expand-on-click-node
                       :check-on-click-node="false" auto-expand-parent :default-expanded-keys="[]"
-                      check-strictly
+                      :check-strictly="false"
                       :accordion="false" :indent="16" :style="{width: '100%'}">
-      <template #tree.default="{node, data}">
-        <span>{{data}}</span>
+<!--      <template #tree.default="{node, data}">-->
+<!--        <span>{{data}}</span>-->
         <!--                      <span>-->
         <!--&lt;!&ndash;                        {{data}}&ndash;&gt;-->
         <!--                        <span v-if="data.name.substr(0, 1) === 'Ⓕ'">-->
@@ -26,7 +27,7 @@
         <!--                          <span>{{data.name}}</span>-->
         <!--                        </span>-->
         <!--                      </span>-->
-      </template>
+<!--      </template>-->
     </j-el-select-tree>
   </div>
 </template>
@@ -39,11 +40,13 @@ export default {
       treeData: [
         {
           id: '1',
-          name: '1'
+          name: '1',
+          leaf: false
         },
         {
           id: '2',
-          name: '2'
+          name: '2',
+          leaf: false
         }
       ],
       radioGroupData: [
@@ -89,6 +92,57 @@ export default {
         // console.log(val)
       }
     }
+  },
+
+  methods: {
+    onLoadTree(node, resolve) {
+      if(node.level < 1) return;
+      if(node.level === 1) {
+        setTimeout(() => {
+          resolve([{
+            id: `${node.data.id}-1`,
+            name: `${node.data.id}-1`,
+            leaf: false
+          },{
+            id: `${node.data.id}-2`,
+            name: `${node.data.id}-2`,
+            leaf: false
+          }]);
+        }, 500);
+        return;
+      }
+      if(node.level === 2) {
+        setTimeout(() => {
+          resolve([{
+            id: `${node.data.id}-1`,
+            name: `${node.data.id}-1`,
+            leaf: true
+          },{
+            id: `${node.data.id}-2`,
+            name: `${node.data.id}-2`,
+            leaf: true
+          }]);
+        }, 500);
+        return;
+      }
+    }
+  },
+
+  created() {
+    setTimeout(() => {
+      this.treeData = [
+        {
+          id: '1',
+          name: '1',
+          leaf: false
+        },
+        {
+          id: '2',
+          name: '2',
+          leaf: false
+        }
+      ];
+    }, 0);
   }
 }
 </script>

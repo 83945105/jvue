@@ -7,7 +7,7 @@
              @blur="onBlur"
              @focus="onFocus">
     <slot name="select.default">
-      <el-option :value="new Date().getTime()" style="height: auto">
+      <el-option :value="new Date().getTime()" style="height: auto;">
         <el-tree ref="tree" :data="treeData" v-bind="treeBind__"
                  @node-click="onNodeClick"
                  @node-contextmenu="onNodeContextmenu"
@@ -122,7 +122,13 @@
         type: Number,
         default: 16
       },
-      iconClass: String
+      iconClass: String,
+      lazy: {
+        type: Boolean,
+        default() {
+          return !!this.load;
+        }
+      }
     },
 
     data() {
@@ -199,7 +205,10 @@
               }
             });
             resolve(data);
-          })) : void 0,
+            if (!this.checkStrictly) {
+              this.initTag();
+            }
+          })) : null,
           renderContent: this.renderContent,
           highlightCurrent: this.highlightCurrent,
           defaultExpandAll: this.defaultExpandAll,
@@ -210,12 +219,12 @@
           showCheckbox: this.multiple,
           checkStrictly: this.checkStrictly,
           defaultCheckedKeys: this.checkKeys__,
-          currentNodeKey: this.multiple ? void 0 : this.data_ ? this.data_[this.nodeKey__] : void 0,
+          currentNodeKey: this.multiple ? null : this.data_ ? this.data_[this.nodeKey__] : null,
           filterNodeMethod: this.filterNodeMethod || (() => true),
           accordion: this.accordion,
           indent: this.indent,
           iconClass: this.iconClass,
-          lazy: !!this.load
+          lazy: this.lazy
         };
       }
     },
@@ -233,6 +242,7 @@
       },
       data_: {
         handler(val) {
+          if (JSON.stringify(val) === JSON.stringify(this.data)) return;
           this.$emit('update:data', val);
           this.$emit('input', val ? this.multiple ? val.map(v => v[this.nodeKey__]) : val[this.nodeKey__] : val);
         }
@@ -291,11 +301,72 @@
       onVisibleChange(visible) {
         this.$emit('visible-change', visible);
       },
+      getCheckedChildNodes(node) {
+        if (!node.childNodes) return [];
+        let nodes = [];
+        node.childNodes.forEach(cn => {
+          if (!!cn.checked) {
+            nodes.push(cn);
+          }
+          nodes = nodes.concat(this.getCheckedChildNodes(cn));
+        });
+        return nodes;
+      },
+      getCheckedNodes() {
+        let nodes = [];
+        this.treeData.forEach(td => {
+          let node = this.$refs.tree.getNode(td);
+          if (!!node.checked) {
+            nodes.push(node);
+          }
+          nodes = nodes.concat(this.getCheckedChildNodes(node));
+        });
+        return nodes;
+      },
+      getUncheckedChildNodes(node) {
+        if (!node.childNodes) return [];
+        let nodes = [];
+        node.childNodes.forEach(cn => {
+          if (!cn.checked) {
+            nodes.push(cn);
+          }
+          nodes = nodes.concat(this.getUncheckedChildNodes(cn));
+        });
+        return nodes;
+      },
+      getUncheckedNodes() {
+        let nodes = [];
+        this.treeData.forEach(td => {
+          let node = this.$refs.tree.getNode(td);
+          if (!node.checked) {
+            nodes.push(node);
+          }
+          nodes = nodes.concat(this.getUncheckedChildNodes(node));
+        });
+        return nodes;
+      },
+      initTag() {
+        let checkedNodes = this.getCheckedNodes();
+        let checkedNodeKeys = checkedNodes.map(checkedNode => checkedNode.data[this.nodeKey__]);
+        let tmp = [];
+        this.data_.forEach(d => {
+          if (checkedNodeKeys.includes(d[this.nodeKey__])) return;
+          tmp.push(d);
+        });
+        this.data_ = checkedNodes.map(checkedNode => checkedNode.data).concat(tmp);
+      },
       onRemoveTag(value) {
         this.$emit('remove-tag', value);
         if (!this.multiple) return;
         this.$refs.tree.setChecked(value, false, !this.checkStrictly);
-        this.data_ = this.$refs.tree.getCheckedNodes();
+        let uncheckedNodes = this.getUncheckedNodes();
+        let uncheckedNodeKeys = uncheckedNodes.map(uncheckedNode => uncheckedNode.data[this.nodeKey__]);
+        let data = [];
+        this.data_.forEach(d => {
+          if (uncheckedNodeKeys.includes(d[this.nodeKey__])) return true;
+          data.push(d);
+        });
+        this.data_ = data;
       },
       onClear() {
         this.$emit('clear');
