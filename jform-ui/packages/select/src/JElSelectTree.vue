@@ -17,7 +17,9 @@
                  @node-expand="onNodeExpand"
                  @node-collapse="onNodeCollapse"
         >
-          <slot name="tree.default"></slot>
+          <template #default="{node, data}" v-if="$scopedSlots['tree.default']">
+            <slot name="tree.default" v-bind="{node, data}"></slot>
+          </template>
         </el-tree>
       </el-option>
       <template v-if="multiple">
