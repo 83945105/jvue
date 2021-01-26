@@ -363,7 +363,7 @@
         let uncheckedNodeKeys = uncheckedNodes.map(uncheckedNode => uncheckedNode.data[this.nodeKey__]);
         let data = [];
         this.data_.forEach(d => {
-          if (uncheckedNodeKeys.includes(d[this.nodeKey__])) return true;
+          if (d[this.nodeKey__] === value || uncheckedNodeKeys.includes(d[this.nodeKey__])) return true;
           data.push(d);
         });
         this.data_ = data;
