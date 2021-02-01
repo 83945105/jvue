@@ -17,8 +17,10 @@
                  @node-expand="onNodeExpand"
                  @node-collapse="onNodeCollapse"
         >
-          <template #default="{node, data}" v-if="$scopedSlots['tree.default']">
-            <slot name="tree.default" v-bind="{node, data}"></slot>
+          <template #default="{node, data}" v-if="!multiple || $scopedSlots['tree.default']">
+            <slot name="tree.default" v-bind="{node, data}">
+              <span class="el-tree-node__label" :class="{'disabled': !!node.disabled}">{{node.label}}</span>
+            </slot>
           </template>
         </el-tree>
       </el-option>
@@ -133,7 +135,7 @@
 
     data() {
       return {
-        data_: {}
+        data_: this.multiple ? [] : {}
       };
     },
 
@@ -205,7 +207,7 @@
               }
             });
             resolve(data);
-            if (!this.checkStrictly) {
+            if (this.multiple && !this.checkStrictly) {
               this.initTag();
             }
           })) : null,
@@ -314,8 +316,10 @@
       },
       getCheckedNodes() {
         let nodes = [];
+        let $tree = this.$refs.tree;
+        if (!$tree) return nodes;
         this.treeData.forEach(td => {
-          let node = this.$refs.tree.getNode(td);
+          let node = $tree.getNode(td);
           if (!!node.checked) {
             nodes.push(node);
           }
@@ -336,8 +340,10 @@
       },
       getUncheckedNodes() {
         let nodes = [];
+        let $tree = this.$refs.tree;
+        if (!$tree) return nodes;
         this.treeData.forEach(td => {
-          let node = this.$refs.tree.getNode(td);
+          let node = $tree.getNode(td);
           if (!node.checked) {
             nodes.push(node);
           }
@@ -387,6 +393,7 @@
       onNodeClick(data, node, vm) {
         this.$emit('node-click', data, node, vm);
         if (this.multiple) return;
+        if (!!data.disabled) return;
         this.data_ = data;
       },
       onNodeContextmenu(e, data, node, vm) {
@@ -419,5 +426,9 @@
 <style scoped>
   .el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
     background-color: transparent;
+  }
+
+  .el-tree-node__label.disabled {
+    color: #c0c4cc;
   }
 </style>
