@@ -890,6 +890,14 @@ const initSwitch = function (data, context) {
   return data;
 };
 
+const initTag = function (data, context) {
+  let {tag, options, children = []} = data;
+  if (!tag) return data;
+  data.tag = options.attrs.tag_;
+  children.forEach(child => init(child, context));
+  return data;
+};
+
 const initTextarea = function (data, context) {
   let {tag, options, children = []} = data;
   if (!tag) return data;
@@ -1041,6 +1049,8 @@ const init = function (data, context) {
       return initSubmitButton(data, context);
     case 'switch':
       return initSwitch(data, context);
+    case 'tag':
+      return initTag(data, context);
     case 'textarea':
       return initTextarea(data, context);
     case 'time-picker':

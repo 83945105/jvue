@@ -1,0 +1,129 @@
+{
+  "key": "form",
+  "tag": "j-el-form",
+  "type": "form",
+  "fdName": "fd-el-form",
+  "options": {
+    "key": "5daf90f1-47d5-42f7-9946-3a728ecb5a2c",
+    "ref": "$form",
+    "class": [],
+    "style": {},
+    "attrs": {
+      "ui_": "Element",
+      "label_": "表单",
+      "prop_": "form"
+    },
+    "props": {
+      "model": {},
+      "inline": false,
+      "labelPosition": "left",
+      "labelWidth": "100px",
+      "hideRequiredAsterisk": false,
+      "showMessage": true,
+      "inlineMessage": false,
+      "statusIcon": false,
+      "validateOnRuleChange": true,
+      "disabled": false
+    }
+  },
+  "children": [
+    {
+      "key": "tag_1612702104069",
+      "tag": "tag",
+      "type": "tag",
+      "fdName": "fd-el-tag",
+      "options": {
+        "key": "941dfbdb-4730-4fc8-92fc-6cfea0a44177",
+        "ref": "$tag_1612702104069",
+        "class": [],
+        "style": {},
+        "attrs": {
+          "prop_": "tag_1612702104069",
+          "tag_": "div",
+          "text_": null
+        },
+        "props": {}
+      },
+      "children": [
+        {
+          "tag": "slot",
+          "type": "control-slot",
+          "fdName": "fd-el-submit-button",
+          "options": {
+            "props": {
+              "name": "submit_button"
+            }
+          },
+          "children": [
+            {
+              "key": "submit_button",
+              "tag": "el-button",
+              "type": "submit-button",
+              "options": {
+                "key": "248c7e82-7c39-47fc-8df6-2a2d3e1e53b8",
+                "ref": "$submit_button",
+                "class": [],
+                "style": {},
+                "attrs": {
+                  "nativeType": "button",
+                  "prop_": "submit_button",
+                  "text_": "提 交",
+                  "submitProp_": "submit"
+                },
+                "props": {
+                  "size": "small",
+                  "type": "primary",
+                  "plain": false,
+                  "round": false,
+                  "circle": false,
+                  "loading": false,
+                  "disabled": false,
+                  "icon": "el-icon-check",
+                  "autofocus": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "tag": "slot",
+          "type": "control-slot",
+          "fdName": "fd-el-reset-button",
+          "options": {
+            "props": {
+              "name": "reset_button"
+            }
+          },
+          "children": [
+            {
+              "key": "reset_button",
+              "tag": "el-button",
+              "type": "reset-button",
+              "options": {
+                "key": "5150f47c-0b61-4da3-b4bf-8e0f596dc03a",
+                "ref": "$reset_button",
+                "class": [],
+                "style": {},
+                "attrs": {
+                  "nativeType": "button",
+                  "prop_": "reset_button",
+                  "text_": "重 置"
+                },
+                "props": {
+                  "size": "small",
+                  "plain": false,
+                  "round": false,
+                  "circle": false,
+                  "loading": false,
+                  "disabled": false,
+                  "icon": "el-icon-refresh-left",
+                  "autofocus": false
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

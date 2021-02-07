@@ -44,7 +44,7 @@
     mounted() {
       this.forms_ = Object.keys(this.$refs).reduce((forms, key) => {
         let vm = this.$refs[key];
-        if (vm.$options.name === 'j-el-form') {
+        if (vm.$options && vm.$options.name === 'j-el-form') {
           forms.push(vm);
         }
         return forms;

@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <j-form :data="formData_"></j-form>
     <j-el-radio-group :data="radioGroupData" :data-prop="{label: 'label2', value: 'value2'}"></j-el-radio-group>
     <j-el-select-tree :tree-data="treeData"
                       :multiple="false" :disabled="false" :clearable="true" :collapse-tags="false"
@@ -15,103 +16,46 @@
                       :accordion="false" :indent="16" :style="{width: '100%'}">
     </j-el-select-tree>
     <j-render :data="formData"></j-render>
-<!--    <j-el-select-tree :tree-data="treeData"-->
-<!--                      :multiple="true" :disabled="false" :clearable="true" :collapse-tags="false"-->
-<!--                      :multiple-limit="0" autocomplete="off" placeholder="请选择任务" :filterable="false"-->
-<!--                      :loading="false"-->
-<!--                      :load="onLoadTree"-->
-<!--                      loading-text="加载中" :reserve-keyword="false" popper-append-to-body-->
-<!--                      :automatic-dropdown="false"-->
-<!--                      :props="{label: 'name', value: 'id', disabled: 'disabled', isLeaf: 'leaf', children: 'children'}"-->
-<!--                      render-after-expand highlight-current :default-expand-all="false" expand-on-click-node-->
-<!--                      :check-on-click-node="false" auto-expand-parent :default-expanded-keys="[]"-->
-<!--                      :check-strictly="false"-->
-<!--                      :accordion="false" :indent="16" :style="{width: '100%'}">-->
-<!--      <template #tree.default="{node, data}">-->
-<!--        <span>{{data}}</span>-->
-        <!--                      <span>-->
-        <!--&lt;!&ndash;                        {{data}}&ndash;&gt;-->
-        <!--                        <span v-if="data.name.substr(0, 1) === 'Ⓕ'">-->
-        <!--                          <i  class="el-icon-folder-opened" style="font-size: 16px;line-height: 1"/>-->
-        <!--                          <span>{{data.name.substr(1, data.name.length - 1)}}</span>-->
-        <!--                        </span>-->
-        <!--                        <span v-else>-->
-        <!--                          <i  class="el-icon-document" style="font-size: 16px;line-height: 1"/>-->
-        <!--                          <span>{{data.name}}</span>-->
-        <!--                        </span>-->
-        <!--                      </span>-->
-<!--      </template>-->
-<!--    </j-el-select-tree>-->
+    <!--    <j-el-select-tree :tree-data="treeData"-->
+    <!--                      :multiple="true" :disabled="false" :clearable="true" :collapse-tags="false"-->
+    <!--                      :multiple-limit="0" autocomplete="off" placeholder="请选择任务" :filterable="false"-->
+    <!--                      :loading="false"-->
+    <!--                      :load="onLoadTree"-->
+    <!--                      loading-text="加载中" :reserve-keyword="false" popper-append-to-body-->
+    <!--                      :automatic-dropdown="false"-->
+    <!--                      :props="{label: 'name', value: 'id', disabled: 'disabled', isLeaf: 'leaf', children: 'children'}"-->
+    <!--                      render-after-expand highlight-current :default-expand-all="false" expand-on-click-node-->
+    <!--                      :check-on-click-node="false" auto-expand-parent :default-expanded-keys="[]"-->
+    <!--                      :check-strictly="false"-->
+    <!--                      :accordion="false" :indent="16" :style="{width: '100%'}">-->
+    <!--      <template #tree.default="{node, data}">-->
+    <!--        <span>{{data}}</span>-->
+    <!--                      <span>-->
+    <!--&lt;!&ndash;                        {{data}}&ndash;&gt;-->
+    <!--                        <span v-if="data.name.substr(0, 1) === 'Ⓕ'">-->
+    <!--                          <i  class="el-icon-folder-opened" style="font-size: 16px;line-height: 1"/>-->
+    <!--                          <span>{{data.name.substr(1, data.name.length - 1)}}</span>-->
+    <!--                        </span>-->
+    <!--                        <span v-else>-->
+    <!--                          <i  class="el-icon-document" style="font-size: 16px;line-height: 1"/>-->
+    <!--                          <span>{{data.name}}</span>-->
+    <!--                        </span>-->
+    <!--                      </span>-->
+    <!--      </template>-->
+    <!--    </j-el-select-tree>-->
   </div>
 </template>
 
 <script>
-export default {
-  name: 'app',
-  data() {
-    return {
-      treeData: [
-        {
-          id: '1',
-          name: '1',
-          leaf: false
-        },
-        {
-          id: '2',
-          name: '2',
-          leaf: false,
-          disabled: true
-        }
-      ],
-      radioGroupData: [
-        {
-          label2: '张三',
-          value2: '1'
-        },
-        {
-          label2: '李四',
-          value2: '2'
-        }
-      ],
-      formData: {
-        tag: 'j-el-form',
-        children: [
-          {
-            tag: 'j-el-description'
-          },
-          {
-            tag: 'j-el-editor'
-          },
-          {
-            tag: 'j-el-icon-picker'
-          },
-          {
-            tag: 'j-el-coordinate-picker',
-            options: {
-              props: {
-                size: 'mini',
-                mapHeight: 300
-              }
-            }
-          }
-        ]
-      }
-    }
-  },
 
-  watch: {
-    radioGroupData: {
-      immediate: true,
-      handler(val) {
-        // console.log(val)
-      }
-    }
-  },
+  import FormData from "./form.json";
 
-  methods: {
-    onLoadTree(node, resolve) {
-      if(node.level < 1) {
-        resolve([
+  export default {
+    name: 'app',
+    data() {
+      return {
+        formData_: FormData,
+        treeData: [
           {
             id: '1',
             name: '1',
@@ -123,61 +67,122 @@ export default {
             leaf: false,
             disabled: true
           }
-        ]);
-        return;
+        ],
+        radioGroupData: [
+          {
+            label2: '张三',
+            value2: '1'
+          },
+          {
+            label2: '李四',
+            value2: '2'
+          }
+        ],
+        formData: {
+          tag: 'j-el-form',
+          children: [
+            {
+              tag: 'j-el-description'
+            },
+            {
+              tag: 'j-el-editor'
+            },
+            {
+              tag: 'j-el-icon-picker'
+            },
+            {
+              tag: 'j-el-coordinate-picker',
+              options: {
+                props: {
+                  size: 'mini',
+                  mapHeight: 300
+                }
+              }
+            }
+          ]
+        }
       }
-      if(node.level === 1) {
-        setTimeout(() => {
-          resolve([{
-            id: `${node.data.id}-1`,
-            name: `${node.data.id}-1`,
+    },
+
+    watch: {
+      radioGroupData: {
+        immediate: true,
+        handler(val) {
+          // console.log(val)
+        }
+      }
+    },
+
+    methods: {
+      onLoadTree(node, resolve) {
+        if (node.level < 1) {
+          resolve([
+            {
+              id: '1',
+              name: '1',
+              leaf: false
+            },
+            {
+              id: '2',
+              name: '2',
+              leaf: false,
+              disabled: true
+            }
+          ]);
+          return;
+        }
+        if (node.level === 1) {
+          setTimeout(() => {
+            resolve([{
+              id: `${node.data.id}-1`,
+              name: `${node.data.id}-1`,
+              leaf: false,
+              disabled: true
+            }, {
+              id: `${node.data.id}-2`,
+              name: `${node.data.id}-2`,
+              leaf: false
+            }]);
+          }, 500);
+          return;
+        }
+        if (node.level === 2) {
+          setTimeout(() => {
+            resolve([{
+              id: `${node.data.id}-1`,
+              name: `${node.data.id}-1`,
+              leaf: true,
+              disabled: true
+            }, {
+              id: `${node.data.id}-2`,
+              name: `${node.data.id}-2`,
+              leaf: true
+            }]);
+          }, 500);
+          return;
+        }
+      }
+    },
+
+    created() {
+      setTimeout(() => {
+        this.treeData = [
+          {
+            id: '1',
+            name: '1',
             leaf: false,
             disabled: true
-          },{
-            id: `${node.data.id}-2`,
-            name: `${node.data.id}-2`,
-            leaf: false
-          }]);
-        }, 500);
-        return;
-      }
-      if(node.level === 2) {
-        setTimeout(() => {
-          resolve([{
-            id: `${node.data.id}-1`,
-            name: `${node.data.id}-1`,
-            leaf: true,
+          },
+          {
+            id: '2',
+            name: '2',
+            leaf: false,
             disabled: true
-          },{
-            id: `${node.data.id}-2`,
-            name: `${node.data.id}-2`,
-            leaf: true
-          }]);
-        }, 500);
-        return;
-      }
+          }
+        ];
+      }, 0);
     }
-  },
-
-  created() {
-    setTimeout(() => {
-      this.treeData = [
-        {
-          id: '1',
-          name: '1',
-          leaf: false,
-          disabled: true
-        },
-        {
-          id: '2',
-          name: '2',
-          leaf: false,
-          disabled: true
-        }
-      ];
-    }, 0);
   }
-}
 </script>
 
 <style>
