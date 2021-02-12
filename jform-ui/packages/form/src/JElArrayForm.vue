@@ -307,9 +307,6 @@
     },
     created() {
       this.form && this.form.addSubForm(this);
-    },
-    mounted() {
-      this.append();
     }
   }
 </script>
