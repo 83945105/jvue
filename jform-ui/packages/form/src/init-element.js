@@ -153,7 +153,7 @@ const initObjectForm = function (data, context) {
   if (!tag) return data;
   merge(options.props, {
     value: VModel,
-    renderData: (options.props.renderData || []).map(rd => {
+    children: children.map(rd => {
       let _formItem = rd;
       while (_formItem.tag !== 'el-form-item') {
         _formItem = _formItem.children[0];
@@ -167,7 +167,7 @@ const initObjectForm = function (data, context) {
       }
     }
   });
-  options.props.renderData.forEach(rd => init(rd, context));
+  children.forEach(child => init(child, context));
   return data;
 };
 

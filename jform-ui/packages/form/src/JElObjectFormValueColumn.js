@@ -38,11 +38,11 @@ export default {
             return _scopedSlots;
           }, {});
           // TODO 可以扩展更多render属性
-          if (!row.__renderData__) {
+          if (!row.__child__) {
             return h('span', [row[column.property]]);
           }
           // 去除 formItem label
-          let formItemRenderData = row.__renderData__.children[0];
+          let formItemRenderData = row.__child__.children[0];
           if (!formItemRenderData.options.scopedSlots) {
             formItemRenderData.options.scopedSlots = {};
           }
@@ -65,7 +65,7 @@ export default {
             attrs: attrs,
             props: {
               parent: parent,
-              data: row.__renderData__ || {}
+              data: row.__child__ || {}
             },
             on: on,
             scopedSlots: scopedSlots

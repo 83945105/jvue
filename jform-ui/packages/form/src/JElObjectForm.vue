@@ -63,7 +63,7 @@
           };
         }
       },
-      renderData: Array,
+      children: Array,
       value: Object,
 
       height: [String, Number],
@@ -187,15 +187,15 @@
           if (!val) return;
           if (compare(val, this.form_)) return;
           this.form_ = val;
-          this.data_ = (this.renderData || []).map(renderData => {
+          this.data_ = (this.children || []).map(child => {
             let row = {
-              __renderData__: renderData
+              __child__: child
             };
-            let controlItem = renderData.children[0];
+            let controlItem = child.children[0];
             let label = controlItem.options.props.label;
             let prop = controlItem.options.props.prop;
             row[this.labelColumn__.prop] = label;
-            row[this.valueColumn__.prop] = this.form_[prop] || this.initValue(renderData);
+            row[this.valueColumn__.prop] = this.form_[prop] || this.initValue(child);
             return row;
           });
         },
@@ -206,7 +206,7 @@
         handler(val, oldValue) {
           if (!val || !oldValue) return;
           val.map(row => {
-            let name = row.__renderData__.children[0].options.props.prop;
+            let name = row.__child__.children[0].options.props.prop;
             let value = row[this.valueColumn__.prop];
             if (name in this.form_) {
               this.form_[name] = value;
@@ -220,9 +220,9 @@
       }
     },
     methods: {
-      initValue(renderData) {
-        let _valueType = renderData.children[0].options.attrs.valueType_;
-        let _defaultValue = renderData.children[0].children[0].children[0].options.props.value;
+      initValue(child) {
+        let _valueType = child.children[0].options.attrs.valueType_;
+        let _defaultValue = child.children[0].children[0].children[0].options.props.value;
         switch (_valueType) {
           case 'string':
             return _defaultValue || '';

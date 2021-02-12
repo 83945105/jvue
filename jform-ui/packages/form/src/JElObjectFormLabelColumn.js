@@ -32,9 +32,9 @@ export default {
             _on[_key] = on[_key];
             return _on;
           }, {});
-          let renderData = row.__renderData__;
-          let key = renderData.children[0].key;
-          let required = !!attrs[`${key}:required_`] || (renderData ? !!renderData.children[0].options.attrs.required_ : false);
+          let child = row.__child__;
+          let key = child.children[0].key;
+          let required = !!attrs[`${key}:required_`] || (child ? !!child.children[0].options.attrs.required_ : false);
           // TODO 可以扩展更多render属性
           return h('span', {
             'class': {

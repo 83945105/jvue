@@ -20,28 +20,49 @@
              @opened="$emit('opened')"
              @close="$emit('close')"
              @closed="$emit('closed')"
-             class="j-dialog"
+             :class="{
+                   'j-el-dialog': true,
+                   'fullscreen': fullscreen_,
+                   'in-iframe': inIframe
+               }"
   >
-    <div :style="{height: `${height__}px`}">
+    <template #title>
+      <div ref="header">
+        <slot name="title" v-if="showHeader">
+          <div :class="{
+                     'j-el-dialog-header': true,
+                     'fullscreen': fullscreen_,
+                     'in-iframe': inIframe
+                }" @dblclick.stop="fullScreen(!fullscreen_)">
+            <span class="el-dialog__title">{{title}}</span>
+            <span style="font-size: 18px;float: right;">
+                            <i class="el-icon-full-screen i-icon" @click="fullScreen(!fullscreen_)"></i>
+                            <i v-if="showClose" class="el-icon-close i-icon" @click="visible_ = false"></i>
+                        </span>
+          </div>
+        </slot>
+      </div>
+    </template>
+    <div :style="{height: `${bodyHeight__}px`}">
       <el-scrollbar style="height: 100%;">
-        <div style="padding-right: 20px">
-          <slot :height="height__" :fullscreen="fullscreen_"></slot>
+        <div :class="{
+                    'j-el-dialog-body': true,
+                    'fullscreen': fullscreen_,
+                    'header': !!showHeader,
+                    'footer': !!$slots.footer,
+                    'in-iframe': inIframe
+                }">
+          <slot :height="bodySlotHeight__" :fullscreen="fullscreen_"></slot>
         </div>
       </el-scrollbar>
     </div>
-    <template #title>
-      <slot name="title">
-        <div class="j-dialog__header" @dblclick.stop="fullScreen(!fullscreen_)">
-          <span class="el-dialog__title">{{title}}</span>
-          <span style="font-size: 18px;float: right;">
-                        <i class="el-icon-full-screen j-icon" @click="fullScreen(!fullscreen_)"></i>
-                        <i v-if="showClose" class="el-icon-close j-icon" @click="visible_ = false"></i>
-                    </span>
-        </div>
-      </slot>
-    </template>
     <template #footer>
-      <div v-if="$slots.footer" ref="footer" class="j-dialog__footer">
+      <div v-if="!!$slots.footer" ref="footer"
+           :class="{
+                    'j-el-dialog-footer': true,
+                    'fullscreen': fullscreen_,
+                    'in-iframe': inIframe
+                 }">
         <slot name="footer"></slot>
       </div>
     </template>
@@ -49,13 +70,8 @@
 </template>
 
 <script>
-
-  import WindowResize from '../../../src/mixins/window-resize';
-
   export default {
     name: "j-el-dialog",
-
-    mixins: [WindowResize],
 
     props: {
       visible: Boolean,               // 是否显示 Dialog，支持 .sync 修饰符
@@ -104,12 +120,27 @@
       destroyOnClose: {               // 关闭时销毁 Dialog 中的元素
         type: Boolean,
         default: true
+      },
+      showHeader: {                   // 是否显示头部
+        type: Boolean,
+        default: true
+      },
+      inIframe: {                     // 是否处于iframe中
+        type: Boolean,
+        default() {
+          return window.frames.length !== window.parent.frames.length;
+        }
       }
     },
 
     data() {
       return {
+        window: {
+          width: window.innerWidth,
+          height: window.innerHeight
+        },
         visible_: this.visible,
+        headerHeight_: 0,
         footerHeight_: 0,
         fullscreen_: false
       };
@@ -124,11 +155,15 @@
         if (height) {
           return height;
         }
-        height = this.window.height - 223;
+        height = this.window.height - 200;
         return height > 200 ? height : 200;
       },
-      height__() {
-        return this.fullscreen_ ? this.window.height - this.footerHeight_ + 66 : this.height_;
+      bodyHeight__() {
+        return (this.fullscreen_ ? this.window.height : this.height_) - this.headerHeight_ - this.footerHeight_;
+      },
+      bodySlotHeight__() {
+        // 全屏且不在iframe内部时如果没有头部或者底部, body 的上下 padding 各有 20 , 因此要各自减掉
+        return (this.fullscreen_ && this.inIframe) ? this.bodyHeight__ : this.bodyHeight__ - (this.showHeader ? 0 : 20) - (!!this.footerHeight_ ? 0 : 20);
       },
       top__() {
         return this.fullscreen_ ? "0vh" : this.top;
@@ -178,13 +213,30 @@
           dragDom.style.top = dragDom.dataset.top;
           this.fullscreen_ = false;
         }
+      },
+      resize() {
+        this.window = {
+          width: window.innerWidth,
+          height: window.innerHeight
+        };
       }
     },
 
     updated() {
+      if (this.$refs.header) {
+        this.headerHeight_ = this.$refs.header.offsetHeight;
+      }
       if (this.$refs.footer) {
         this.footerHeight_ = this.$refs.footer.offsetHeight;
       }
+    },
+
+    beforeDestroy() {
+      window.removeEventListener('resize', this.resize)
+    },
+
+    created() {
+      window.addEventListener('resize', this.resize);
     },
 
     mounted() {
@@ -194,45 +246,70 @@
 </script>
 
 <style scoped>
-  .j-dialog >>> .el-scrollbar__wrap {
+  .j-el-dialog >>> .el-dialog__header {
+    padding: 0 0 0 0;
+  }
+
+  .j-el-dialog-header {
+    height: 30px;
+    padding: 20px 20px 10px 20px;
+  }
+
+  .j-el-dialog-header.fullscreen.in-iframe {
+    height: 30px;
+    padding: 0 0 10px 0;
+  }
+
+  .j-el-dialog >>> .el-dialog__body {
+    padding: 0 0 0 0;
+  }
+
+  .j-el-dialog-body {
+    padding: 20px 20px 20px 20px;
+  }
+
+  .j-el-dialog-body.header {
+    padding-top: 0;
+  }
+
+  .j-el-dialog-body.footer {
+    padding-bottom: 0;
+  }
+
+  .j-el-dialog-body.fullscreen.in-iframe {
+    padding: 0 0 0 0;
+  }
+
+  .j-el-dialog >>> .el-dialog__footer {
+    padding: 0 0 0 0;
+  }
+
+  .j-el-dialog-footer {
+    padding: 10px 20px 20px 20px;
+  }
+
+  .j-el-dialog-footer.fullscreen.in-iframe {
+    padding: 10px 0 0 0;
+  }
+
+  .j-el-dialog >>> .el-scrollbar__wrap {
     overflow-x: hidden;
   }
 
-  .j-icon {
-    margin-left: 5px;
-  }
-
-  .j-icon:hover {
-    color: #409eff;
-    cursor: pointer;
-  }
-
-  .j-dialog >>> .el-dialog {
+  .j-el-dialog >>> .el-dialog {
     margin: 0 auto 0;
   }
 
-  .j-dialog >>> .el-dialog__wrapper {
+  .j-el-dialog >>> .el-dialog__wrapper {
     overflow: hidden;
   }
 
-  .j-dialog >>> .el-dialog__header {
-    padding: 0 0 0;
+  .i-icon {
+    margin-left: 5px;
   }
 
-  .j-dialog__header {
-    height: 30px;
-    padding: 20px 20px 10px;
-  }
-
-  .j-dialog >>> .el-dialog__body {
-    padding: 20px 0 20px 20px;
-  }
-
-  .j-dialog >>> .el-dialog__footer {
-    padding: 0 0 0;
-  }
-
-  .j-dialog__footer {
-    padding: 0 20px 20px 20px;
+  .i-icon:hover {
+    color: #409eff;
+    cursor: pointer;
   }
 </style>

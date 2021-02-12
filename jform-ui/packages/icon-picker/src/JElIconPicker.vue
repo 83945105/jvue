@@ -24,7 +24,7 @@
         </slot>
       </template>
     </el-input>
-    <j-el-dialog :visible.sync="dialogVisible_" title="选择图标" append-to-body :close-on-click-modal="false">
+    <j-el-dialog :visible.sync="dialogVisible_" title="选择图标" top="10vh" append-to-body :close-on-click-modal="false">
       <template #default="{height}">
         <icon-library :height="height - 144" :options="$JVue['icon-picker']" @click="onClick"/>
       </template>
