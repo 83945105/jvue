@@ -324,20 +324,20 @@ self.__precacheManifest = [
     "url": "static/js/chunk-cffe07e6.b556584d.js"
   },
   {
-    "revision": "22e816e6e13f22bf2e63",
+    "revision": "758d7ce975d7ae2f5fac",
     "url": "static/css/chunk-vendors.77af9b05.css"
   },
   {
-    "revision": "22e816e6e13f22bf2e63",
-    "url": "static/js/chunk-vendors.edc0abf1.js"
+    "revision": "758d7ce975d7ae2f5fac",
+    "url": "static/js/chunk-vendors.c5f024ab.js"
   },
   {
-    "revision": "643fd64bf7e6f3cfe159",
+    "revision": "400d1a9e33df97d6e39f",
     "url": "static/css/jvue-jform.b0fbd22a.css"
   },
   {
-    "revision": "643fd64bf7e6f3cfe159",
-    "url": "static/js/jvue-jform.2ce040bb.js"
+    "revision": "400d1a9e33df97d6e39f",
+    "url": "static/js/jvue-jform.c834b5d2.js"
   },
   {
     "revision": "5d0fc2ff62f60c98f55055848094539e",
@@ -348,12 +348,12 @@ self.__precacheManifest = [
     "url": "editor.worker.js"
   },
   {
-    "revision": "06622d75cf38482c9f43262ced5b52de",
-    "url": "html.worker.js"
-  },
-  {
     "revision": "efe597b509f7e5fcdd8483aec6b715fb",
     "url": "css.worker.js"
+  },
+  {
+    "revision": "06622d75cf38482c9f43262ced5b52de",
+    "url": "html.worker.js"
   },
   {
     "revision": "42107d0e109cacdf2dc74646bfc0d675",
@@ -412,7 +412,7 @@ self.__precacheManifest = [
     "url": "static/fonts/element-icons.732389de.ttf"
   },
   {
-    "revision": "3db2f5a2b6a1d4d8bb0b21b889fae7cb",
+    "revision": "eccdf0609a9179e5d1305a87974340d7",
     "url": "index.html"
   },
   {
@@ -420,20 +420,16 @@ self.__precacheManifest = [
     "url": "../resources/public/frame/tinymce/icons/default/index.js"
   },
   {
-    "revision": "d41d8cd98f00b204e9800998ecf8427e",
-    "url": "../resources/public/frame/tinymce/skins/content/dark/content.css"
-  },
-  {
     "revision": "a561a4484a28c2267c30a4455d3da68e",
     "url": "../resources/public/frame/tinymce/langs/zh_CN.js"
   },
   {
     "revision": "d41d8cd98f00b204e9800998ecf8427e",
-    "url": "../resources/public/frame/tinymce/skins/content/default/content.css"
+    "url": "../resources/public/frame/tinymce/skins/content/document/content.css"
   },
   {
     "revision": "d41d8cd98f00b204e9800998ecf8427e",
-    "url": "../resources/public/frame/tinymce/skins/content/document/content.css"
+    "url": "../resources/public/frame/tinymce/skins/content/dark/content.css"
   },
   {
     "revision": "424e5e291b3c95b9486805a8d5c4cf61",
@@ -445,15 +441,19 @@ self.__precacheManifest = [
   },
   {
     "revision": "d41d8cd98f00b204e9800998ecf8427e",
-    "url": "../resources/public/frame/tinymce/skins/content/writer/content.css"
+    "url": "../resources/public/frame/tinymce/skins/content/default/content.css"
   },
   {
-    "revision": "4c0b8cf274d116c2ff8b3f1c7cfaf9d3",
-    "url": "../resources/public/frame/tinymce/skins/content/dark/content.min.css"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e",
+    "url": "../resources/public/frame/tinymce/skins/content/writer/content.css"
   },
   {
     "revision": "5022f9908e1f0680cdc3ad293816bd13",
     "url": "../resources/public/frame/tinymce/skins/content/default/content.min.css"
+  },
+  {
+    "revision": "4c0b8cf274d116c2ff8b3f1c7cfaf9d3",
+    "url": "../resources/public/frame/tinymce/skins/content/dark/content.min.css"
   },
   {
     "revision": "0ccaf40378ed037f42d01279f625793d",
@@ -472,12 +472,12 @@ self.__precacheManifest = [
     "url": "../resources/public/frame/tinymce/skins/ui/oxide-dark/content.inline.css"
   },
   {
-    "revision": "9bf88986ca27fef8c399b7c35170309c",
-    "url": "../resources/public/frame/tinymce/skins/ui/oxide-dark/content.min.css"
-  },
-  {
     "revision": "ce5777f78c423d92c076e5f60bed168b",
     "url": "../resources/public/frame/tinymce/skins/ui/oxide-dark/content.inline.min.css"
+  },
+  {
+    "revision": "9bf88986ca27fef8c399b7c35170309c",
+    "url": "../resources/public/frame/tinymce/skins/ui/oxide-dark/content.min.css"
   },
   {
     "revision": "e84062c0d71bace6637586be7c2590d3",
@@ -492,12 +492,12 @@ self.__precacheManifest = [
     "url": "../resources/public/frame/tinymce/skins/ui/oxide-dark/fonts/tinymce-mobile.woff"
   },
   {
-    "revision": "338b06826c0e8a681688fc195dbb72b1",
-    "url": "../resources/public/frame/tinymce/skins/ui/oxide-dark/skin.mobile.css"
+    "revision": "716eed34383df77dbb9ac01b3b72fd05",
+    "url": "../resources/public/frame/tinymce/skins/ui/oxide-dark/skin.shadowdom.min.css"
   },
   {
-    "revision": "4fdf33191102d7a24a5bf0639040d128",
-    "url": "../resources/public/frame/tinymce/skins/ui/oxide-dark/skin.mobile.min.css"
+    "revision": "338b06826c0e8a681688fc195dbb72b1",
+    "url": "../resources/public/frame/tinymce/skins/ui/oxide-dark/skin.mobile.css"
   },
   {
     "revision": "41cd5c63b189f1a96823b083c4e4cbf1",
@@ -508,16 +508,16 @@ self.__precacheManifest = [
     "url": "../resources/public/frame/tinymce/skins/ui/oxide-dark/skin.min.css"
   },
   {
+    "revision": "3f8e5ab03a1912508dcc153aee24cd03",
+    "url": "../resources/public/frame/tinymce/skins/ui/oxide/content.css"
+  },
+  {
     "revision": "6bb06cca1c5dcc257a5eccfe690f6aca",
     "url": "../resources/public/frame/tinymce/skins/ui/oxide-dark/skin.shadowdom.css"
   },
   {
-    "revision": "716eed34383df77dbb9ac01b3b72fd05",
-    "url": "../resources/public/frame/tinymce/skins/ui/oxide-dark/skin.shadowdom.min.css"
-  },
-  {
-    "revision": "3f8e5ab03a1912508dcc153aee24cd03",
-    "url": "../resources/public/frame/tinymce/skins/ui/oxide/content.css"
+    "revision": "4fdf33191102d7a24a5bf0639040d128",
+    "url": "../resources/public/frame/tinymce/skins/ui/oxide-dark/skin.mobile.min.css"
   },
   {
     "revision": "02b37a107b5ae121955c43bb4efee57f",
@@ -528,6 +528,10 @@ self.__precacheManifest = [
     "url": "../resources/public/frame/tinymce/skins/ui/oxide/content.inline.min.css"
   },
   {
+    "revision": "ee807042b61ee69a8db0755b70536fbc",
+    "url": "../resources/public/frame/tinymce/skins/ui/oxide/content.min.css"
+  },
+  {
     "revision": "e84062c0d71bace6637586be7c2590d3",
     "url": "../resources/public/frame/tinymce/skins/ui/oxide/content.mobile.css"
   },
@@ -536,35 +540,31 @@ self.__precacheManifest = [
     "url": "../resources/public/frame/tinymce/skins/ui/oxide/content.mobile.min.css"
   },
   {
-    "revision": "ee807042b61ee69a8db0755b70536fbc",
-    "url": "../resources/public/frame/tinymce/skins/ui/oxide/content.min.css"
+    "revision": "384c8c3faba0ccd58cc04b829b6ad5c4",
+    "url": "../resources/public/frame/tinymce/skins/ui/oxide/skin.css"
   },
   {
     "revision": "baecf466c40e709e7ffdbc935fc0813a",
     "url": "../resources/public/frame/tinymce/skins/ui/oxide/fonts/tinymce-mobile.woff"
   },
   {
-    "revision": "384c8c3faba0ccd58cc04b829b6ad5c4",
-    "url": "../resources/public/frame/tinymce/skins/ui/oxide/skin.css"
+    "revision": "ba4c0fbdc0bd508726364b9dcd9f3f94",
+    "url": "../resources/public/frame/tinymce/skins/ui/oxide/skin.min.css"
   },
   {
     "revision": "338b06826c0e8a681688fc195dbb72b1",
     "url": "../resources/public/frame/tinymce/skins/ui/oxide/skin.mobile.css"
   },
   {
-    "revision": "ba4c0fbdc0bd508726364b9dcd9f3f94",
-    "url": "../resources/public/frame/tinymce/skins/ui/oxide/skin.min.css"
-  },
-  {
     "revision": "716eed34383df77dbb9ac01b3b72fd05",
     "url": "../resources/public/frame/tinymce/skins/ui/oxide/skin.shadowdom.min.css"
   },
   {
-    "revision": "6bb06cca1c5dcc257a5eccfe690f6aca",
-    "url": "../resources/public/frame/tinymce/skins/ui/oxide/skin.shadowdom.css"
-  },
-  {
     "revision": "4fdf33191102d7a24a5bf0639040d128",
     "url": "../resources/public/frame/tinymce/skins/ui/oxide/skin.mobile.min.css"
+  },
+  {
+    "revision": "6bb06cca1c5dcc257a5eccfe690f6aca",
+    "url": "../resources/public/frame/tinymce/skins/ui/oxide/skin.shadowdom.css"
   }
 ];
