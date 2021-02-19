@@ -50,7 +50,7 @@ model: {
 
 使用QQ App扫描二维码加入我们一起讨论
 
-<img alt="Join Discusion Group" src="https://gitee.com/83945105/jvue/assets/Vue表单设计器QQ交流群（1）.jpg" width="300">
+<img alt="QQ群: 699850713" src="https://gitee.com/83945105/jvue/blob/main/assets/jvue-jform-designer-qq-1.jpg" width="300">
 
 ## Vue页面设计器（开发中）
 
