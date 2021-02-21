@@ -52,16 +52,3 @@ model: {
 使用QQ App扫描二维码加入我们一起讨论
 
 <img alt="QQ群: 699850713" src="https://gitee.com/83945105/jvue/raw/main/assets/Vue表单设计器技术讨论QQ群（1）.jpg" width="300">
-
-## Vue页面设计器（开发中）
-
-- 通过拖拽控件设计出后台管理页面
-- 尝试使用和Vue表单设计器不同的架构方案，实现可插拔、可自定义扩展控件功能
-- 支持JSON逆向渲染出页面（需安装[@jvue/jform](https://github.com/83945105/jvue/tree/main/jform-ui) [国内(gitee)](https://gitee.com/83945105/jvue/tree/main/jform-ui)）
-- 支持生成.vue文件（无需任何依赖直接copy至你的项目中即可使用）
-- 预计支持控件列表
-  - 表格
-  - 树
-  - 分页
-  - 各种搜索框（文本、下拉、单选等）
-  - 各种图表
