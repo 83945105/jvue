@@ -26,11 +26,11 @@
       </el-option>
       <template v-if="multiple">
         <template v-for="(option, $index) in selectOptions__">
-          <el-option :key="$index" :label="option.label || ' '" :value="option.value" hidden></el-option>
+          <el-option :key="$index" :label="option.label" :value="option.value" hidden></el-option>
         </template>
       </template>
       <template v-else-if="selectOptions__">
-        <el-option :label="selectOptions__.label || ' '" :value="selectOptions__.value" hidden></el-option>
+        <el-option :label="selectOptions__.label" :value="selectOptions__.value" hidden></el-option>
       </template>
     </slot>
     <slot name="select.prefix"></slot>
