@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "precache-manifest.bafb2301b04078706f8bc79104655582.js"
+  "precache-manifest.a09815f3cf7a94d084106b4310f84106.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "vue3.0"});
