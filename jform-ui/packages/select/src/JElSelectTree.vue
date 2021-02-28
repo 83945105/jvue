@@ -403,6 +403,13 @@
         this.$emit('check-change', data, selected, childSelected);
       },
       onCheck(data, {checkedKeys, checkedNodes, halfCheckedKeys, halfCheckedNodes}) {
+        // 找出 data_ 中的虚拟节点
+        let $tree = this.$refs.tree;
+        let tmp = this.data_.map(d => {
+          if (!$tree.getNode(d)) return d;
+        }).filter(d => !!d);
+        checkedKeys = checkedKeys.concat(tmp.map(t => t[this.nodeKey__]));
+        checkedNodes = checkedNodes.concat(tmp);
         this.$emit('check', data, {checkedKeys, checkedNodes, halfCheckedKeys, halfCheckedNodes});
         if (!this.multiple) return;
         this.data_ = checkedNodes;
