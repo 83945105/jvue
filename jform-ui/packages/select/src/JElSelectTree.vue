@@ -8,7 +8,8 @@
              @focus="onFocus">
     <slot name="select.default">
       <el-option :value="new Date().getTime()" style="height: auto;">
-        <el-tree ref="tree" :data="treeData" v-bind="treeBind__"
+        <el-tree ref="tree"
+                 v-bind="treeBind__"
                  @node-click="onNodeClick"
                  @node-contextmenu="onNodeContextmenu"
                  @check-change="onCheckChange"
@@ -193,6 +194,7 @@
       },
       treeBind__() {
         return {
+          data: this.load ? null : this.treeData,
           emptyText: this.emptyText,
           nodeKey: this.nodeKey__,
           props: this.props,
@@ -303,53 +305,20 @@
       onVisibleChange(visible) {
         this.$emit('visible-change', visible);
       },
-      getCheckedChildNodes(node) {
-        if (!node.childNodes) return [];
-        let nodes = [];
-        node.childNodes.forEach(cn => {
-          if (!!cn.checked) {
-            nodes.push(cn);
-          }
-          nodes = nodes.concat(this.getCheckedChildNodes(cn));
-        });
-        return nodes;
+      getAllNodes() {
+        let $tree = this.$refs.tree;
+        if (!$tree) return [];
+        let nodesMap = $tree.store.nodesMap;
+        return Object.keys(nodesMap).reduce((nodes, key) => {
+          nodes.push(nodesMap[key]);
+          return nodes;
+        }, []);
       },
       getCheckedNodes() {
-        let nodes = [];
-        let $tree = this.$refs.tree;
-        if (!$tree) return nodes;
-        this.treeData.forEach(td => {
-          let node = $tree.getNode(td);
-          if (!!node.checked) {
-            nodes.push(node);
-          }
-          nodes = nodes.concat(this.getCheckedChildNodes(node));
-        });
-        return nodes;
-      },
-      getUncheckedChildNodes(node) {
-        if (!node.childNodes) return [];
-        let nodes = [];
-        node.childNodes.forEach(cn => {
-          if (!cn.checked) {
-            nodes.push(cn);
-          }
-          nodes = nodes.concat(this.getUncheckedChildNodes(cn));
-        });
-        return nodes;
+        return this.getAllNodes().filter(node => !!node.checked);
       },
       getUncheckedNodes() {
-        let nodes = [];
-        let $tree = this.$refs.tree;
-        if (!$tree) return nodes;
-        this.treeData.forEach(td => {
-          let node = $tree.getNode(td);
-          if (!node.checked) {
-            nodes.push(node);
-          }
-          nodes = nodes.concat(this.getUncheckedChildNodes(node));
-        });
-        return nodes;
+        return this.getAllNodes().filter(node => !node.checked);
       },
       initTag() {
         let checkedNodes = this.getCheckedNodes();
