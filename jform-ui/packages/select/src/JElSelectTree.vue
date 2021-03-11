@@ -143,7 +143,8 @@
     computed: {
       selectValue__() {
         if (!this.data_) return this.multiple ? [] : null;
-        return this.multiple ? this.isArray(this.data_) ? this.data_.map(d => d[this.props.value]) : null : this.data_[this.props.value];
+        if (this.multiple) return this.data_.map(d => d[this.props.value]);
+        return this.data_[this.props.value] === undefined ? '' : this.data_[this.props.value];
       },
       selectOptions__() {
         if (this.multiple) {
