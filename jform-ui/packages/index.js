@@ -1,27 +1,11 @@
 import Array from "./array/index.js";
-import Checkbox from "./checkbox/index.js";
-import CoordinatePicker from "./coordinate-picker/index.js";
-import Description from "./description/index.js";
-import Dialog from "./dialog/index.js";
-import Editor from "./editor/index.js";
-import Form from "./form/index.js";
-import IconPicker from "./icon-picker/index.js";
-import Radio from "./radio/index.js";
 import Render from "./render/index.js";
-import Select from "./select/index.js";
+import ElementUIExpand from "./element-ui-expand/index.js";
 
 const components = [
   Array,
-  Checkbox,
-  CoordinatePicker,
-  Description,
-  Dialog,
-  Editor,
-  Form,
-  IconPicker,
-  Radio,
   Render,
-  Select
+  ElementUIExpand
 ];
 
 
