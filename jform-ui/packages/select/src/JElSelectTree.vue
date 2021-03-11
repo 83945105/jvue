@@ -301,6 +301,8 @@
         });
       },
       onChange(value) {
+        // 经过测试，在 el-select 中只有点击下拉项改变数据才会触发 change 事件，因此该事件在下拉树控件中不一定触发
+        // 可以通过监听 input 事件 或者 watch 下拉树绑定的值来判断值是否改变
         this.$emit('change', value);
       },
       onVisibleChange(visible) {
