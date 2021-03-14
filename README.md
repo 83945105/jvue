@@ -43,19 +43,11 @@ model: {
     - 尝试下访问 [集成地址](http://83945105.gitee.io/jvue/jform/#/designer?fullScreen=2)
     - 其实就是在表单设计器的地址后面加上 `?fullScreen=2` 参数即可实现无边化全屏
  
-3. 集成到自己的项目中后是否有API可以使用？
-    - 目前有这种想法，如提供获取设计器的JSON数据API，拿到JSON数据可以进行二次开发其它功能，如前后端代码生成
-    - 如果确认了方案，会尽快实现
-    
-4. 如何给作者提建议&需求？
+3. 如何给作者提建议&需求？
     - 给我们提[Issues](https://github.com/83945105/jvue/issues) [国内(gitee)](https://gitee.com/83945105/jvue/issues)
     - 通过Vue表单设计器在线地址右上角的`联系我们`功能
     - 加入我们的技术讨论群
     
-5. 开源计划？
-    - 目前JSON模式渲染器是开源的，参考[@jvue/jform](https://github.com/83945105/jvue/tree/main/jform-ui) [国内(gitee)](https://gitee.com/83945105/jvue/tree/main/jform-ui)
-    - 设计器暂未开源，可以通过在线地址来设计，如果您不是需要将设计器整合进您的项目中而仅仅是作为一个开发工具来使用，那么使用在线方式是够用的
-
 ## 技术讨论群
 
 使用QQ App扫描二维码加入我们一起讨论
