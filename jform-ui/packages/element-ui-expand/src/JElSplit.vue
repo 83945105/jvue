@@ -87,7 +87,7 @@
         return 100 - this.offset;
       },
       valueIsPx() {
-        return typeof this.value === 'string';
+        return typeof this.currentValue === 'string';
       },
       offsetSize() {
         return this.isHorizontal ? 'offsetWidth' : 'offsetHeight';
@@ -95,11 +95,14 @@
     },
 
     watch: {
-      value(val) {
-        if (val !== this.currentValue) {
+      value: {
+        immediate: true,
+        handler(val) {
           this.currentValue = val;
-          this.computeOffset();
         }
+      },
+      currentValue() {
+        this.computeOffset();
       }
     },
 
@@ -141,10 +144,10 @@
         if (parseFloat(anotherValue) <= parseFloat(this.computedMax)) {
           value = this.getAnotherOffset(this.getMax(anotherValue, this.computedMax));
         }
-        e.atMin = this.value === this.computedMin;
-        e.atMax = this.valueIsPx ? this.getAnotherOffset(this.value) === this.computedMax : this.getAnotherOffset(this.value).toFixed(5) === this.computedMax.toFixed(5);
-        this.$emit('input', value);
+        e.atMin = this.currentValue === this.computedMin;
+        e.atMax = this.valueIsPx ? this.getAnotherOffset(this.currentValue) === this.computedMax : this.getAnotherOffset(this.currentValue).toFixed(5) === this.computedMax.toFixed(5);
         this.$emit('moving', e);
+        this.currentValue = value;
       },
       handleUp() {
         this.isMoving = false;
@@ -154,7 +157,7 @@
       },
       handleMousedown(e) {
         this.initOffset = this.isHorizontal ? e.pageX : e.pageY;
-        this.oldOffset = this.value;
+        this.oldOffset = this.currentValue;
         this.isMoving = true;
         on(document, 'mousemove', this.handleMove);
         on(document, 'mouseup', this.handleUp);
@@ -164,7 +167,7 @@
         this.$nextTick(() => {
           this.computedMin = this.getComputedThresholdValue('min');
           this.computedMax = this.getComputedThresholdValue('max');
-          let value = this.valueIsPx ? this.px2percent(this.value, this.$refs.outerWrapper[this.offsetSize]) : this.value;
+          let value = this.valueIsPx ? this.px2percent(this.currentValue, this.$refs.outerWrapper[this.offsetSize]) : this.currentValue;
           let anotherValue = this.getAnotherOffset(value);
           if (parseFloat(value) <= parseFloat(this.computedMin)) {
             value = this.getMax(value, this.computedMin);
@@ -173,7 +176,6 @@
             value = this.getAnotherOffset(this.getMax(anotherValue, this.computedMax));
           }
           this.offset = value * 10000 / 100;
-          this.currentValue = value;
           this.$emit('input', value);
         });
       }
@@ -207,10 +209,10 @@
             style: {
               left: this.offset + '%'
             },
-            on: {
+            on: this.draggable ? {
               mousedown: this.handleMousedown
-            }
-          }, [h('div', {class: ['split-line-vertical-bar']})]),
+            } : null
+          }, this.draggable ? this.$scopedSlots.trigger ? this.$scopedSlots.trigger() : [h('div', {class: ['split-line-vertical-bar']})] : []),
           h('div', {
             class: ['split-right'],
             style: {
@@ -233,10 +235,10 @@
             style: {
               top: this.offset + '%'
             },
-            on: {
+            on: this.draggable ? {
               mousedown: this.handleMousedown
-            }
-          }, [h('div', {class: ['split-line-horizontal-bar']})]),
+            } : null
+          }, this.draggable ? this.$scopedSlots.trigger ? this.$scopedSlots.trigger() : [h('div', {class: ['split-line-horizontal-bar']})] : []),
           h('div', {
             class: ['split-bottom'],
             style: {
