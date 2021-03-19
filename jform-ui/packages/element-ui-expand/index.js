@@ -1,8 +1,8 @@
 import JElCheckboxGroup from "./src/JElCheckboxGroup";
-import JElCoordinatePicker from './src/JElCoordinatePicker.vue';
-import JElDescription from './src/JElDescription.vue';
-import JDialogDrag from './src/JDialogDrag.js';
-import JElDialog from './src/JElDialog.vue';
+import JElCoordinatePicker from "./src/JElCoordinatePicker.vue";
+import JElDescription from "./src/JElDescription.vue";
+import JDialogDrag from "./src/JDialogDrag.js";
+import JElDialog from "./src/JElDialog.vue";
 import JElDrawer from "./src/JElDrawer.vue";
 import JElEditor from "./src/JElEditor";
 import JElForm from "./src/JElForm";
@@ -10,11 +10,12 @@ import JElArrayForm from "./src/JElArrayForm";
 import JElObjectForm from "./src/JElObjectForm";
 import JElObjectArrayForm from "./src/JElObjectArrayForm";
 import JForm from "./src/JForm";
-import JElIconPicker from './src/JElIconPicker';
+import JElIconPicker from "./src/JElIconPicker";
 import JElRadioGroup from "./src/JElRadioGroup";
 import JElSelect from "./src/JElSelect";
 import JElSelectGroup from "./src/JElSelectGroup";
-import JElSelectTree from './src/JElSelectTree';
+import JElSelectTree from "./src/JElSelectTree";
+import JElSplit from "./src/JElSplit";
 
 const ElementUIExpand = {
   JElCheckboxGroup,
@@ -33,6 +34,7 @@ const ElementUIExpand = {
   JElSelect,
   JElSelectGroup,
   JElSelectTree,
+  JElSplit,
   install(Vue) {
     Vue.directive("JDialogDrag", JDialogDrag);
     Vue.component(JElCheckboxGroup.name, JElCheckboxGroup);
@@ -51,6 +53,7 @@ const ElementUIExpand = {
     Vue.component(JElSelect.name, JElSelect);
     Vue.component(JElSelectGroup.name, JElSelectGroup);
     Vue.component(JElSelectTree.name, JElSelectTree);
+    Vue.component(JElSplit.name, JElSplit);
   }
 };
 
