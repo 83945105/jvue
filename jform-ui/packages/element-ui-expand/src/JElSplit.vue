@@ -156,6 +156,7 @@
         this.$emit('move-end');
       },
       handleMousedown(e) {
+        e.preventDefault();
         this.initOffset = this.isHorizontal ? e.pageX : e.pageY;
         this.oldOffset = this.currentValue;
         this.isMoving = true;
