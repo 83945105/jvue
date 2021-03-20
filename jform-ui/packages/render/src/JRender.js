@@ -218,26 +218,191 @@ function initBindDomProps(key, domProps) {
 /**
  * 初始化绑定属性
  * 属性规则:
- * 1、纯字符无冒号如: name 表示 key=name 的组件的 若干属性
- * 2、存在一个冒号如: name:placeholder 表示 key=name 的组件的 placeholder 属性
- * 3、存在多个冒号如: name:age:placeholder 表示 key=name 的组件的 age:placeholder 属性
+ * 1、纯字符无冒号如: name 表示 key=name 组件的 若干属性
+ * 2、存在一个冒号如: name:placeholder 表示 key=name 组件的 placeholder 属性
+ * 3、存在多个冒号如: name:age:placeholder 表示子表单属性，每多一个冒号表示多一层子表单
+ * 4、最后一个冒号后不得出现 class 、 style 等关键字，否则会被当做 class 、 style 处理
+ * class规则:
+ * 1、一个冒号如: name:class="custom-class" 表示 key=name 组件的 class
+ * 2、多个冒号如: name:age:class="custom-class" 表示子表单控件的class,每多一个冒号表示多一层子表单
+ * style规则:
+ * 1、一个冒号如: name:style="{height: '100px'}" 表示 key=name 组件的 style
+ * 2、多个冒号如: name:age:style="{height: '100px'}" 表示子表单控件的style,每多一个冒号表示多一层子表单
  * 修饰符规则:
  * 1、.sync - 同步属性,标识该符号的属性将会产生用于属性同步的事件监听函数: update:xx {@see initBindListeners}
- * 2、::root - 根组件的属性
+ * 2、::root - 根组件的 [属性|class|style],当无法确定根组件key时,可以通过 [属性|class|style]::root 直接传递给根组件
+ * 3、::all - 所有组件的 [属性|class|style],使用 [属性|class|style]::all 给所有组件传递属性,如果配置了all，root修饰符将失效
  * 返回结果:
  * attrs => 当前组件属性
+ * class => 当前组件class
+ * style => 当前组件style
  * childAttrs => 子组件的属性
  */
 function initBindAttrs(key, attrs) {
+  console.log(attrs)
   let _attrs = {};
+  let _class = [];
+  let _style = {};
   let _childAttrs = {};
   Object.keys(attrs).forEach(_key => {
+    let _value = attrs[_key];
     let _keys = _key.split("::");
     let _modifiers = _keys.slice(1);
-    let _root = _modifiers.includes("root");
-    if (_root) {
-      _attrs[_keys[0]] = attrs[_key];
-      return true;
+    let _all = _modifiers.includes("all");
+    let _root = _all || _modifiers.includes("root");
+
+    let routes = _keys[0].split(":");
+    let routesLen = routes.length;
+
+    let isClass = routes[routesLen - 1] === 'class';
+    let isStyle = routes[routesLen - 1] === 'style';
+    let isAttr = !isClass && !isStyle;
+
+    if (_all) {
+      if (isClass) {
+        if (routesLen > 1) {
+          // name:class::all=""
+          throw new Error(`you can not use key to bind class for ::all`);
+        } else if (routesLen === 1) {
+          if (isString(_value)) {
+            _class.push(_value);
+          } else if (isArray(_value)) {
+            _class.push(..._value);
+          } else if (isObject(_value)) {
+            _class.push(...(Object.keys(_value).reduce((c, k) => {
+              if (_value[k] === true) {
+                c.push(k);
+              }
+              return c;
+            }, [])));
+          } else {
+            throw new Error(`bind class for ::all value must be string or array or object type`);
+          }
+        } else {
+          throw new Error(`error length`);
+        }
+      } else if (isStyle) {
+        if (routesLen > 1) {
+          // name:style::all=""
+          throw new Error(`you can not use key to bind style for ::all`);
+        } else if (routesLen === 1) {
+          if (isObject(_value)) {
+            Object.keys(_value).forEach(k => {
+              _style[k] = _value[k];
+            });
+          } else if (isArray(_value)) {
+            _value.forEach(s => {
+              if (isObject(s)) {
+                Object.keys(s).forEach(k => {
+                  _style[k] = s[k];
+                });
+              } else {
+                throw new Error(`bind style for ::all array type value item must be object type`);
+              }
+            });
+          } else {
+            throw new Error(`bind style for ::all value must be object type`);
+          }
+        } else {
+          throw new Error(`error length`);
+        }
+      } else if (isAttr) {
+        if (routesLen > 1) {
+          // name:placeholder::all=""
+          throw new Error(`you can not use key to bind attr for ::all`);
+        } else if (routesLen === 1) {
+          _attrs[routes[0]] = _value;
+        } else {
+          throw new Error(`error length`);
+        }
+      } else {
+        throw new Error(`error`);
+      }
+      _childAttrs[_key] = _value;
+    } else if (_root) {
+      if (isClass) {
+        if (routesLen > 1) {
+          // name:class::root=""
+          throw new Error(`you can not use key to bind class for ::root`);
+        } else if (routesLen === 1) {
+          if (isString(_value)) {
+            _class.push(_value);
+          } else if (isArray(_value)) {
+            _class.push(..._value);
+          } else if (isObject(_value)) {
+            _class.push(...(Object.keys(_value).reduce((c, k) => {
+              if (_value[k] === true) {
+                c.push(k);
+              }
+              return c;
+            }, [])));
+          } else {
+            throw new Error(`bind class for ::root value must be string or array or object type`);
+          }
+        } else {
+          throw new Error(`error length`);
+        }
+      } else if (isStyle) {
+        if (routesLen > 1) {
+          // name:style::root=""
+          throw new Error(`you can not use key to bind style for ::root`);
+        } else if (routesLen === 1) {
+          if (isObject(_value)) {
+            Object.keys(_value).forEach(k => {
+              _style[k] = _value[k];
+            });
+          } else if (isArray(_value)) {
+            _value.forEach(s => {
+              if (isObject(s)) {
+                Object.keys(s).forEach(k => {
+                  _style[k] = s[k];
+                });
+              } else {
+                throw new Error(`bind style for ::root array type value item must be object type`);
+              }
+            });
+          } else {
+            throw new Error(`bind style for ::root value must be object type`);
+          }
+        } else {
+          throw new Error(`error length`);
+        }
+      } else if (isAttr) {
+        if (routesLen > 1) {
+          // name:placeholder::root=""
+          throw new Error(`you can not use key to bind attr for ::root`);
+        } else if (routesLen === 1) {
+          _attrs[routes[0]] = _value;
+        } else {
+          throw new Error(`error length`);
+        }
+      } else {
+        throw new Error(`error`);
+      }
+    } else {
+      // 没有修饰符
+      if (isClass) {
+        if (routesLen > 2) {
+          // 子控件
+          // name:age:class=""
+          if (key === routes[0]) {
+            _childAttrs[routes.slice(1).join(":")] = _value;
+          }
+        } else if (routesLen > 1) {
+
+        } else if (routesLen === 1) {
+          // class=""
+          throw new Error(`no key found for binding class: ${_value}`);
+        } else {
+          throw new Error(`error length`);
+        }
+      } else if (isStyle) {
+
+      } else if (isAttr) {
+
+      } else {
+        throw new Error(`error`);
+      }
     }
     _keys = _keys[0].split(":");
     if (_keys.length === 1) {
@@ -463,15 +628,15 @@ export default {
     let $parentContext = context.props.parent;              // 父级自定义上下文
     let $context = {data, context, parent: $parentContext}; // 自定义上下文
 
+    let {attrs, childAttrs} = initBindAttrs(key, context.data.attrs || {});
+    $context.attrs = merge({}, options.attrs, attrs);
+    $context.props = merge({}, options.props, attrs);
+
     let {class: clazz, childClass} = initBindClass(key, context.data.class || {});
     $context.class = merge({}, initClass(options.class || {}), clazz);
 
     let {style, childStyle} = initBindStyle(key, context.data.style || {});
     $context.style = merge({}, initStyle(options.style || {}), style);
-
-    let {attrs, childAttrs} = initBindAttrs(key, context.data.attrs || {});
-    $context.attrs = merge({}, options.attrs, attrs);
-    $context.props = merge({}, options.props, attrs);
 
     let {domAttrs, childDomAttrs} = initBindDomProps(key, context.data.domProps || {});
     $context.domProps = merge({}, options.domProps, domAttrs);

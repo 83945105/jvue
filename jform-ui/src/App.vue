@@ -1,34 +1,24 @@
 <template>
   <div id="app">
-    <j-el-split style="height: 500px" :value="0.2" min="200" max="200">
-      <template #left>
-        <div style="width: 100%;height: 300px;background-color: #2dc26b"></div>
-      </template>
-      <template #right>
-        <j-el-split mode="vertical">
-          <template #top>
-            <j-el-split :draggable="false">
-              <template #right>
-                <div style="width: 100%;height: 100px;background-color: #ffe44c"></div>
-              </template>
-            </j-el-split>
-          </template>
-          <template #bottom>
-            <div style="width: 100%;height: 300px;background-color: #afcaff"></div>
-          </template>
-        </j-el-split>
-      </template>
-    </j-el-split>
+    <j-form :data="formData"
+            :name="{placeholder: '请输入姓名', clearable: true}"
+            :name:class="['i-ui']"
+            class="custom-class"
+            :name$item:label.sync="sync1"
+            name$prop="name"
+    ></j-form>
   </div>
 </template>
 
 <script>
+  import FormData from "./form";
 
   export default {
     name: 'app',
     data() {
       return {
-        split1: 0.5
+        formData: FormData,
+        sync1: '自定义Label'
       }
     },
     methods: {}

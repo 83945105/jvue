@@ -4,6 +4,8 @@
   export default {
     name: "j-form",
 
+    inheritAttrs: false,
+
     props: {
       data: Object,
       required: true
@@ -52,6 +54,13 @@
     },
 
     render(h) {
+      console.log('=========================')
+      console.log(this.$attrs)
+      console.log(this.$props)
+      console.log(this.$listeners)
+      console.log(this.$scopedSlots)
+      console.log(this.$class)
+      console.log('=========================')
       return h('j-render', {
         props: {
           data: this.data_
