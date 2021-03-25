@@ -59,7 +59,6 @@
 </template>
 
 <script>
-  import {compare} from "../../../src/utils/util";
   import deepMerge from "../../../src/utils/deep-merge";
   import JElArrayFormColumn from "./JElArrayFormColumn";
 
@@ -246,7 +245,7 @@
         immediate: true,
         handler(val) {
           if (!val) return;
-          if (compare(val, this.value_)) return;
+          if (JSON.stringify(val) === JSON.stringify(this.value_)) return;
           this.value_ = val;
           this.form_.data = this.value_.map(v => {
             let _row = {
@@ -263,6 +262,7 @@
         handler(val, oldValue) {
           if (!val || !oldValue) return;
           let _value = val.map(v => v[this.column__.prop]);
+          if (JSON.stringify(_value) === JSON.stringify(this.value)) return;
           this.$emit('input', _value);
         },
         deep: true

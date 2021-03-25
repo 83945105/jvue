@@ -132,12 +132,12 @@ const initArrayForm = function (data, context) {
       let column = options.props.column;
       let _formItem = column.renderData;
       if (!_formItem || !_formItem.tag) return column;
-
       while (_formItem.tag !== 'el-form-item') {
         _formItem = _formItem.children[0];
       }
       _formItem.type = 'array-form-item';   // 更改为 数组表单项
 
+      // 不会初始化到控件，因为 array-form-item 没有初始化子级
       init(_formItem, context);
       return column;
     })(),
@@ -156,12 +156,16 @@ const initObjectForm = function (data, context) {
   merge(options.props, {
     value: VModel,
     children: (data.children || []).map(child => {
+      let defaultValue = child.children[0].children[0].children[0].options.props.value;
       init(child, context);
       let _formItem = child;
       while (_formItem.tag !== 'el-form-item') {
         _formItem = _formItem.children[0];
       }
       _formItem.type = 'object-form-item';   // 更改为 对象表单项
+      // 防止控件被初始化和Model绑定
+      // 虽然 object-form-item 不会初始化子级，但是因为命名为 children 会被 JRender 默认初始化子级
+      _formItem.children[0].children[0].options.props.value = defaultValue;
       return child;
     }),
     $context: {
@@ -187,6 +191,7 @@ const initObjectArrayForm = function (data, context) {
       }
       _formItem.type = 'object-array-form-item';   // 更改为 对象数组表单项
 
+      // 不会初始化到控件，因为 object-array-form-item 没有初始化子级
       init(_formItem, context);
       return column;
     }),

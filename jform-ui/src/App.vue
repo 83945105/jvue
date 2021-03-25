@@ -1,67 +1,8 @@
 <template>
   <div id="app">
     <j-form :data="formData"
-            :xxx="{
-              'class': {
-                  foo: true,
-                  bar: false
-              },
-              style: {
-                  color: 'red',
-                  fontSize: '14px'
-              },
-              attrs: {
-                  id: 'foo'
-              },
-              props: {
-                  myProp: 'bar'
-              },
-              domProps: {
-                  innerHTML: 'baz'
-              },
-              on: {
-                  click: () => {}
-              },
-              nativeOn: {
-                  click: () => {}
-              },
-              directives: [
-                  {
-                      name: 'my-custom-directive',
-                      value: '2',
-                      expression: '1 + 1',
-                      arg: 'foo',
-                      modifiers: {
-                          bar: true
-                      }
-                  }
-              ],
-              scopedSlots: {
-                  default: (h, props) => h('span', props.text)
-              },
-              slot: 'name-of-slot',
-              key: 'myKey',
-              ref: 'myRef',
-              refInFor: true
-            }"
             :form&props&model.sync="model"
-            :name&props&clearable="false"
-            :sub:name&props&clearable="false"
-            @name&input="onInput"
-            @sub:name&input="onInput"
     >
-<!--      <template #name="{model}">-->
-<!--        <el-input-number v-model="model.name"></el-input-number>-->
-<!--      </template>-->
-      <template #name&append>
-        <span>.com</span>
-      </template>
-      <template #sub:name&append>
-        <span>.cn</span>
-      </template>
-      <template #name_item&label>
-        <span>自定义label</span>
-      </template>
     </j-form>
   </div>
 </template>
@@ -79,7 +20,50 @@
         props1: {customProp: 'bar2'},
 
         model: {
-          sub: []
+          "object_form_1616678961156": {
+            "input_1616678965507": "",
+            "textarea_1616678966723": "",
+            "autocomplete_1616678968214": "",
+            "input_number_1616678970145": 0
+          },
+          "object_form_1616678963122": {
+            "radio_group_1616678972687": "",
+            "select_tree_1616678979326_label": "",
+            "select_tree_1616678979326": "",
+            "select_group_1616678977732": "",
+            "checkbox_group_1616678974107": [],
+            "select_1616678975921": ""
+          },
+          "object_form_1616678980863": {
+            "description_1616678982642": "",
+            "upload_1616678984053": ""
+          },
+          "object_form_1616678992502": {
+            "date_time_range_picker_1616679015413": [],
+            "date_range_picker_1616679008675": [],
+            "time_range_picker_1616679012974": "",
+            "month_range_picker_1616679006639": [],
+            "date_time_picker_1616679004866": "",
+            "time_picker_1616679002595": "",
+            "date_picker_1616679000505": "",
+            "week_picker_1616678997861": "",
+            "month_picker_1616678996275": "",
+            "year_picker_1616678994442": ""
+          },
+          "object_form_1616679020561": {
+            "editor_1616679026122": "",
+            "coordinate_picker_1616679027833": {
+              "lng": "",
+              "lat": ""
+            }
+          },
+          "object_form_1616679036153": {
+            "icon_picker_1616679047687": "",
+            "color_picker_1616679045702": "",
+            "switch_1616679039537": false,
+            "rate_1616679040913": 0,
+            "slider_1616679043272": 0
+          }
         }
       }
     },

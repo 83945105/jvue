@@ -489,9 +489,6 @@ export default {
     let {key, tag, options = {}, children, scopedSlotsToChildren = false} = data;
     if (!tag) return;
 
-    // console.log("---JRender----")
-    // console.log({key, tag, options, children, context})
-
     let $parentContext = context.props.parent;              // 父级自定义上下文
     let $context = {data, context, parent: $parentContext, $root: !($parentContext && !$parentContext.$root)}; // 自定义上下文
 

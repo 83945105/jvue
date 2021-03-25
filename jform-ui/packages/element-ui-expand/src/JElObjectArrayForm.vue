@@ -52,7 +52,6 @@
 </template>
 
 <script>
-  import {compare} from "../../../src/utils/util";
   import merge from "../../../src/utils/merge";
   import deepMerge from "../../../src/utils/deep-merge";
   import JElObjectArrayFormColumn from "./JElObjectArrayFormColumn";
@@ -243,7 +242,7 @@
         immediate: true,
         handler(val) {
           if (!val) return;
-          if (compare(val, this.value_)) return;
+          if (JSON.stringify(val) === JSON.stringify(this.value_)) return;
           this.value_ = val;
           this.form_.data = this.value_.map(v => {
             return merge({}, v, {
@@ -262,6 +261,7 @@
             delete row.__buttonVisible__;
             return row;
           });
+          if (JSON.stringify(_value) === JSON.stringify(this.value)) return;
           this.$emit('input', _value);
         },
         deep: true

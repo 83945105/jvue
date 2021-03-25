@@ -202,7 +202,7 @@
         immediate: true,
         handler(val) {
           if (!val) return;
-          if (compare(val, this.form_)) return;
+          if (JSON.stringify(val) === JSON.stringify(this.form_)) return;
           this.form_ = val;
           this.data_ = (this.children || []).map(child => {
             let row = {
@@ -231,6 +231,7 @@
               this.$set(this.form_, name, value);
             }
           });
+          if (JSON.stringify(this.form_) === JSON.stringify(this.value)) return;
           this.$emit('input', this.form_);
         },
         deep: true
