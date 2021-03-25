@@ -50,7 +50,6 @@ function parseBindAttrs(dataKey, dataAttrs, root) {
     ref: null,
     refInFor: null
   };
-  if (!dataKey) return data;
   Object.keys(dataAttrs).forEach(name => {
     let key;
     let type;
@@ -151,7 +150,6 @@ function parseBindListeners(dataKey, dataListeners, root) {
     nativeListeners: {},
     syncListeners: {}
   };
-  if (!dataKey) return data;
   Object.keys(dataListeners).forEach(name => {
     let key;
     let eventName;
@@ -250,7 +248,6 @@ function parseBindScopedSlots(dataKey, dataScopedSlots, root) {
   let data = {
     scopedSlots: {}
   };
-  if (!dataKey) return data;
   if (dataKey === 'slot') return data;
 
   Object.keys(dataScopedSlots).forEach(name => {
