@@ -17,87 +17,6 @@ const VModel = {
   }
 };
 
-const initAutocomplete = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
-const initCheckboxGroup = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
-const initColorPicker = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
-const initCoordinatePicker = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
-const initDatePicker = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
-const initDateRangePicker = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
-const initDateTimePicker = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
-const initDateTimeRangePicker = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
-const initDescription = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
 const initDivider = function (data, context) {
   let {tag, options} = data;
   if (!tag) return data;
@@ -107,19 +26,12 @@ const initDivider = function (data, context) {
   return data;
 };
 
-const initEditor = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
 const initForm = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options, children} = data;
   if (!tag) return data;
-  children.forEach(child => init(child, context));
+  if (children) {
+    children.forEach(child => init(child, context));
+  }
   return data;
 };
 
@@ -205,7 +117,7 @@ const initObjectArrayForm = function (data, context) {
 };
 
 const initFormItem = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options, children} = data;
   if (!tag) return data;
   merge(options.props, {
     rules: {
@@ -307,7 +219,9 @@ const initFormItem = function (data, context) {
       }
     }
   });
-  children.forEach(child => init(child, context));
+  if (children) {
+    children.forEach(child => init(child, context));
+  }
   return data;
 };
 
@@ -629,15 +543,6 @@ const initObjectArrayFormItem = function (data, context) {
   return data;
 };
 
-const initIconPicker = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
 const initInput = function (data, context) {
   let {tag, options} = data;
   if (!tag) return data;
@@ -649,62 +554,21 @@ const initInput = function (data, context) {
   return data;
 };
 
-const initInputNumber = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
 const initLayoutRow = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, children} = data;
   if (!tag) return data;
-  children.forEach(child => init(child, context));
+  if (children) {
+    children.forEach(child => init(child, context));
+  }
   return data;
 };
 
 const initLayoutCol = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, children} = data;
   if (!tag) return data;
-  children.forEach(child => init(child, context));
-  return data;
-};
-
-const initMonthPicker = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
-const initMonthRangePicker = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
-const initRadioGroup = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
-const initRate = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
+  if (children) {
+    children.forEach(child => init(child, context));
+  }
   return data;
 };
 
@@ -726,24 +590,6 @@ const initResetButton = function (data, context) {
   });
   merge(data, {
     children: [options.attrs.text_ || '']
-  });
-  return data;
-};
-
-const initSelect = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
-const initSelectGroup = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
   });
   return data;
 };
@@ -799,40 +645,7 @@ const initSelectTree = function (data, context) {
   return data;
 };
 
-const initSlider = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
 const initSlot = function (data, context) {
-  let {tag, options, children} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    model: ({$context}) => $context.getParent('j-el-form').$props.model
-  });
-  if (children) {
-    children.forEach(child => init(child, context));
-  }
-  return data;
-};
-
-const initFormItemSlot = function (data, context) {
-  let {tag, options, children} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    model: ({$context}) => $context.getParent('j-el-form').$props.model
-  });
-  if (children) {
-    children.forEach(child => init(child, context));
-  }
-  return data;
-};
-
-const initControlSlot = function (data, context) {
   let {tag, options, children} = data;
   if (!tag) return data;
   merge(options.props, {
@@ -899,15 +712,6 @@ const initSubmitButton = function (data, context) {
   return data;
 };
 
-const initSwitch = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
 const initTag = function (data, context) {
   let {tag, options, children} = data;
   if (!tag) return data;
@@ -915,33 +719,6 @@ const initTag = function (data, context) {
   if (children) {
     children.forEach(child => init(child, context));
   }
-  return data;
-};
-
-const initTextarea = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
-const initTimePicker = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
-const initTimeRangePicker = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
   return data;
 };
 
@@ -968,16 +745,7 @@ const initUpload = function (data, context) {
   return data;
 };
 
-const initWeekPicker = function (data, context) {
-  let {tag, options} = data;
-  if (!tag) return data;
-  merge(options.props, {
-    value: VModel
-  });
-  return data;
-};
-
-const initYearPicker = function (data, context) {
+const initControl = function (data, context) {
   let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
@@ -996,31 +764,31 @@ const init = function (data, context) {
     case 'slot':
       return initSlot(data, context);
     case 'form-item-slot':
-      return initFormItemSlot(data, context);
+      return initSlot(data, context);
     case 'control-slot':
-      return initControlSlot(data, context);
+      return initSlot(data, context);
     case 'autocomplete':
-      return initAutocomplete(data, context);
+      return initControl(data, context);
     case 'checkbox-group':
-      return initCheckboxGroup(data, context);
+      return initControl(data, context);
     case 'color-picker':
-      return initColorPicker(data, context);
+      return initControl(data, context);
     case 'coordinate-picker':
-      return initCoordinatePicker(data, context);
+      return initControl(data, context);
     case 'date-picker':
-      return initDatePicker(data, context);
+      return initControl(data, context);
     case 'date-range-picker':
-      return initDateRangePicker(data, context);
+      return initControl(data, context);
     case 'date-time-picker':
-      return initDateTimePicker(data, context);
+      return initControl(data, context);
     case 'date-time-range-picker':
-      return initDateTimeRangePicker(data, context);
+      return initControl(data, context);
     case 'description':
-      return initDescription(data, context);
+      return initControl(data, context);
     case 'divider':
       return initDivider(data, context);
     case 'editor':
-      return initEditor(data, context);
+      return initControl(data, context);
     case 'form':
       return initForm(data, context);
     case 'array-form':
@@ -1038,51 +806,51 @@ const init = function (data, context) {
     case 'object-array-form-item':
       return initObjectArrayFormItem(data, context);
     case 'icon-picker':
-      return initIconPicker(data, context);
+      return initControl(data, context);
     case 'input':
       return initInput(data, context);
     case 'input-number':
-      return initInputNumber(data, context);
+      return initControl(data, context);
     case 'layout-row':
       return initLayoutRow(data, context);
     case 'layout-col':
       return initLayoutCol(data, context);
     case 'month-picker':
-      return initMonthPicker(data, context);
+      return initControl(data, context);
     case 'month-range-picker':
-      return initMonthRangePicker(data, context);
+      return initControl(data, context);
     case 'radio-group':
-      return initRadioGroup(data, context);
+      return initControl(data, context);
     case 'rate':
-      return initRate(data, context);
+      return initControl(data, context);
     case 'reset-button':
       return initResetButton(data, context);
     case 'select':
-      return initSelect(data, context);
+      return initControl(data, context);
     case 'select-group':
-      return initSelectGroup(data, context);
+      return initControl(data, context);
     case 'select-tree':
       return initSelectTree(data, context);
     case 'slider':
-      return initSlider(data, context);
+      return initControl(data, context);
     case 'submit-button':
       return initSubmitButton(data, context);
     case 'switch':
-      return initSwitch(data, context);
+      return initControl(data, context);
     case 'tag':
       return initTag(data, context);
     case 'textarea':
-      return initTextarea(data, context);
+      return initControl(data, context);
     case 'time-picker':
-      return initTimePicker(data, context);
+      return initControl(data, context);
     case 'time-range-picker':
-      return initTimeRangePicker(data, context);
+      return initControl(data, context);
     case 'upload':
       return initUpload(data, context);
     case 'week-picker':
-      return initWeekPicker(data, context);
+      return initControl(data, context);
     case 'year-picker':
-      return initYearPicker(data, context);
+      return initControl(data, context);
     default:
       throw new Error('不支持的类型: ' + type);
   }
