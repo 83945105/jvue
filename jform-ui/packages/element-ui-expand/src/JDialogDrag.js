@@ -14,6 +14,7 @@ function JDialogDragImpl(el, {fullscreen}) {
     const sty = dragDom.currentStyle || window.getComputedStyle(dragDom, null);
 
     dialogHeaderEl.onmousedown = (e) => {
+      e.preventDefault();
       // 鼠标按下，计算当前元素距离可视区的距离
       const disX = e.clientX - dialogHeaderEl.offsetLeft;
       const disY = e.clientY - dialogHeaderEl.offsetTop;

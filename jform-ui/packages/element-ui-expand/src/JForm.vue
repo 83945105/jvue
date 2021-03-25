@@ -1,3 +1,11 @@
+<template>
+  <j-render :data="data_" v-bind="$attrs" v-on="$listeners">
+    <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope">
+      <slot :name="slot" v-bind="scope"/>
+    </template>
+  </j-render>
+</template>
+
 <script>
   import {init} from "./init";
 
@@ -51,24 +59,6 @@
         }
         return forms;
       }, []);
-    },
-
-    render(h) {
-      console.log('=========================')
-      console.log(this.$attrs)
-      console.log(this.$props)
-      console.log(this.$listeners)
-      console.log(this.$scopedSlots)
-      console.log(this.$class)
-      console.log('=========================')
-      return h('j-render', {
-        props: {
-          data: this.data_
-        },
-        attrs: this.$attrs,
-        on: this.$listeners,
-        scopedSlots: this.$scopedSlots
-      });
     }
   }
 </script>

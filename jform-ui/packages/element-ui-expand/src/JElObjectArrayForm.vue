@@ -120,38 +120,55 @@
         return this.size || this.elFormItemSize__ || (this.$ELEMENT || {}).size;
       },
       $context__() {
-        return this.$context || {
+        return this.$context ? Object.keys(this.$context).reduce((context, name) => {
+          let value = this.$context[name];
+          if (name === 'context') {
+            let key = value.data.props.data.key + ":";
+            let keyLen = key.length;
+            context[name] = Object.keys(value).reduce((c, n) => {
+              let v = value[n];
+              if (n === 'data') {
+                c[n] = Object.keys(v).reduce((data, n) => {
+                  if (n === 'attrs') {
+                    data[n] = Object.keys(v[n]).reduce((attrs, attrName) => {
+                      if (attrName.startsWith(key)) {
+                        attrs[attrName.substring(keyLen)] = v[n][attrName];
+                      }
+                      return attrs;
+                    }, {});
+                  } else {
+                    data[n] = v[n];
+                  }
+                  return data;
+                }, {});
+              } else if (n === 'listeners') {
+                c[n] = Object.keys(v).reduce((listeners, n) => {
+                  if (n.startsWith(key)) {
+                    listeners[n.substring(keyLen)] = v[n];
+                  }
+                  return listeners;
+                }, {});
+              } else if (n === 'scopedSlots') {
+                c[n] = Object.keys(v).reduce((scopedSlots, n) => {
+                  if (n.startsWith(key)) {
+                    scopedSlots[n.substring(keyLen)] = v[n];
+                  }
+                  return scopedSlots;
+                }, {});
+              } else {
+                c[n] = v;
+              }
+              return c;
+            }, {});
+          } else {
+            context[name] = value;
+          }
+          return context;
+        }, {}) : {
+          data: null,
           context: this,
-          $model: {
-            prop: 'value',
-            event: 'input'
-          },
-          'class': null,
-          $class: null,
-          style: null,
-          $style: null,
-          attrs: null,
-          $attrs: null,
-          props: null,
-          $props: null,
-          domProps: null,
-          $domProps: null,
-          on: null,
-          $on: null,
-          nativeOn: null,
-          $nativeOn: null,
-          directives: null,
-          $directives: null,
-          scopedSlots: this.$scopedSlots,
-          $scopedSlots: this.$scopedSlots,
-          slot: null,
-          $slot: null,
-          key: null,
-          $key: null,
-          ref: null,
-          $ref: null,
-          refInFor: null,
-          $refInFor: null
+          parent: null,
+          $root: true
         };
       },
       columns__() {

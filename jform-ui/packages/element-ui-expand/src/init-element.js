@@ -18,7 +18,7 @@ const VModel = {
 };
 
 const initAutocomplete = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -27,7 +27,7 @@ const initAutocomplete = function (data, context) {
 };
 
 const initCheckboxGroup = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -36,7 +36,7 @@ const initCheckboxGroup = function (data, context) {
 };
 
 const initColorPicker = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -45,7 +45,7 @@ const initColorPicker = function (data, context) {
 };
 
 const initCoordinatePicker = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -54,7 +54,7 @@ const initCoordinatePicker = function (data, context) {
 };
 
 const initDatePicker = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -63,7 +63,7 @@ const initDatePicker = function (data, context) {
 };
 
 const initDateRangePicker = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -72,7 +72,7 @@ const initDateRangePicker = function (data, context) {
 };
 
 const initDateTimePicker = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -81,7 +81,7 @@ const initDateTimePicker = function (data, context) {
 };
 
 const initDateTimeRangePicker = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -90,7 +90,7 @@ const initDateTimeRangePicker = function (data, context) {
 };
 
 const initDescription = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -108,7 +108,7 @@ const initDivider = function (data, context) {
 };
 
 const initEditor = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -124,7 +124,7 @@ const initForm = function (data, context) {
 };
 
 const initArrayForm = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel,
@@ -132,10 +132,13 @@ const initArrayForm = function (data, context) {
       let column = options.props.column;
       let _formItem = column.renderData;
       if (!_formItem || !_formItem.tag) return column;
+
       while (_formItem.tag !== 'el-form-item') {
         _formItem = _formItem.children[0];
       }
       _formItem.type = 'array-form-item';   // 更改为 数组表单项
+
+      init(_formItem, context);
       return column;
     })(),
     $context: {
@@ -144,22 +147,22 @@ const initArrayForm = function (data, context) {
       }
     }
   });
-  init(options.props.column.renderData, context);
   return data;
 };
 
 const initObjectForm = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel,
-    children: children.map(rd => {
-      let _formItem = rd;
+    children: (data.children || []).map(child => {
+      init(child, context);
+      let _formItem = child;
       while (_formItem.tag !== 'el-form-item') {
         _formItem = _formItem.children[0];
       }
       _formItem.type = 'object-form-item';   // 更改为 对象表单项
-      return rd;
+      return child;
     }),
     $context: {
       $getValue({$context}) {
@@ -167,12 +170,13 @@ const initObjectForm = function (data, context) {
       }
     }
   });
-  children.forEach(child => init(child, context));
+  // 取消渲染默认子级，否则会有获取到错误插槽导致model异常
+  data.children = [];
   return data;
 };
 
 const initObjectArrayForm = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel,
@@ -182,6 +186,8 @@ const initObjectArrayForm = function (data, context) {
         _formItem = _formItem.children[0];
       }
       _formItem.type = 'object-array-form-item';   // 更改为 对象数组表单项
+
+      init(_formItem, context);
       return column;
     }),
     $context: {
@@ -190,7 +196,6 @@ const initObjectArrayForm = function (data, context) {
       }
     }
   });
-  options.props.columns.forEach(column => init(column.renderData, context));
   return data;
 };
 
@@ -302,7 +307,7 @@ const initFormItem = function (data, context) {
 };
 
 const initArrayFormItem = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     rules: {
@@ -408,7 +413,7 @@ const initArrayFormItem = function (data, context) {
 };
 
 const initObjectFormItem = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     rules: {
@@ -514,7 +519,7 @@ const initObjectFormItem = function (data, context) {
 };
 
 const initObjectArrayFormItem = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     rules: {
@@ -620,7 +625,7 @@ const initObjectArrayFormItem = function (data, context) {
 };
 
 const initIconPicker = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -629,16 +634,18 @@ const initIconPicker = function (data, context) {
 };
 
 const initInput = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
   });
+  // 使用子组件模式渲染插槽，解决ElInput插槽不支持Render scopedSlots 问题
+  data.scopedSlotsToChildren = true;
   return data;
 };
 
 const initInputNumber = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -661,7 +668,7 @@ const initLayoutCol = function (data, context) {
 };
 
 const initMonthPicker = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -670,7 +677,7 @@ const initMonthPicker = function (data, context) {
 };
 
 const initMonthRangePicker = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -679,7 +686,7 @@ const initMonthRangePicker = function (data, context) {
 };
 
 const initRadioGroup = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -688,7 +695,7 @@ const initRadioGroup = function (data, context) {
 };
 
 const initRate = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -697,7 +704,7 @@ const initRate = function (data, context) {
 };
 
 const initResetButton = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   if (!options.on) {
     options.on = {};
@@ -719,7 +726,7 @@ const initResetButton = function (data, context) {
 };
 
 const initSelect = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -728,7 +735,7 @@ const initSelect = function (data, context) {
 };
 
 const initSelectGroup = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -737,7 +744,7 @@ const initSelectGroup = function (data, context) {
 };
 
 const initSelectTree = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     data: {
@@ -788,7 +795,7 @@ const initSelectTree = function (data, context) {
 };
 
 const initSlider = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -797,37 +804,43 @@ const initSlider = function (data, context) {
 };
 
 const initSlot = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options, children} = data;
   if (!tag) return data;
   merge(options.props, {
     model: ({$context}) => $context.getParent('j-el-form').$props.model
   });
-  children.forEach(child => init(child, context));
+  if (children) {
+    children.forEach(child => init(child, context));
+  }
   return data;
 };
 
 const initFormItemSlot = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options, children} = data;
   if (!tag) return data;
   merge(options.props, {
     model: ({$context}) => $context.getParent('j-el-form').$props.model
   });
-  children.forEach(child => init(child, context));
+  if (children) {
+    children.forEach(child => init(child, context));
+  }
   return data;
 };
 
 const initControlSlot = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options, children} = data;
   if (!tag) return data;
   merge(options.props, {
     model: ({$context}) => $context.getParent('j-el-form').$props.model
   });
-  children.forEach(child => init(child, context));
+  if (children) {
+    children.forEach(child => init(child, context));
+  }
   return data;
 };
 
 const initSubmitButton = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   if (!options.on) {
     options.on = {};
@@ -882,7 +895,7 @@ const initSubmitButton = function (data, context) {
 };
 
 const initSwitch = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -891,15 +904,17 @@ const initSwitch = function (data, context) {
 };
 
 const initTag = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options, children} = data;
   if (!tag) return data;
   data.tag = options.attrs.tag_;
-  children.forEach(child => init(child, context));
+  if (children) {
+    children.forEach(child => init(child, context));
+  }
   return data;
 };
 
 const initTextarea = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -908,7 +923,7 @@ const initTextarea = function (data, context) {
 };
 
 const initTimePicker = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -917,7 +932,7 @@ const initTimePicker = function (data, context) {
 };
 
 const initTimeRangePicker = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -926,7 +941,7 @@ const initTimeRangePicker = function (data, context) {
 };
 
 const initUpload = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel,
@@ -949,7 +964,7 @@ const initUpload = function (data, context) {
 };
 
 const initWeekPicker = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
@@ -958,7 +973,7 @@ const initWeekPicker = function (data, context) {
 };
 
 const initYearPicker = function (data, context) {
-  let {tag, options, children = []} = data;
+  let {tag, options} = data;
   if (!tag) return data;
   merge(options.props, {
     value: VModel
