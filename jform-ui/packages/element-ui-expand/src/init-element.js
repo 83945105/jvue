@@ -27,7 +27,7 @@ const initDivider = function (data, context) {
 };
 
 const initForm = function (data, context) {
-  let {tag, options, children} = data;
+  let {tag, children} = data;
   if (!tag) return data;
   if (children) {
     children.forEach(child => init(child, context));
@@ -666,8 +666,8 @@ const initSubmitButton = function (data, context) {
   let _click = options.on.click;
   merge(options.on, {
     click: (event, {$context}) => {
-      let {$attrs} = $context;
-      let _submit = $attrs[$attrs.submitProp_];
+      let {$attrs, $props} = $context;
+      let _submit = $props[$attrs.submitProp_];
       if (!_submit) return;
       let _form = $context.getParent('j-el-form');
       let _formVM = _form.context.parent.$refs[_form.$ref];
