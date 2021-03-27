@@ -7,7 +7,12 @@
             :s2:name$item&props&validate="{required: true}"
             :s3:name$item&props&validate="{required: true}"
     >
-      <template #s1></template>
+<!--      <template #s1#value&header>-->
+<!--        <span>自定义value</span>-->
+<!--      </template>-->
+<!--      <template #s1#value&default>-->
+<!--        <span>自定义default</span>-->
+<!--      </template>-->
     </j-form>
   </div>
 </template>

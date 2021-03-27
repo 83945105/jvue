@@ -160,6 +160,18 @@
                 c[n] = Object.keys(v).reduce((scopedSlots, n) => {
                   if (n.startsWith(key)) {
                     scopedSlots[n.substring(keyLen)] = v[n];
+                  } else if (n === 's1#label&header') {
+                    // 标题列 header 插槽
+                    scopedSlots[n] = v[n];
+                  } else if (n === 's1#label&default') {
+                    // 标题列 default 插槽
+                    scopedSlots[n] = v[n];
+                  } else if (n === 's1#value&header') {
+                    // 值列 header 插槽
+                    scopedSlots[n] = v[n];
+                  } else if (n === 's1#value&default') {
+                    // 值列 default 插槽
+                    scopedSlots[n] = v[n];
                   }
                   return scopedSlots;
                 }, {});
@@ -172,12 +184,7 @@
             context[name] = value;
           }
           return context;
-        }, {}) : {
-          data: null,
-          context: this,
-          parent: null,
-          $root: true
-        };
+        }, {}) : this;
       },
       formBind__() {
         return {
@@ -204,9 +211,7 @@
           if (JSON.stringify(val) === JSON.stringify(this.form_)) return;
           this.form_ = val;
           this.data_ = (this.children || []).map(child => {
-            let row = {
-              __child__: child
-            };
+            let row = {};
             let controlItem = child.children[0];
             let label = controlItem.options.props.label;
             let prop = controlItem.options.props.prop;
@@ -221,8 +226,8 @@
         immediate: true,
         handler(val, oldValue) {
           if (!val || !oldValue) return;
-          val.map(row => {
-            let name = row.__child__.children[0].options.props.prop;
+          val.map((row, $index) => {
+            let name = this.children[$index].children[0].options.props.prop;
             let value = row[this.valueColumn__.prop];
             if (name in this.form_) {
               this.form_[name] = value;

@@ -15,8 +15,8 @@ export default {
 
           let scopedSlots = parent.context.scopedSlots;
 
-          let slot = scopedSlots[`${column.property}#header`];
-          return slot ? slot({column, $index}) : h('span', [ctx.props.column.label]);
+          let slot = scopedSlots ? scopedSlots[`${parent.context.props.data.key}#${column.property}&header`] : null;
+          return slot ? slot({column, $index, createElement: h, context: ctx}) : h('span', [ctx.props.column.label]);
         },
         default: ({row, column, $index}) => {
           let parent = ctx.props.parent;
@@ -24,12 +24,12 @@ export default {
           let scopedSlots = parent.context.scopedSlots;
 
           // 表格列插槽
-          let slot = scopedSlots[`${column.property}#default`];
+          let slot = scopedSlots ? scopedSlots[`${parent.context.props.data.key}#${column.property}&default`] : null;
           if (slot) {
-            return slot({row, column, $index});
+            return slot({row, column, $index, createElement: h, context: ctx});
           }
 
-          let child = row.__child__;
+          let child = parent.$props.children[$index];
 
           let required = !!child.children[0].options.attrs.validate_.required;
           let validate = parent.context.data.attrs[child.children[0].key + '&props&validate'];

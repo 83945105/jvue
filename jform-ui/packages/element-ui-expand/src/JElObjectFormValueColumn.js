@@ -15,28 +15,30 @@ export default {
 
           let scopedSlots = parent.context.scopedSlots;
 
-          let slot = scopedSlots[`${column.property}#header`];
-          return slot ? slot({column, $index}) : h('span', [ctx.props.column.label]);
+          let slot = scopedSlots ? scopedSlots[`${parent.context.props.data.key}#${column.property}&header`] : null;
+          return slot ? slot({column, $index, createElement: h, context: ctx}) : h('span', [ctx.props.column.label]);
         },
         default: ({row, column, $index}) => {
           let parent = ctx.props.parent;
 
-          let attrs = parent.context.data.attrs;
-          let listeners = parent.context.listeners;
-          let nativeOn = {};
           let scopedSlots = parent.context.scopedSlots;
 
           // 表格列插槽
-          let slot = scopedSlots[`${column.property}#default`];
+          let slot = scopedSlots ? scopedSlots[`${parent.context.props.data.key}#${column.property}&default`] : null;
           if (slot) {
-            return slot({row, column, $index});
+            return slot({row, column, $index, createElement: h, context: ctx});
           }
 
-          if (!row.__child__) {
+          let attrs = parent.context.data.attrs;
+          let listeners = parent.context.listeners;
+          let nativeOn = {};
+
+          let child = parent.$props.children[$index];
+          if (!child) {
             return h('span', [row[column.property]]);
           }
           // 去除 formItem label
-          let formItemRenderData = row.__child__.children[0];
+          let formItemRenderData = child.children[0];
           if (!formItemRenderData.options.scopedSlots) {
             formItemRenderData.options.scopedSlots = {};
           }
@@ -60,7 +62,7 @@ export default {
           return h('j-render', {
             props: {
               parent: parent,
-              data: row.__child__ || {}
+              data: child || {}
             },
             attrs: attrs,
             on: listeners,
