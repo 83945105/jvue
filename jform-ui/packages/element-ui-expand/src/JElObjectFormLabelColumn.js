@@ -30,8 +30,13 @@ export default {
           }
 
           let child = row.__child__;
-          let required = (child ? !!child.children[0].options.attrs.required_ : false);
-          // TODO 可以扩展更多render属性
+
+          let required = !!child.children[0].options.attrs.validate_.required;
+          let validate = parent.context.data.attrs[child.children[0].key + '&props&validate'];
+          if (validate && validate.required === true) {
+            required = true;
+          }
+
           return h('span', {
             'class': {
               'j-object-form-label': true,

@@ -36,7 +36,6 @@
 </template>
 
 <script>
-  import {compare} from "../../../src/utils/util";
   import JElObjectFormLabelColumn from "./JElObjectFormLabelColumn";
   import JElObjectFormValueColumn from "./JElObjectFormValueColumn";
   import merge from "../../../src/utils/merge";

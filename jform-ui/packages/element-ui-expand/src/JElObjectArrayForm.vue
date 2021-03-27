@@ -183,11 +183,15 @@
           if (_formItemRenderData.tag !== 'el-form-item') {
             throw new Error('The tag must el-form-item');
           }
-          let _label = _formItemRenderData.options.props.label;
+          _column.label = _formItemRenderData.options.props.label;
           let _prop = _formItemRenderData.options.props.prop;
-          let _required = _formItemRenderData.options.attrs.required_;
-          _column.label = _label;
           _column.prop = _prop;
+
+          let _required = !!_formItemRenderData.options.attrs.validate_.required;
+          let validate = this.$context__.context.data.attrs[_formItemRenderData.key + '&props&validate'];
+          if (validate && validate.required === true) {
+            _required = true;
+          }
           _column.required_ = _required;
 
           if (!_formItemRenderData.options.scopedSlots) {
