@@ -270,9 +270,7 @@
         deep: true
       },
       'form_.data': {
-        immediate: true,
-        handler(val, oldValue) {
-          if (!val || !oldValue) return;
+        handler(val) {
           let _value = val.map(v => {
             let row = merge({}, v);
             delete row.__buttonVisible__;

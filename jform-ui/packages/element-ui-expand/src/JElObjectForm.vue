@@ -1,6 +1,6 @@
 <template>
   <el-form ref="form" :model="form_" v-bind="formBind__">
-    <el-table :data="data_"
+    <el-table :data="form_.data"
               v-bind="tableBind__"
               @select="(selection, row) => $emit('select', selection, row)"
               @select-all="(selection) => $emit('select-all', selection)"
@@ -28,6 +28,7 @@
       </j-el-object-form-label-column>
       <j-el-object-form-value-column :column="valueColumn__"
                                      :parent="$context__"
+                                     :children="children__"
                                      v-if="showValueColumn"
       >
       </j-el-object-form-value-column>
@@ -42,6 +43,7 @@
   import JElObjectFormLabelColumn from "./JElObjectFormLabelColumn";
   import JElObjectFormValueColumn from "./JElObjectFormValueColumn";
   import merge from "../../../src/utils/merge";
+  import deepMerge from "../../../src/utils/deep-merge";
 
   export default {
     name: "j-el-object-form",
@@ -94,8 +96,10 @@
     },
     data() {
       return {
-        form_: null,
-        data_: []
+        value_: null,
+        form_: {
+          data: []
+        }
       };
     },
     inject: {
@@ -128,6 +132,17 @@
           prop: this.valueColumn.prop || 'value',
           width: this.valueColumn.width > 0 ? `${this.valueColumn.width}px` : null,
           minWidth: this.valueColumn.minWidth > 0 ? `${this.valueColumn.minWidth}px` : null
+        });
+      },
+      children__() {
+        return (this.children || []).map((child, $index) => {
+          child = deepMerge({}, child);
+          child.children[0].options.props.prop = {
+            $getValue: () => {
+              return `data.${$index}.value`;
+            }
+          };
+          return child;
         });
       },
       $context__() {
@@ -203,35 +218,27 @@
         immediate: true,
         handler(val) {
           if (!val) return;
-          if (JSON.stringify(val) === JSON.stringify(this.form_)) return;
-          this.form_ = val;
-          this.data_ = (this.children || []).map(child => {
+          if (JSON.stringify(val) === JSON.stringify(this.value_)) return;
+          this.value_ = val;
+          this.form_.data = (this.children || []).map(child => {
             let row = {};
             let controlItem = child.children[0];
-            let label = controlItem.options.props.label;
-            let prop = controlItem.options.props.prop;
-            row[this.labelColumn__.prop] = label;
-            row[this.valueColumn__.prop] = this.form_[prop] || this.initValue(child);
+            row[this.labelColumn__.prop] = controlItem.options.props.label;
+            row[this.valueColumn__.prop] = val[controlItem.options.props.prop] || this.initValue(child);
             return row;
           });
         },
         deep: true
       },
-      data_: {
-        immediate: true,
-        handler(val, oldValue) {
-          if (!val || !oldValue) return;
-          val.map((row, $index) => {
+      'form_.data': {
+        handler(val) {
+          let _value = val.reduce((form, row, $index) => {
             let name = this.children[$index].children[0].options.props.prop;
-            let value = row[this.valueColumn__.prop];
-            if (name in this.form_) {
-              this.form_[name] = value;
-            } else {
-              this.$set(this.form_, name, value);
-            }
-          });
-          if (JSON.stringify(this.form_) === JSON.stringify(this.value)) return;
-          this.$emit('input', this.form_);
+            form[name] = row[this.valueColumn__.prop];
+            return form;
+          }, {});
+          if (JSON.stringify(_value) === JSON.stringify(this.value)) return;
+          this.$emit('input', _value);
         },
         deep: true
       }

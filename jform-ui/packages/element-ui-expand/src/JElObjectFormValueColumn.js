@@ -3,7 +3,8 @@ export default {
   functional: true,
   props: {
     column: Object,
-    parent: Object
+    parent: Object,
+    children: Array
   },
   render(h, ctx) {
     return h('el-table-column', {
@@ -33,7 +34,7 @@ export default {
           let listeners = parent.context.listeners;
           let nativeOn = {};
 
-          let child = parent.$props.children[$index];
+          let child = ctx.props.children[$index];
           if (!child) {
             return h('span', [row[column.property]]);
           }
@@ -49,6 +50,7 @@ export default {
             formItemRenderData.options.style = {};
           }
           formItemRenderData.options.style.marginBottom = '15px';
+
           let control = formItemRenderData.children[0].children[0];
           control.options.props.value = row[column.property];
 

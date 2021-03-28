@@ -270,9 +270,7 @@
         deep: true
       },
       'form_.data': {
-        immediate: true,
-        handler(val, oldValue) {
-          if (!val || !oldValue) return;
+        handler(val) {
           let _value = val.map(v => v[this.column__.prop]);
           if (JSON.stringify(_value) === JSON.stringify(this.value)) return;
           this.$emit('input', _value);
