@@ -31,6 +31,9 @@
                                      v-if="showValueColumn"
       >
       </j-el-object-form-value-column>
+      <template #append>
+        <slot name="append"></slot>
+      </template>
     </el-table>
   </el-form>
 </template>
@@ -131,7 +134,9 @@
         return this.$context ? Object.keys(this.$context).reduce((context, name) => {
           let value = this.$context[name];
           if (name === 'context') {
-            let key = value.data.props.data.key + ":";
+            let key = value.data.props.data.key;
+            let skipNames = [`${key}#label&header`, `${key}#label&default`, `${key}#value&header`, `${key}#value&default`];
+            key = key + ":";
             let keyLen = key.length;
             context[name] = Object.keys(value).reduce((c, n) => {
               let v = value[n];
@@ -160,17 +165,7 @@
                 c[n] = Object.keys(v).reduce((scopedSlots, n) => {
                   if (n.startsWith(key)) {
                     scopedSlots[n.substring(keyLen)] = v[n];
-                  } else if (n === 's1#label&header') {
-                    // 标题列 header 插槽
-                    scopedSlots[n] = v[n];
-                  } else if (n === 's1#label&default') {
-                    // 标题列 default 插槽
-                    scopedSlots[n] = v[n];
-                  } else if (n === 's1#value&header') {
-                    // 值列 header 插槽
-                    scopedSlots[n] = v[n];
-                  } else if (n === 's1#value&default') {
-                    // 值列 default 插槽
+                  } else if (skipNames.includes(n)) {
                     scopedSlots[n] = v[n];
                   }
                   return scopedSlots;

@@ -21,24 +21,32 @@
               @expand-change="(row, expanded) => $emit('expand-change', row, expanded)"
               class="j-object-array-form"
     >
-      <el-table-column header-align="center" align="center" width="50px" fixed="left">
-        <template #header="{column, $index}">
-          <el-button v-if="appendEnabled"
-                     :disabled="appendButtonDisabled__" type="primary" icon="el-icon-plus"
-                     circle size="mini"
-                     @click="append"
-          ></el-button>
-          <span v-else>#</span>
-        </template>
-        <template #default="{row, column, $index}">
-          <el-button v-if="removeEnabled && row.__buttonVisible__"
-                     :disabled="removeButtonDisabled_" type="danger" icon="el-icon-minus"
-                     circle size="mini"
-                     @click="remove({$index})"
-          ></el-button>
-          <span v-else>{{$index + 1}}</span>
-        </template>
-      </el-table-column>
+      <template #empty>
+        <slot name="empty" v-bind="{append, data: form_.data}"></slot>
+      </template>
+      <template #append>
+        <slot name="append" v-bind="{append, data: form_.data}"></slot>
+      </template>
+      <slot name="index">
+        <el-table-column header-align="center" align="center" width="50px" fixed="left">
+          <template #header="{column, $index}">
+            <el-button v-if="appendEnabled"
+                       :disabled="appendButtonDisabled__" type="primary" icon="el-icon-plus"
+                       circle plain size="mini"
+                       @click="append"
+            ></el-button>
+            <span v-else>#</span>
+          </template>
+          <template #default="{row, column, $index}">
+            <el-button v-if="removeEnabled && row.__buttonVisible__"
+                       :disabled="removeButtonDisabled_" type="danger" icon="el-icon-minus"
+                       circle plain size="mini"
+                       @click="remove({$index})"
+            ></el-button>
+            <span v-else>{{$index + 1}}</span>
+          </template>
+        </el-table-column>
+      </slot>
       <template v-for="(column, $index) in columns__">
         <j-el-object-array-form-column :key="column.key"
                                        :column="column"
@@ -122,7 +130,10 @@
         return this.$context ? Object.keys(this.$context).reduce((context, name) => {
           let value = this.$context[name];
           if (name === 'context') {
-            let key = value.data.props.data.key + ":";
+            let key = value.data.props.data.key;
+            let names = this.columns.map(column => column.renderData.children[0].children[0].children[0].key);
+            let skipNames = [...names.map(name => `${key}#${name}&header`), ...names.map(name => `${key}#${name}&default`)];
+            key = key + ":";
             let keyLen = key.length;
             context[name] = Object.keys(value).reduce((c, n) => {
               let v = value[n];
@@ -151,6 +162,8 @@
                 c[n] = Object.keys(v).reduce((scopedSlots, n) => {
                   if (n.startsWith(key)) {
                     scopedSlots[n.substring(keyLen)] = v[n];
+                  } else if (skipNames.includes(n)) {
+                    scopedSlots[n] = v[n];
                   }
                   return scopedSlots;
                 }, {});

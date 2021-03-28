@@ -52,8 +52,9 @@ export default {
 
           let scopedSlots = parent.context.scopedSlots;
 
-          let slot = scopedSlots[`${column.property}#header`];
-          return slot ? slot({column, $index}) : h('span', {
+          let slot = scopedSlots ? scopedSlots[`${parent.context.props.data.key}#${column.property}&header`] : null;
+
+          return slot ? slot({column, $index, createElement: h, context: ctx}) : h('span', {
             'class': {
               'j-object-array-form-header': true,
               'required': !!ctx.props.column.required_
@@ -63,19 +64,20 @@ export default {
         default: ({row, column, $index}) => {
           let parent = ctx.props.parent;
 
+          let scopedSlots = parent.context.scopedSlots;
+
+          // 表格列插槽
+          let slot = scopedSlots ? scopedSlots[`${parent.context.props.data.key}#${column.property}&default`] : null;
+          if (slot) {
+            return slot({row, column, $index, createElement: h, context: ctx});
+          }
+
           let attrs = parent.context.data.attrs;
           let listeners = Object.keys(parent.context.listeners).reduce((listeners, name) => {
             listeners[name] = parent.context.listeners[name];
             return listeners;
           }, {});
           let nativeOn = {};
-          let scopedSlots = parent.context.scopedSlots;
-
-          // 表格列插槽
-          let slot = scopedSlots[`${column.property}#default`];
-          if (slot) {
-            return slot({row, column, $index});
-          }
 
           return h('j-render', {
             props: {

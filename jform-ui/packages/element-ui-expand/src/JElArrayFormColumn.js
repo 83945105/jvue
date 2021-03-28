@@ -49,19 +49,20 @@ export default {
         default: ({row, column, $index}) => {
           let parent = ctx.props.parent;
 
+          let scopedSlots = parent.context.scopedSlots;
+
+          // 表格列插槽
+          let slot = scopedSlots ? scopedSlots[`${parent.context.props.data.key}#value&default`] : null;
+          if (slot) {
+            return slot({row, column, $index, createElement: h, context: ctx});
+          }
+
           let attrs = parent.context.data.attrs;
           let listeners = Object.keys(parent.context.listeners).reduce((listeners, name) => {
             listeners[name] = parent.context.listeners[name];
             return listeners;
           }, {});
           let nativeOn = {};
-          let scopedSlots = parent.context.scopedSlots;
-
-          // 表格列插槽
-          let slot = scopedSlots[`${column.property}#default`];
-          if (slot) {
-            return slot({row, column, $index});
-          }
 
           return h('j-render', {
             props: {

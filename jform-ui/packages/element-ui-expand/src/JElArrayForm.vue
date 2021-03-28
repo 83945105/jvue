@@ -22,33 +22,36 @@
               class="j-array-form"
     >
       <template #empty>
-        <el-button v-if="appendEnabled"
-                   :disabled="appendButtonDisabled__" type="primary" icon="el-icon-plus"
-                   circle size="mini"
-                   @click="append"
-        ></el-button>
-        <span v-else>#</span>
-      </template>
-      <template #append>
-        <div v-if="appendEnabled && form_.data.length > 0" style="text-align: center">
-          <el-button :disabled="appendButtonDisabled__" type="primary" icon="el-icon-plus"
-                     circle size="mini"
+        <slot name="empty" v-bind="{append, data: form_.data}">
+          <el-button v-if="appendEnabled"
+                     :disabled="appendButtonDisabled__" type="primary" icon="el-icon-plus"
+                     circle plain size="mini"
                      @click="append"
           ></el-button>
-        </div>
+          <span v-else>#</span>
+        </slot>
       </template>
-      <el-table-column header-align="center" align="center" width="50px" fixed="left">
-        <template #default="{row, column, $index}">
-          <el-button v-if="removeEnabled && row.__buttonVisible__"
-                     :disabled="removeButtonDisabled_" type="danger" icon="el-icon-minus"
-                     circle size="mini"
-                     @click="remove({$index})"
-          ></el-button>
-          <span v-else class="j-array-form-index" :class="{
+      <template #append>
+        <slot name="append" v-bind="{append, data: form_.data}">
+          <div v-if="appendEnabled && form_.data.length > 0 && !appendButtonDisabled__" style="text-align: center">
+            <i class="el-icon-plus" style="cursor: pointer;" @click="append"/>
+          </div>
+        </slot>
+      </template>
+      <slot name="index">
+        <el-table-column header-align="center" align="center" width="50px" fixed="left">
+          <template #default="{row, column, $index}">
+            <el-button v-if="removeEnabled && row.__buttonVisible__"
+                       :disabled="removeButtonDisabled_" type="danger" icon="el-icon-minus"
+                       circle plain size="mini"
+                       @click="remove({$index})"
+            ></el-button>
+            <span v-else class="j-array-form-index" :class="{
                         required: !!column__.required_
                     }">{{$index + 1}}</span>
-        </template>
-      </el-table-column>
+          </template>
+        </el-table-column>
+      </slot>
       <j-el-array-form-column :key="column__.key"
                               :column="column__"
                               :parent="$context__"
@@ -126,7 +129,9 @@
         return this.$context ? Object.keys(this.$context).reduce((context, name) => {
           let value = this.$context[name];
           if (name === 'context') {
-            let key = value.data.props.data.key + ":";
+            let key = value.data.props.data.key;
+            let skipNames = [`${key}#value&default`];
+            key = key + ":";
             let keyLen = key.length;
             context[name] = Object.keys(value).reduce((c, n) => {
               let v = value[n];
@@ -155,6 +160,9 @@
                 c[n] = Object.keys(v).reduce((scopedSlots, n) => {
                   if (n.startsWith(key)) {
                     scopedSlots[n.substring(keyLen)] = v[n];
+                  } else if (skipNames.includes(n)) {
+                    // 值列 default 插槽
+                    scopedSlots[n] = v[n];
                   }
                   return scopedSlots;
                 }, {});
