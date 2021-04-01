@@ -171,8 +171,8 @@
           this.computedMin = this.getComputedThresholdValue('min');
           this.computedMax = this.getComputedThresholdValue('max');
           let value = this.valueIsPx ? this.px2percent(this.currentValue, this.$refs.outerWrapper[this.offsetSize]) : this.currentValue;
-          let anotherValue = this.getAnotherOffset(value);
-          if (parseFloat(value) <= parseFloat(this.computedMin)) {
+          let anotherValue = this.getAnotherOffset(this.currentValue);
+          if (parseFloat(this.currentValue) <= parseFloat(this.computedMin)) {
             value = this.getMax(value, this.computedMin);
           }
           if (parseFloat(anotherValue) <= parseFloat(this.computedMax)) {
