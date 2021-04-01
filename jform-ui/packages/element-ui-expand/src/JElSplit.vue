@@ -93,6 +93,32 @@
       },
       offsetSize() {
         return this.isHorizontal ? 'offsetWidth' : 'offsetHeight';
+      },
+      slotArgs() {
+        let offsetWidth = this.$refs.outerWrapper.offsetWidth;
+        let offsetHeight = this.$refs.outerWrapper.offsetHeight;
+        return this.isHorizontal ? {
+          width: this.valueIsPx ? parseFloat(this.currentValue) : this.currentValue * offsetWidth,
+          height: offsetHeight,
+          offsetWidth, offsetHeight
+        } : {
+          width: offsetWidth,
+          height: this.valueIsPx ? parseFloat(this.currentValue) : this.currentValue * offsetWidth,
+          offsetWidth, offsetHeight
+        };
+      },
+      anotherSlotArgs() {
+        return this.isHorizontal ? {
+          width: this.slotArgs.offsetWidth - this.slotArgs.width,
+          height: this.slotArgs.height,
+          offsetWidth: this.slotArgs.offsetWidth,
+          offsetHeight: this.slotArgs.offsetHeight
+        } : {
+          width: this.slotArgs.width,
+          height: this.slotArgs.offsetHeight - this.slotArgs.height,
+          offsetWidth: this.slotArgs.offsetWidth,
+          offsetHeight: this.slotArgs.offsetHeight
+        };
       }
     },
 
@@ -198,8 +224,8 @@
     render(h) {
       let splitContent;
       if (this.mode === 'horizontal') {
-        let leftSlot = this.$scopedSlots.left && this.$scopedSlots.left();
-        let rightSlot = this.$scopedSlots.right && this.$scopedSlots.right();
+        let leftSlot = this.$refs.outerWrapper && this.$scopedSlots.left && this.$scopedSlots.left(this.slotArgs);
+        let rightSlot = this.$refs.outerWrapper && this.$scopedSlots.right && this.$scopedSlots.right(this.anotherSlotArgs);
         splitContent = [
           h('div', {
             class: ['split-left'],
@@ -231,8 +257,8 @@
           }, rightSlot)
         ];
       } else if (this.mode === 'vertical') {
-        let topSlot = this.$scopedSlots.top && this.$scopedSlots.top();
-        let bottomSlot = this.$scopedSlots.bottom && this.$scopedSlots.bottom();
+        let topSlot = this.$scopedSlots.top && this.$scopedSlots.top(this.slotArgs);
+        let bottomSlot = this.$scopedSlots.bottom && this.$scopedSlots.bottom(this.anotherSlotArgs);
         splitContent = [
           h('div', {
             class: ['split-top'],
