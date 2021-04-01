@@ -1,13 +1,18 @@
 <template>
   <div id="app">
-    <j-form :data="formData"
-            :form&props&model="model"
-            :name$item&props&validate="{required: false}"
-            :s1:name$item&props&validate="{required: true}"
-            :s2:name$item&props&validate="{required: true}"
-            :s3:name$item&props&validate="{required: true}"
-    >
-    </j-form>
+<!--    <j-form :data="formData"-->
+<!--            :form&props&model="model"-->
+<!--            :name$item&props&validate="{required: false}"-->
+<!--            :s1:name$item&props&validate="{required: true}"-->
+<!--            :s2:name$item&props&validate="{required: true}"-->
+<!--            :s3:name$item&props&validate="{required: true}"-->
+<!--    >-->
+<!--    </j-form>-->
+    <j-el-split style="height: 500px">
+      <template #left>
+        <div style="width: 100%;height: 500px;"></div>
+      </template>
+    </j-el-split>
   </div>
 </template>
 

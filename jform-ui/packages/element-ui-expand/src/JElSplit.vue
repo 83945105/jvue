@@ -75,7 +75,9 @@
         isMoving: false,
         computedMin: 0,
         computedMax: 0,
-        currentValue: 0.5
+        currentValue: 0.5,
+        verticalImgBase64: 'data:image/jpg;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAASAQMAAABCRT2GAAAABlBMVEUAAABmZmZ+SwYRAAAAAXRSTlMAQObYZgAAAA9JREFUCNdjOAOEQICPBgCPlAf5BmzbZQAAAABJRU5ErkJggg==',
+        horizontalImgBase64: 'data:image/jpg;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAGAQMAAAD0R1yZAAAABlBMVEUAAABmZmZ+SwYRAAAAAXRSTlMAQObYZgAAABFJREFUCNdjOHPmABhDAYwPAHDICWEre84CAAAAAElFTkSuQmCC'
       };
     },
 
@@ -213,7 +215,14 @@
             on: this.draggable ? {
               mousedown: this.handleMousedown
             } : null
-          }, this.draggable ? this.$scopedSlots.trigger ? this.$scopedSlots.trigger() : [h('div', {class: ['split-line-vertical-bar']})] : []),
+          }, this.draggable ? this.$scopedSlots.trigger ? this.$scopedSlots.trigger() : [
+            h('div', {
+              class: ['split-line-vertical-bar'],
+              style: {
+                backgroundImage: `url(${this.verticalImgBase64})`
+              }
+            })
+          ] : []),
           h('div', {
             class: ['split-right'],
             style: {
@@ -239,7 +248,14 @@
             on: this.draggable ? {
               mousedown: this.handleMousedown
             } : null
-          }, this.draggable ? this.$scopedSlots.trigger ? this.$scopedSlots.trigger() : [h('div', {class: ['split-line-horizontal-bar']})] : []),
+          }, this.draggable ? this.$scopedSlots.trigger ? this.$scopedSlots.trigger() : [
+            h('div', {
+              class: ['split-line-horizontal-bar'],
+              style: {
+                backgroundImage: `url(${this.horizontalImgBase64})`
+              }
+            })
+          ] : []),
           h('div', {
             class: ['split-bottom'],
             style: {
@@ -325,7 +341,6 @@
     height: 18px;
     cursor: ew-resize;
     z-index: 9;
-    background-image: url('../../../../assets/img/split-line-vertical.png');
   }
 
   .split-wrapper .split-line-horizontal {
@@ -349,6 +364,5 @@
     height: 6px;
     cursor: ns-resize;
     z-index: 9;
-    background-image: url('../../../../assets/img/split-line-horizontal.png');
   }
 </style>
