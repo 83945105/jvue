@@ -257,8 +257,8 @@
           }, rightSlot)
         ];
       } else if (this.mode === 'vertical') {
-        let topSlot = this.$scopedSlots.top && this.$scopedSlots.top(this.slotArgs);
-        let bottomSlot = this.$scopedSlots.bottom && this.$scopedSlots.bottom(this.anotherSlotArgs);
+        let topSlot = this.$refs.outerWrapper && this.$scopedSlots.top && this.$scopedSlots.top(this.slotArgs);
+        let bottomSlot = this.$refs.outerWrapper && this.$scopedSlots.bottom && this.$scopedSlots.bottom(this.anotherSlotArgs);
         splitContent = [
           h('div', {
             class: ['split-top'],
