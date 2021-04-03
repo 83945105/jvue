@@ -1,18 +1,6 @@
 <template>
   <div id="app">
-<!--    <j-form :data="formData"-->
-<!--            :form&props&model="model"-->
-<!--            :name$item&props&validate="{required: false}"-->
-<!--            :s1:name$item&props&validate="{required: true}"-->
-<!--            :s2:name$item&props&validate="{required: true}"-->
-<!--            :s3:name$item&props&validate="{required: true}"-->
-<!--    >-->
-<!--    </j-form>-->
-    <j-el-split style="height: 500px">
-      <template #left>
-        <div style="width: 100%;height: 500px;"></div>
-      </template>
-    </j-el-split>
+    <j-el-select v-model="value" v-bind="bind" :data="data"></j-el-select>
   </div>
 </template>
 
@@ -24,29 +12,73 @@
     data() {
       return {
         formData: FormData,
-        model: {
-          name: '',
-          s1: {
-            name: '1',
-            sex: '2'
-          },
-          s2: ['1'],
-          s3: [{name: '1', sex: '2'}]
-        }
+        value: '',
+        bind: {
+          allowCreate: false,
+          autocomplete: "off",
+          automaticDropdown: false,
+          clearable: false,
+          collapseTags: false,
+          data: [],
+          dataMethod_: null,
+          dataProp: {},
+          defaultFirstOption: false,
+          disabled: false,
+          filterMethod_: null,
+          filterable: false,
+          loading: false,
+          loadingText: "加载中",
+          multiple: false,
+          multipleLimit: 0,
+          noDataText: "无数据",
+          noMatchText: "无匹配数据",
+          placeholder: "请选择",
+          popperAppendToBody: true,
+          remote: false,
+          remoteMethod_: null,
+          reserveKeyword: false,
+          size: "small",
+          valueKey: "value",
+        },
+        data: [
+          {
+            label: '1',
+            value: '1'
+          }
+        ]
       }
-    },
-    methods: {
-      onSubmit(value) {
-        console.log(value);
-      }
-    },
-
-    watch: {},
-
-    updated() {
     },
 
     created() {
+      setTimeout(() => {
+        this.bind = {
+          allowCreate: false,
+          autocomplete: "off",
+          automaticDropdown: false,
+          clearable: false,
+          collapseTags: false,
+          data: [],
+          dataMethod_: null,
+          dataProp: {},
+          defaultFirstOption: false,
+          disabled: false,
+          filterMethod_: null,
+          filterable: false,
+          loading: false,
+          loadingText: "加载中",
+          multiple: true,
+          multipleLimit: 0,
+          noDataText: "无数据",
+          noMatchText: "无匹配数据",
+          placeholder: "请选择",
+          popperAppendToBody: true,
+          remote: false,
+          remoteMethod_: null,
+          reserveKeyword: false,
+          size: "small",
+          valueKey: "value",
+        };
+      }, 1000);
     }
   }
 </script>
