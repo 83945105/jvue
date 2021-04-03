@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <j-el-select v-model="value" v-bind="bind" :data="data"></j-el-select>
+    <j-el-select-group v-model="value" v-bind="bind" :data="data"></j-el-select-group>
   </div>
 </template>
 
@@ -42,8 +42,13 @@
         },
         data: [
           {
-            label: '1',
-            value: '1'
+            label: '组1',
+            data: [
+              {
+                label: '1',
+                value: '1'
+              }
+            ]
           }
         ]
       }
@@ -78,6 +83,7 @@
           size: "small",
           valueKey: "value",
         };
+        this.value = 1;
       }, 1000);
     }
   }
