@@ -105,7 +105,7 @@
 
     data() {
       return {
-        value_: ''
+        value_: this.value
       };
     },
 
@@ -166,12 +166,8 @@
     },
 
     watch: {
-      value: {
-        immediate: true,
-        handler(val) {
-          if (!val) return;
-          this.value_ = val;
-        }
+      value(val) {
+        this.value_ = val;
       },
       value_(val) {
         this.$emit('input', val);

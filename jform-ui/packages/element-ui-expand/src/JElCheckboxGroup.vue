@@ -68,7 +68,7 @@
 
     data() {
       return {
-        value_: []
+        value_: this.value
       };
     },
 
@@ -112,17 +112,11 @@
     },
 
     watch: {
-      value: {
-        immediate: true,
-        handler(val) {
-          this.value_ = val;
-        }
+      value(val) {
+        this.value_ = val;
       },
-      value_: {
-        immediate: true,
-        handler(val) {
-          this.$emit('input', val);
-        }
+      value_(val) {
+        this.$emit('input', val);
       }
     }
   }
