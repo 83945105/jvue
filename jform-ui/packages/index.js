@@ -1,9 +1,7 @@
-import Array from "./array/index.js";
 import Render from "./render/index.js";
 import ElementUIExpand from "./element-ui-expand/index.js";
 
 const components = [
-  Array,
   Render,
   ElementUIExpand
 ];
