@@ -29,7 +29,6 @@
 </template>
 
 <script>
-
   import WindowResize from '../../../src/mixins/window-resize';
 
   export default {

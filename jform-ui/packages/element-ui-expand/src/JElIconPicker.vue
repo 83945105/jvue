@@ -503,7 +503,7 @@
         this.value_ = val;
       },
       computedPopoverWidth() {
-        let width = this.$refs.reference.$el.offsetWidth;
+        let width = this.$refs.reference.$el.offsetWidth - 24;
         width = width - width % 46;
         if (width < 46 * 4) {
           width = 46 * 4;

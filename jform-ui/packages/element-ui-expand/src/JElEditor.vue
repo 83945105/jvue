@@ -1,7 +1,5 @@
 <script>
-
   import merge from "../../../src/utils/merge";
-  import {compare} from "../../../src/utils/util";
 
   export default {
     name: "j-el-editor",
@@ -45,10 +43,10 @@
         let init = merge({}, this.init_);
         init.auto_focus = !!init.auto_focus;
         init.branding = !!init.branding;
-        init.skin_url = init.skin_url || this.$JVue.editor.skin_url;
-        init.language_url = init.language_url || this.$JVue.editor.language_url;
-        init.language = init.language || this.$JVue.editor.language;
-        init.content_css = init.content_css || this.$JVue.editor.content_css;
+        init.skin_url = init.skin_url || this.$JForm.editor.skin_url;
+        init.language_url = init.language_url || this.$JForm.editor.language_url;
+        init.language = init.language || this.$JForm.editor.language;
+        init.content_css = init.content_css || this.$JForm.editor.content_css;
         return init;
       }
     },
@@ -68,7 +66,7 @@
       init: {
         immediate: true,
         handler(val) {
-          if (compare(val, this.init_)) return;
+          if (JSON.stringify(val) === JSON.stringify(this.init_)) return;
           this.init_ = val;
         }
       },
