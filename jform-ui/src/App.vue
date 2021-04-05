@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <j-el-icon-picker></j-el-icon-picker>
+    <j-el-icon-picker :popover-height="100"></j-el-icon-picker>
   </div>
 </template>
 

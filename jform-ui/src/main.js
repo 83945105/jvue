@@ -22,24 +22,21 @@ Vue.component('tinymce-editor', Editor);
 import 'tinymce/themes/silver/theme';
 import 'tinymce/icons/default';
 
-import JVue from "../packages";
+import JForm from "../packages";
 
-Vue.use(JVue, {
+Vue.use(JForm, {
   editor: {
     skin_url: '/src/assets/tinymce/skins/ui/oxide',
     language_url: '/src/assets/tinymce/langs/zh_CN.js',
     content_css: '/src/assets/tinymce/skins/content/default/content.css'
   },
-  'icon-picker': {
-    copySuccess: () => {
-      alert('拷贝成功');
-    },
-    copyError: () => {
-      alert('拷贝失败');
-    },
-    'element-ui': {
-      copy: true
-    }
+  iconPicker: {
+    icons: [
+      {
+        label: 'Iconfont',
+        data: ['el-icon-delete']
+      }
+    ]
   }
 });
 

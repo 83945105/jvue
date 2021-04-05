@@ -1,22 +1,36 @@
 <template>
-  <div class="inner i-icon-library">
+  <div class="j-el-icon-picker">
     <div class="search-bar">
-      <el-popover placement="bottom-start"
-                  :width="500">
-        <el-tabs value="ElementUI" stretch>
-          <el-tab-pane label="ElementUI" name="ElementUI" style="height: 500px">
-            <el-scrollbar class="scroll-bar" style="height: 100%">
-              <j-el-icon-picker-pane :value="elIcons__"/>
-            </el-scrollbar>
-          </el-tab-pane>
+      <el-popover placement="bottom-start" :width="popoverWidth_">
+        <slot v-if="filterable" name="filter">
+          <el-input v-model="query_" :size="size__" placeholder="请输入搜索内容" clearable prefix-icon="el-icon-search"/>
+        </slot>
+        <el-tabs :value="active__" stretch>
+          <template v-for="(icon, $index) in icons__">
+            <el-tab-pane :label="icon.label" :name="icon.label" :style="{height: popoverHeight__ + 'px'}">
+              <el-scrollbar class="scroll-bar">
+                <j-el-icon-picker-pane v-model="value_" :data="icon.data" :query="query_"/>
+              </el-scrollbar>
+            </el-tab-pane>
+          </template>
         </el-tabs>
         <template slot="reference">
-          <el-input placeholder="请输入" :style="{width:`${500}px`}" @click="visible=!visible"
-                    clearable>
-            <!--            <el-button slot="prepend">-->
-            <!--              <i v-if="chooseIcon" :class="`${chooseIcon}`"></i>-->
-            <!--              <i v-else class="el-icon-edit"></i>-->
-            <!--            </el-button>-->
+          <el-input v-model="value_" ref="reference" v-bind="bind__"
+                    @blur="onBlur" @focus="onFocus" @change="onChange" @input="onInput" @clear="onClear">
+            <template #prefix>
+              <slot name="prefix"/>
+            </template>
+            <template #suffix>
+              <slot name="suffix"/>
+            </template>
+            <template #prepend>
+              <slot name="prepend">
+                <i :class="value_"/>
+              </slot>
+            </template>
+            <template #append>
+              <slot name="append"/>
+            </template>
           </el-input>
         </template>
       </el-popover>
@@ -32,27 +46,39 @@
         name: "j-el-icon-picker-pane",
         functional: true,
         props: {
-          value: {
+          value: String,
+          data: {
             type: Array,
             default() {
               return [];
             }
-          }
+          },
+          query: String
         },
         render(h, ctx) {
           return h('ul', {
             'class': 'icon-list-mini'
-          }, ctx.props.value.map(icon => h('li', {
-            key: icon
-          }, [
-            h('div', {
-              'class': 'icon-one'
+          }, ctx.props.data.filter(icon => !ctx.props.query || icon.indexOf(ctx.props.query) !== -1)
+            .map(icon => h('li', {
+              key: icon,
+              'class': {'active': ctx.props.value === icon},
+              on: {
+                click: () => {
+                  ctx.listeners.input(icon);
+                }
+              }
             }, [
-              h('i', {
-                'class': [icon]
-              })
-            ])
-          ])));
+              h('div', {
+                'class': 'icon-one'
+              }, [
+                h('i', {
+                  'class': [icon],
+                  attrs: {
+                    title: icon
+                  }
+                })
+              ])
+            ])));
         }
       }
     },
@@ -90,13 +116,24 @@
       validateEvent: {
         type: Boolean,
         default: true
+      },
+
+      popoverHeight: Number,// 弹层高度，不设置默认为宽度 1/3
+      active: String,       // 激活的选项卡，不设置默认为第一个
+      initDefault: Boolean, // 初始化默认图标
+      icons: Array,         // 图标
+      filterable: {         // 是否可搜索
+        type: Boolean,
+        default: true
       }
     },
 
     data() {
       return {
         value_: '',
-        popoverVisible_: false
+        popoverVisible_: false,
+        popoverWidth_: 0,
+        query_: ''
       };
     },
 
@@ -129,6 +166,13 @@
           tabindex: this.tabindex,
           validateEvent: this.validateEvent
         };
+      },
+      popoverHeight__() {
+        let popoverHeight = this.popoverHeight || this.popoverWidth_ / 3;
+        if (popoverHeight < 138) {
+          popoverHeight = 138;
+        }
+        return popoverHeight;
       },
       elIcons__() {
         return [
@@ -413,6 +457,17 @@
           "el-icon-ice-cream-square",
           "el-icon-ice-cream-round"
         ]
+      },
+      icons__() {
+        let initDefault = this.initDefault || !!(this.$JForm || {}).iconPicker.initDefault;
+        let icons = this.icons || (this.$JForm || {}).iconPicker.icons;
+        return initDefault ? [{
+          label: 'ElementUI',
+          data: this.elIcons__
+        }, ...icons] : icons;
+      },
+      active__() {
+        return this.active || this.icons__[0] ? this.icons__[0].label : null;
       }
     },
 
@@ -420,7 +475,6 @@
       value: {
         immediate: true,
         handler(val) {
-          if (!val) return;
           this.value_ = val;
         }
       },
@@ -449,13 +503,25 @@
       },
       onClick(val) {
         this.value_ = val;
+      },
+      computedPopoverWidth() {
+        let width = this.$refs.reference.$el.offsetWidth;
+        width = width - width % 46;
+        if (width < 46 * 4) {
+          width = 46 * 4;
+        }
+        this.popoverWidth_ = width;
       }
+    },
+
+    mounted() {
+      this.$nextTick(() => this.computedPopoverWidth());
     }
   }
 </script>
 
 <style scoped>
-  .inner {
+  .j-el-icon-picker {
     padding: 15px;
   }
 
@@ -463,108 +529,23 @@
     margin: 0 0 20px;
   }
 
+  .scroll-bar {
+    height: 100%;
+  }
+
   .scroll-bar >>> .el-scrollbar__wrap {
     overflow-x: hidden;
     overflow-y: auto;
   }
 
-  .icon-list li {
-    float: left;
-    width: 12.5%;
-    padding: 12.5% 0 0;
-    list-style: none;
-    text-align: center;
-    position: relative;
-    border-right: 1px solid #E5E5E5;
-    border-bottom: 1px solid #E5E5E5;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-  }
-
-  .icon-list li .copy-button {
-    display: none;
-    cursor: pointer;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 40px;
-    line-height: 40px;
-    color: #409EFF;
-    background-color: #F7F7F7;
-  }
-
-  .icon-list li .copy-button:active {
-    background-color: #FAFAFA;
-  }
-
-  .icon-list li:hover .copy-button {
-    display: block;
-  }
-
-  .icon-list {
-    margin: 0 0 0 0;
-    padding: 0;
-    overflow: hidden;
-    border: 1px solid #E5E5E5;
-  }
-
-  .icon-list li:nth-child(8n) {
-    border-right: none;
-  }
-
-  .icon-list li .icon-one {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 8px;
-    right: 8px;
-    bottom: 0;
-    color: #777777;
-  }
-
-  .icon-list li .icon-one .icon-name {
-    font-size: 13px;
-    margin-top: 15px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .icon-list li .icon-one i {
-    display: block;
-    height: 40px;
-    font-size: 40px;
-  }
-
-  .i-icon-library {
-  }
-
-  .i-icon-library >>> .el-scrollbar__bar {
-    right: 0;
-    display: none;
-  }
-
-  .i-icon-library >>> .el-scrollbar__wrap {
-    overflow-x: hidden;
-  }
-
-  .i-icon-library >>> .el-scrollbar__bar.is-horizontal {
-    display: none;
-  }
-
-  .i-icon-library >>> .el-badge__content.is-fixed {
-    top: 10px;
-    right: 5px;
-    cursor: pointer;
-  }
-
   .icon-list-mini {
     width: 100%;
+    margin: 0;
+    padding: 0;
   }
 
   .icon-list-mini li {
+    list-style: none;
     cursor: pointer;
     float: left;
     width: 36px;
@@ -578,6 +559,10 @@
   }
 
   .icon-list-mini li:hover {
+    background-color: #f5f5f5;
+  }
+
+  .icon-list-mini li.active {
     background-color: #f5f5f5;
   }
 
