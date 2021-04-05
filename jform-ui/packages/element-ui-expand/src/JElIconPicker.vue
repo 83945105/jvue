@@ -1,40 +1,38 @@
 <template>
   <div class="j-el-icon-picker">
-    <div class="search-bar">
-      <el-popover placement="bottom-start" :width="popoverWidth_">
-        <slot v-if="filterable" name="filter">
-          <el-input v-model="query_" :size="size__" placeholder="请输入搜索内容" clearable prefix-icon="el-icon-search"/>
-        </slot>
-        <el-tabs :value="active__" stretch>
-          <template v-for="(icon, $index) in icons__">
-            <el-tab-pane :label="icon.label" :name="icon.label" :style="{height: popoverHeight__ + 'px'}">
-              <el-scrollbar class="scroll-bar">
-                <j-el-icon-picker-pane v-model="value_" :data="icon.data" :query="query_"/>
-              </el-scrollbar>
-            </el-tab-pane>
-          </template>
-        </el-tabs>
-        <template slot="reference">
-          <el-input v-model="value_" ref="reference" v-bind="bind__"
-                    @blur="onBlur" @focus="onFocus" @change="onChange" @input="onInput" @clear="onClear">
-            <template #prefix>
-              <slot name="prefix"/>
-            </template>
-            <template #suffix>
-              <slot name="suffix"/>
-            </template>
-            <template #prepend>
-              <slot name="prepend">
-                <i :class="value_"/>
-              </slot>
-            </template>
-            <template #append>
-              <slot name="append"/>
-            </template>
-          </el-input>
+    <el-popover placement="bottom-start" :width="popoverWidth_" popper-class="j-el-icon-picker-popover">
+      <slot v-if="filterable" name="filter">
+        <el-input v-model="query_" :size="size__" placeholder="请输入搜索内容" clearable prefix-icon="el-icon-search"/>
+      </slot>
+      <el-tabs :value="active__" stretch>
+        <template v-for="(icon, $index) in icons__">
+          <el-tab-pane :label="icon.label" :name="icon.label" :style="{height: popoverHeight__ + 'px'}">
+            <el-scrollbar class="scroll-bar">
+              <j-el-icon-picker-pane v-model="value_" :data="icon.data" :query="query_"/>
+            </el-scrollbar>
+          </el-tab-pane>
         </template>
-      </el-popover>
-    </div>
+      </el-tabs>
+      <template slot="reference">
+        <el-input v-model="value_" ref="reference" v-bind="bind__"
+                  @blur="onBlur" @focus="onFocus" @change="onChange" @input="onInput" @clear="onClear">
+          <template #prefix>
+            <slot name="prefix"/>
+          </template>
+          <template #suffix>
+            <slot name="suffix"/>
+          </template>
+          <template #prepend>
+            <slot name="prepend">
+              <i :class="value_"/>
+            </slot>
+          </template>
+          <template #append>
+            <slot name="append"/>
+          </template>
+        </el-input>
+      </template>
+    </el-popover>
   </div>
 </template>
 
@@ -522,11 +520,11 @@
 
 <style scoped>
   .j-el-icon-picker {
-    padding: 15px;
+
   }
 
-  .search-bar {
-    margin: 0 0 20px;
+  .j-el-icon-picker-popover {
+
   }
 
   .scroll-bar {
