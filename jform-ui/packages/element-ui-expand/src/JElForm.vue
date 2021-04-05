@@ -9,7 +9,6 @@
 </template>
 
 <script>
-
   export default {
     name: "j-el-form",
 
