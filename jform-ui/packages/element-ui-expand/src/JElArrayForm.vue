@@ -19,15 +19,12 @@
               @current-change="(currentRow, oldCurrentRow) => $emit('current-change', currentRow, oldCurrentRow)"
               @header-dragend="(newWidth, oldWidth, _column, event) => $emit('header-dragend', newWidth, oldWidth, _column, event)"
               @expand-change="(row, expanded) => $emit('expand-change', row, expanded)"
-              class="j-array-form"
-    >
+              class="j-array-form">
       <template #empty>
         <slot name="empty" v-bind="{append, data: form_.data}">
           <el-button v-if="appendEnabled"
-                     :disabled="appendButtonDisabled__" type="primary" icon="el-icon-plus"
-                     circle plain size="mini"
-                     @click="append"
-          ></el-button>
+                     :disabled="appendButtonDisabled__" type="primary" icon="el-icon-plus" circle plain size="mini"
+                     @click="append"/>
           <span v-else>#</span>
         </slot>
       </template>
@@ -42,21 +39,13 @@
         <el-table-column header-align="center" align="center" width="50px" fixed="left">
           <template #default="{row, column, $index}">
             <el-button v-if="removeEnabled && row.__buttonVisible__"
-                       :disabled="removeButtonDisabled_" type="danger" icon="el-icon-minus"
-                       circle plain size="mini"
-                       @click="remove({$index})"
-            ></el-button>
-            <span v-else class="j-array-form-index" :class="{
-                        required: !!column__.required_
-                    }">{{$index + 1}}</span>
+                       :disabled="removeButtonDisabled_" type="danger" icon="el-icon-minus" circle plain size="mini"
+                       @click="remove({$index})"/>
+            <span v-else class="j-array-form-index" :class="{required: !!column__.required_}">{{$index + 1}}</span>
           </template>
         </el-table-column>
       </slot>
-      <j-el-array-form-column :key="column__.key"
-                              :column="column__"
-                              :parent="$context__"
-      >
-      </j-el-array-form-column>
+      <j-el-array-form-column :column="column__" :parent="$context__"/>
     </el-table>
   </el-form>
 </template>
@@ -64,16 +53,24 @@
 <script>
   import deepMerge from "../../../src/utils/deep-merge";
   import JElArrayFormColumn from "./JElArrayFormColumn";
+  import merge from "../../../src/utils/merge";
+  import init from "./init";
+  import {recursionRemoveEmptyStringProps} from "../../form/src/init";
 
   export default {
     name: "j-el-array-form",
+
+    inheritAttrs: false,
+
     components: {JElArrayFormColumn},
+
     props: {
-      column: {
+      column: {         // 列配置
         type: Object,
         required: true
       },
-      value: Array,
+      value: Array,     // 表单model，支持v-model
+      data: Object,     // 表单项数据
 
       height: [String, Number],
       maxHeight: [String, Number],
@@ -177,7 +174,16 @@
           return context;
         }, {}) : {
           data: null,
-          context: this,
+          context: merge(this, {
+            props: {
+              data: {},
+            },
+            data: {
+              attrs: this.$attrs
+            },
+            listeners: this.$listeners,
+            scopedSlots: this.$scopedSlots
+          }),
           parent: null,
           $root: true
         };
@@ -187,8 +193,11 @@
           width: this.column.width > 0 ? `${this.column.width}px` : null,
           minWidth: this.column.minWidth > 0 ? `${this.column.minWidth}px` : null
         });
-        // _column.key = uuid();
+
         if (!_column.renderData || !_column.renderData.children) return _column;
+        _column.renderData = deepMerge({}, _column.renderData);
+        recursionRemoveEmptyStringProps(_column.renderData);
+        _column.renderData = init(_column.renderData, this.$context__);
 
         let _formItemRenderData = _column.renderData.children[0];
         if (_formItemRenderData.tag !== 'el-form-item') {
@@ -224,6 +233,7 @@
             return `data.${$index}.${_prop}`;
           }
         };
+        console.log(_column)
         return _column;
       },
       formBind__() {

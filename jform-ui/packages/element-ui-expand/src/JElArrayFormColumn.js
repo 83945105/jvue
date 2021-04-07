@@ -52,7 +52,7 @@ export default {
           let scopedSlots = parent.context.scopedSlots;
 
           // 表格列插槽
-          let slot = scopedSlots ? scopedSlots[`${parent.context.props.data.key}#value&default`] : null;
+          let slot = scopedSlots ? scopedSlots[parent.context.props.data.key ? `${parent.context.props.data.key}#value&default` : 'value&default'] : null;
           if (slot) {
             return slot({row, column, $index, createElement: h, context: ctx});
           }

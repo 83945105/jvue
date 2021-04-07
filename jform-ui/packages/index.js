@@ -1,8 +1,10 @@
-import Render from "./render/index.js";
-import ElementUIExpand from "./element-ui-expand/index.js";
+import Render from "./render/index";
+import Form from "./form/index";
+import ElementUIExpand from "./element-ui-expand/index";
 import deepMerge from "../src/utils/deep-merge";
 
 const components = [
+  Form,
   Render,
   ElementUIExpand
 ];

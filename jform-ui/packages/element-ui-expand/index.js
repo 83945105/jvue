@@ -9,7 +9,6 @@ import JElForm from "./src/JElForm";
 import JElArrayForm from "./src/JElArrayForm";
 import JElObjectForm from "./src/JElObjectForm";
 import JElObjectArrayForm from "./src/JElObjectArrayForm";
-import JForm from "./src/JForm";
 import JElIconPicker from "./src/JElIconPicker";
 import JElRadioGroup from "./src/JElRadioGroup";
 import JElSelect from "./src/JElSelect";
@@ -28,7 +27,6 @@ const ElementUIExpand = {
   JElArrayForm,
   JElObjectForm,
   JElObjectArrayForm,
-  JForm,
   JElIconPicker,
   JElRadioGroup,
   JElSelect,
@@ -47,7 +45,6 @@ const ElementUIExpand = {
     Vue.component(JElArrayForm.name, JElArrayForm);
     Vue.component(JElObjectForm.name, JElObjectForm);
     Vue.component(JElObjectArrayForm.name, JElObjectArrayForm);
-    Vue.component(JForm.name, JForm);
     Vue.component(JElIconPicker.name, JElIconPicker);
     Vue.component(JElRadioGroup.name, JElRadioGroup);
     Vue.component(JElSelect.name, JElSelect);
