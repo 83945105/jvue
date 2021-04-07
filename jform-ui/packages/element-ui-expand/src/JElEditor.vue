@@ -2,7 +2,7 @@
   import merge from "../../../src/utils/merge";
 
   export default {
-    name: "j-el-editor",
+    name: "JElEditor",
     render(h) {
       if (this.tinymce) {
         if (!this.$options.components || !this.$options.components['tinymce-editor']) {

@@ -38,10 +38,10 @@
 
 <script>
   export default {
-    name: "j-el-icon-picker",
+    name: "JElIconPicker",
     components: {
       JElIconPickerPane: {
-        name: "j-el-icon-picker-pane",
+        name: "JElIconPickerPane",
         functional: true,
         props: {
           value: String,

@@ -4,7 +4,7 @@
 
 <script>
   export default {
-    name: "j-el-description",
+    name: "JElDescription",
 
     inject: {
       elForm: {

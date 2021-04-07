@@ -25,7 +25,7 @@
   import {isObject} from "../../../src/utils/util";
 
   export default {
-    name: "j-el-select",
+    name: "JElSelect",
 
     props: {
       value: [String, Number, Array],     // 绑定值

@@ -37,7 +37,7 @@
 
 <script>
   export default {
-    name: "j-el-coordinate-picker",
+    name: "JElCoordinatePicker",
 
     inject: {
       elForm: {

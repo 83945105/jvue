@@ -31,7 +31,7 @@
   import {isObject} from "../../../src/utils/util";
 
   export default {
-    name: "j-el-select-group",
+    name: "JElSelectGroup",
 
     props: {
       value: [String, Number, Array],     // 绑定值

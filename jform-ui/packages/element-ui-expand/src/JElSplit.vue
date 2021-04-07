@@ -40,7 +40,7 @@
   })();
 
   export default {
-    name: "j-el-split",
+    name: "JElSplit",
 
     props: {
       value: {            // 面板位置 0 ~ 1 代表百分比 其余代表像素值

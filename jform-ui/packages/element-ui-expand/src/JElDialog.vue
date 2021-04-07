@@ -71,7 +71,7 @@
 
 <script>
   export default {
-    name: "j-el-dialog",
+    name: "JElDialog",
 
     props: {
       visible: Boolean,               // 是否显示 Dialog，支持 .sync 修饰符

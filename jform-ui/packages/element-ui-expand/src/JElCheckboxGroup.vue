@@ -20,7 +20,7 @@
   import {isObject} from "../../../src/utils/util";
 
   export default {
-    name: "j-el-checkbox-group",
+    name: "JElCheckboxGroup",
 
     props: {
       value: Array,                       // 绑定值

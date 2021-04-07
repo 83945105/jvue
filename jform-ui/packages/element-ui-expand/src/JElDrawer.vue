@@ -32,7 +32,7 @@
   import WindowResize from '../../../src/mixins/window-resize';
 
   export default {
-    name: "j-el-drawer",
+    name: "JElDrawer",
 
     mixins: [WindowResize],
 

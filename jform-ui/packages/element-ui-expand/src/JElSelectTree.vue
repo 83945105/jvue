@@ -41,7 +41,7 @@
 
 <script>
   export default {
-    name: "j-el-select-tree",
+    name: "JElSelectTree",
 
     props: {
       multiple: Boolean,

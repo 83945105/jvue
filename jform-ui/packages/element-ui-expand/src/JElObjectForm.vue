@@ -46,7 +46,7 @@
   import deepMerge from "../../../src/utils/deep-merge";
 
   export default {
-    name: "j-el-object-form",
+    name: "JElObjectForm",
     components: {JElObjectFormLabelColumn, JElObjectFormValueColumn},
     props: {
       labelColumn: {

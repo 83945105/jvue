@@ -20,7 +20,7 @@
   import {isObject} from "../../../src/utils/util";
 
   export default {
-    name: "j-el-radio-group",
+    name: "JElRadioGroup",
 
     props: {
       value: [String, Number, Boolean],   // 绑定值

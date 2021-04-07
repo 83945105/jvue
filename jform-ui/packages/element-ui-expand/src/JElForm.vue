@@ -10,7 +10,7 @@
 
 <script>
   export default {
-    name: "j-el-form",
+    name: "JElForm",
 
     props: {
       model: Object,                      // 表单数据对象

@@ -65,7 +65,7 @@
   import JElObjectArrayFormColumn from "./JElObjectArrayFormColumn";
 
   export default {
-    name: "j-el-object-array-form",
+    name: "JElObjectArrayForm",
     components: {JElObjectArrayFormColumn},
     props: {
       columns: {
