@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <j-el-array-form ref="form"
-                     v-model="form" size="mini"
+                     :model="form" size="mini"
                      :min-row="2" :max-row="5"
     >
       <template #name&append>
@@ -35,7 +35,7 @@
     data() {
       return {
         data: formData,
-        form: ['2']
+        form: []
       }
     },
     watch: {

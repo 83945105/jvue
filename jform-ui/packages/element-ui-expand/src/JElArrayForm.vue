@@ -8,7 +8,7 @@
         <span v-else>#</span>
       </template>
       <template #append>
-        <div v-if="!disabled && appendEnabled && tableData.length > 0 && !appendButtonDisabled"
+        <div v-if="!disabled && appendEnabled && rowCount > 0 && !appendButtonDisabled"
              style="text-align: center">
           <i class="el-icon-plus" style="cursor: pointer;" @click="append"/>
         </div>
@@ -169,17 +169,14 @@
       model: {
         immediate: true,
         handler(val) {
-          this.form_.data = (val || []).map(item => item);
+          this.form_.data = val || [];
         },
         deep: true
       },
-      'form_.data': {
-        handler(val) {
-          let model = val.map(item => item);
-          if (JSON.stringify(model) === JSON.stringify(this.model)) return;
-          this.$emit('input', model);
-        },
-        deep: true
+      fields_(val) {
+        if (val.length !== this.form_.data.length) {
+          throw new Error(`Component template should contain exactly one j-el-array-form-item element. If you are using v-if on multiple elements, use v-else-if to chain them instead.`);
+        }
       }
     },
     methods: {
@@ -216,7 +213,11 @@
         return this.$refs.form.validateField(props, callback);
       },
       resetFields() {
-        this.form_.data = JSON.parse(JSON.stringify(this.initialValue));
+        if (JSON.stringify(this.form_.data) === JSON.stringify(this.initialValue)) {
+          return this.$refs.form.resetFields();
+        } else {
+          this.form_.data.splice(0, this.form_.data.length, ...JSON.parse(JSON.stringify(this.initialValue)));
+        }
       },
       clearValidate(props) {
         return this.$refs.form.clearValidate(props);
