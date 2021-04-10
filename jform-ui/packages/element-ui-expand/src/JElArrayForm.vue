@@ -1,36 +1,27 @@
 <template>
   <el-form ref="form" :model="form_" v-bind="formBind">
-    <el-table :data="tableData"
-              v-bind="tableBind"
-              v-on="tableOn"
-              class="j-array-form">
+    <el-table :data="tableData" v-bind="tableBind" v-on="tableOn" class="j-array-form">
       <template #empty>
-        <slot name="empty">
-          <el-button v-if="appendEnabled"
-                     :disabled="appendButtonDisabled__ || !$scopedSlots.default" type="primary" icon="el-icon-plus"
-                     circle plain size="mini"
-                     @click="append"/>
-          <span v-else>#</span>
-        </slot>
+        <el-button v-if="appendEnabled"
+                   :disabled="disabled || appendButtonDisabled || !$scopedSlots.default"
+                   type="primary" icon="el-icon-plus" circle plain size="mini" @click="append"/>
+        <span v-else>#</span>
       </template>
       <template #append>
-        <slot name="append">
-          <div v-if="appendEnabled && tableData.length > 0 && !appendButtonDisabled__" style="text-align: center">
-            <i class="el-icon-plus" style="cursor: pointer;" @click="append"/>
-          </div>
-        </slot>
+        <div v-if="!disabled && appendEnabled && tableData.length > 0 && !appendButtonDisabled"
+             style="text-align: center">
+          <i class="el-icon-plus" style="cursor: pointer;" @click="append"/>
+        </div>
       </template>
-      <slot name="index">
-        <el-table-column header-align="center" align="center" width="50px">
-          <template #default="{row, column, $index}">
-            <el-button v-if="removeEnabled && row.visible"
-                       :disabled="removeButtonDisabled__" type="danger" icon="el-icon-minus" circle plain size="mini"
-                       @click="remove({row, column, $index})"/>
-            <span v-else class="j-array-form-index"
-                  :class="{required: columns__[$index] && columns__[$index].required}">{{$index + 1}}</span>
-          </template>
-        </el-table-column>
-      </slot>
+      <el-table-column header-align="center" align="center" width="50px">
+        <template #default="{row, column, $index}">
+          <el-button v-if="!disabled && removeEnabled && row.visible"
+                     :disabled="removeButtonDisabled" type="danger" icon="el-icon-minus" circle plain size="mini"
+                     @click="remove({row, column, $index})"/>
+          <span v-else class="j-array-form-index"
+                :class="{required: !hideRequiredAsterisk && rows[$index] && rows[$index].required}">{{$index + 1}}</span>
+        </template>
+      </el-table-column>
       <el-table-column>
         <template #default="{$index}">
           <slot v-bind="{$index}"/>
@@ -49,27 +40,39 @@
         jElArrayForm: this
       };
     },
+    model: {
+      prop: 'model'
+    },
     props: {
-      value: {
+      model: {
         type: Array,
         default() {
           return [];
         }
       },
-      valueDataType: {       // 数据类型，string - 字符型、number - 数字型、array - 数组型、object - 对象型
+      itemDataType: {                                                     // 数据类型，string - 字符型、number - 数字型、array - 数组型、object - 对象型
         type: String,
         default: 'string'
       },
+      itemDefaultValue: [String, Number, Object, Array],
+
+      rules: [Object, Array],                                             // 表单验证规则
+      hideRequiredAsterisk: Boolean,                                      // 是否显示必填字段的标签旁边的红色星号
+      showMessage: {                                                      // 是否显示校验错误信息
+        type: Boolean,
+        default: true
+      },
+      validateOnRuleChange: {                                             // 是否在 rules 属性改变后立即触发一次验证
+        type: Boolean,
+        default: true
+      },
+      size: String,                                                       // 用于控制该表单内组件的尺寸
+      disabled: Boolean,                                                  // 是否禁用该表单内的所有组件。若设置为 true，则表单内组件上的 disabled 属性不再生效
 
       height: [String, Number],
       maxHeight: [String, Number],
       stripe: Boolean,
       border: {
-        type: Boolean,
-        default: true
-      },
-      size: String,
-      fit: {
         type: Boolean,
         default: true
       },
@@ -87,6 +90,7 @@
     },
     data() {
       return {
+        initialValue: null,
         form_: {
           data: []
         },
@@ -113,7 +117,11 @@
       },
       formBind() {
         return {
-          size: this.size__
+          hideRequiredAsterisk: this.hideRequiredAsterisk,
+          showMessage: this.showMessage,
+          validateOnRuleChange: this.validateOnRuleChange,
+          size: this.size__,
+          disabled: this.disabled
         };
       },
       tableData() {
@@ -130,7 +138,7 @@
           stripe: this.stripe,
           border: this.border,
           size: this.size__,
-          fit: this.fit,
+          fit: true,
           showHeader: false
         };
       },
@@ -140,39 +148,36 @@
           'cell-mouse-leave': row => row.visible = false
         } : {};
       },
-      rowCount__() {
+      rowCount() {
         return this.tableData.length;
       },
-      appendButtonDisabled__() {
-        return !!this.maxRow && this.rowCount__ >= this.maxRow;
+      appendButtonDisabled() {
+        return !!this.maxRow && this.rowCount >= this.maxRow;
       },
-      removeButtonDisabled__() {
-        return !!this.minRow && this.rowCount__ <= this.minRow;
+      removeButtonDisabled() {
+        return !!this.minRow && this.rowCount <= this.minRow;
       },
-      columns__() {
+      rows() {
         return this.fields_.map(field => {
-          return field.$props;
+          return {
+            required: field.isRequired || field.$props.required
+          };
         });
       }
     },
     watch: {
-      value: {
+      model: {
         immediate: true,
         handler(val) {
-          if (JSON.stringify(val) === JSON.stringify(this.form_.data)) return;
-          this.form_.data = (val || []).map(v => {
-            return {
-              value: v
-            };
-          });
+          this.form_.data = (val || []).map(item => item);
         },
         deep: true
       },
       'form_.data': {
         handler(val) {
-          let value = val.map(v => v.value);
-          if (JSON.stringify(value) === JSON.stringify(this.value)) return;
-          this.$emit('input', value);
+          let model = val.map(item => item);
+          if (JSON.stringify(model) === JSON.stringify(this.model)) return;
+          this.$emit('input', model);
         },
         deep: true
       }
@@ -185,31 +190,23 @@
         this.fields_.splice(this.fields_.indexOf(field), 1);
       },
       append() {
-        if (this.appendButtonDisabled__) return;
-        if (this.valueDataType === 'string') {
-          this.form_.data.push({
-            value: ''
-          });
-        } else if (this.valueDataType === 'number') {
-          this.form_.data.push({
-            value: 0
-          });
-        } else if (this.valueDataType === 'object') {
-          this.form_.data.push({
-            value: {}
-          });
-        } else if (this.valueDataType === 'array') {
-          this.form_.data.push({
-            value: []
-          });
+        if (this.appendButtonDisabled) return;
+        if (this.itemDefaultValue) {
+          this.form_.data.push(this.itemDefaultValue);
+        } else if (this.itemDataType === 'string') {
+          this.form_.data.push('');
+        } else if (this.itemDataType === 'number') {
+          this.form_.data.push(0);
+        } else if (this.itemDataType === 'object') {
+          this.form_.data.push({});
+        } else if (this.itemDataType === 'array') {
+          this.form_.data.push([]);
         } else {
-          this.form_.data.push({
-            value: ''
-          });
+          this.form_.data.push('');
         }
       },
       remove({$index}) {
-        if (this.removeButtonDisabled__) return;
+        if (this.removeButtonDisabled) return;
         this.form_.data.splice($index, 1);
       },
       validate(callback) {
@@ -219,7 +216,7 @@
         return this.$refs.form.validateField(props, callback);
       },
       resetFields() {
-        return this.$refs.form.resetFields();
+        this.form_.data = JSON.parse(JSON.stringify(this.initialValue));
       },
       clearValidate(props) {
         return this.$refs.form.clearValidate(props);
@@ -227,6 +224,9 @@
     },
     created() {
       this.form && this.form.addSubForm(this);
+    },
+    mounted() {
+      this.initialValue = JSON.parse(JSON.stringify(this.model || []));
     }
   }
 </script>
