@@ -13,10 +13,6 @@
       }
     },
     props: {
-      propType: {             // 字段类型，string - 字符型、number - 数字型、array - 数组型、object - 对象型
-        type: String,
-        default: 'string'
-      },
       required: Boolean,      // 是否必填，如不设置，则会根据校验规则自动生成
       rules: Object,          // 表单验证规则
       error: String,          // 表单域验证错误信息, 设置该值会使表单验证状态变为error，并显示该错误信息
@@ -30,7 +26,7 @@
     computed: {
       bind__() {
         return {
-          prop: 'value',
+          prop: 'data',
           required: this.required,
           rules: this.rules,
           error: this.error,
@@ -48,7 +44,7 @@
         this.$refs.formItem && this.$refs.formItem.clearValidate();
       }
     },
-    mounted() {
+    created() {
       this.jElArrayForm.addField(this);
     },
     beforeDestroy() {
