@@ -4,7 +4,7 @@
   "type": "form",
   "fdName": "fd-el-form",
   "options": {
-    "key": "36c34f52-ee43-45de-bf0d-6554d89232fb",
+    "key": "ef4d196c-b5a4-4a0e-aa78-f5e06649ee12",
     "ref": "$form",
     "class": [],
     "style": {},
@@ -15,7 +15,7 @@
     },
     "props": {
       "model": {
-        "sub": []
+        "array_form_1618159144356": []
       },
       "rules": {},
       "inline": false,
@@ -38,17 +38,17 @@
       "fdName": "fd-el-array-form",
       "options": {
         "props": {
-          "name": "sub$item"
+          "name": "array_form_1618159144356$item"
         }
       },
       "children": [
         {
-          "key": "sub$item",
+          "key": "array_form_1618159144356$item",
           "tag": "el-form-item",
           "type": "form-item",
           "options": {
-            "key": "e0b60f3c-6868-48f8-a9e6-66721f97f724",
-            "ref": "$sub$item",
+            "key": "3e61e759-9338-4d26-8aff-7e099b80e3d3",
+            "ref": "$array_form_1618159144356$item",
             "class": [],
             "style": {},
             "attrs": {
@@ -58,7 +58,7 @@
               "labelWidth_": 100,
               "controlType_": "array-form",
               "validate_": {
-                "required": false,
+                "required": true,
                 "requiredError": "{name}不能为空",
                 "requiredTrigger": "blur",
                 "valueUnique": false,
@@ -82,10 +82,11 @@
                     "trigger": "blur"
                   }
                 ]
-              }
+              },
+              "defaultValue_": ""
             },
             "props": {
-              "prop": "sub",
+              "prop": "array_form_1618159144356",
               "label": "数组表单",
               "labelWidth": null,
               "required": false,
@@ -102,162 +103,259 @@
               "type": "control-slot",
               "options": {
                 "props": {
-                  "name": "sub"
+                  "name": "array_form_1618159144356"
                 }
               },
               "children": [
                 {
-                  "key": "sub",
+                  "key": "array_form_1618159144356",
                   "tag": "j-el-array-form",
                   "type": "array-form",
                   "options": {
-                    "key": "d5ce6d6e-7c97-4d79-9be7-d474d2892e5f",
-                    "ref": "$sub",
+                    "key": "a5d5cbfc-89e4-4276-8af4-9f4c09ba0e06",
+                    "ref": "$array_form_1618159144356",
                     "class": [],
                     "style": {},
                     "attrs": {},
                     "props": {
-                      "value": [],
-                      "column": {
-                        "width": 0,
-                        "minWidth": 0,
-                        "fixed": null,
-                        "showOverflowTooltip": false,
-                        "align": "left",
-                        "headerAlign": null,
-                        "renderData": {
-                          "tag": "slot",
-                          "type": "form-item-slot",
-                          "fdName": "fd-el-input",
-                          "options": {
-                            "props": {
-                              "name": "name$item"
-                            }
-                          },
-                          "children": [
-                            {
-                              "key": "name$item",
-                              "tag": "el-form-item",
-                              "type": "form-item",
-                              "options": {
-                                "key": "966789cd-3d8e-41ca-b6e7-9bcd5b5a9f9c",
-                                "ref": "$name$item",
-                                "class": [],
-                                "style": {},
-                                "attrs": {
-                                  "valueType_": "string",
-                                  "dataType_": "string",
-                                  "labelWidthEnabled_": false,
-                                  "labelWidth_": 100,
-                                  "controlType_": "input",
-                                  "validate_": {
-                                    "required": false,
-                                    "requiredError": "{name}不能为空",
-                                    "requiredTrigger": "blur",
-                                    "valueUnique": false,
-                                    "valueUniqueTrigger": "blur",
-                                    "valueUniqueMethod": "uniqueValidator",
-                                    "validateMinEnabled": false,
-                                    "validateMin": 0,
-                                    "validateMaxEnabled": false,
-                                    "validateMax": 0,
-                                    "validateRangeError": "{name}长度不正确",
-                                    "validateRangeTrigger": "blur",
-                                    "validateType": "",
-                                    "validateTypeError": "{name}格式不正确",
-                                    "validateTypeTrigger": "blur",
-                                    "validateRegex": "",
-                                    "validateRegexError": "{name}格式不正确",
-                                    "validateRegexTrigger": "blur",
-                                    "validates": [
-                                      {
-                                        "method": "",
-                                        "trigger": "blur"
-                                      }
-                                    ]
-                                  }
-                                },
-                                "props": {
-                                  "prop": "name",
-                                  "label": "姓名",
-                                  "labelWidth": null,
-                                  "required": false,
-                                  "rules": null,
-                                  "error": null,
-                                  "showMessage": true,
-                                  "inlineMessage": false,
-                                  "size": null
-                                }
-                              },
-                              "children": [
-                                {
-                                  "tag": "slot",
-                                  "type": "control-slot",
-                                  "options": {
-                                    "props": {
-                                      "name": "name"
-                                    }
-                                  },
-                                  "children": [
-                                    {
-                                      "key": "name",
-                                      "tag": "el-input",
-                                      "type": "input",
-                                      "options": {
-                                        "key": "2dbcb211-1d87-4200-bc46-ff9e1ff81cb4",
-                                        "ref": "$name",
-                                        "class": [],
-                                        "style": {},
-                                        "attrs": {
-                                          "maxlength": null,
-                                          "minlength": null,
-                                          "placeholder": "请输入",
-                                          "autocomplete": "off",
-                                          "name": null,
-                                          "readonly": false,
-                                          "max": null,
-                                          "min": null,
-                                          "step": null,
-                                          "autofocus": false,
-                                          "form": null
-                                        },
-                                        "props": {
-                                          "type": "text",
-                                          "value": "",
-                                          "showWordLimit": false,
-                                          "clearable": true,
-                                          "showPassword": false,
-                                          "disabled": false,
-                                          "size": null,
-                                          "prefixIcon": null,
-                                          "suffixIcon": null,
-                                          "label": null,
-                                          "tabindex": null,
-                                          "validateEvent": true
-                                        }
-                                      }
-                                    }
-                                  ]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      },
+                      "model": [],
+                      "hideRequiredAsterisk": false,
+                      "showMessage": true,
+                      "validateOnRuleChange": true,
+                      "size": null,
+                      "disabled": false,
                       "height": null,
                       "maxHeight": null,
                       "stripe": false,
                       "border": true,
-                      "size": null,
-                      "fit": true,
                       "minRow": 0,
                       "maxRow": 0,
                       "appendEnabled": true,
                       "removeEnabled": true
+                    },
+                    "scopedSlots": {
+                      "default": {
+                        "tag": "slot",
+                        "type": "form-item-slot",
+                        "fdName": "fd-el-input",
+                        "options": {
+                          "props": {
+                            "name": "input_1618159145466$item"
+                          }
+                        },
+                        "children": [
+                          {
+                            "key": "input_1618159145466$item",
+                            "tag": "el-form-item",
+                            "type": "form-item",
+                            "options": {
+                              "key": "97545dbf-67ea-4f21-9b52-5f1d8d23472a",
+                              "ref": "$input_1618159145466$item",
+                              "class": [],
+                              "style": {},
+                              "attrs": {
+                                "valueType_": "string",
+                                "dataType_": "string",
+                                "labelWidthEnabled_": false,
+                                "labelWidth_": 100,
+                                "controlType_": "input",
+                                "validate_": {
+                                  "required": true,
+                                  "requiredError": "{name}不能为空",
+                                  "requiredTrigger": "blur",
+                                  "valueUnique": false,
+                                  "valueUniqueTrigger": "blur",
+                                  "valueUniqueMethod": "uniqueValidator",
+                                  "validateMinEnabled": false,
+                                  "validateMin": 0,
+                                  "validateMaxEnabled": false,
+                                  "validateMax": 0,
+                                  "validateRangeError": "{name}长度不正确",
+                                  "validateRangeTrigger": "blur",
+                                  "validateType": "",
+                                  "validateTypeError": "{name}格式不正确",
+                                  "validateTypeTrigger": "blur",
+                                  "validateRegex": "",
+                                  "validateRegexError": "{name}格式不正确",
+                                  "validateRegexTrigger": "blur",
+                                  "validates": [
+                                    {
+                                      "method": "",
+                                      "trigger": "blur"
+                                    }
+                                  ]
+                                },
+                                "defaultValue_": ""
+                              },
+                              "props": {
+                                "prop": "input_1618159145466",
+                                "label": "单行文本",
+                                "labelWidth": null,
+                                "required": false,
+                                "rules": null,
+                                "error": null,
+                                "showMessage": true,
+                                "inlineMessage": false,
+                                "size": null
+                              }
+                            },
+                            "children": [
+                              {
+                                "tag": "slot",
+                                "type": "control-slot",
+                                "options": {
+                                  "props": {
+                                    "name": "input_1618159145466"
+                                  }
+                                },
+                                "children": [
+                                  {
+                                    "key": "input_1618159145466",
+                                    "tag": "el-input",
+                                    "type": "input",
+                                    "options": {
+                                      "key": "8096ae64-4a86-434c-a69c-f15130bb187c",
+                                      "ref": "$input_1618159145466",
+                                      "class": [],
+                                      "style": {},
+                                      "attrs": {
+                                        "maxlength": null,
+                                        "minlength": null,
+                                        "placeholder": "请输入",
+                                        "autocomplete": "off",
+                                        "name": null,
+                                        "readonly": false,
+                                        "max": null,
+                                        "min": null,
+                                        "step": null,
+                                        "autofocus": false,
+                                        "form": null
+                                      },
+                                      "props": {
+                                        "type": "text",
+                                        "value": "",
+                                        "showWordLimit": false,
+                                        "clearable": true,
+                                        "showPassword": false,
+                                        "disabled": false,
+                                        "size": null,
+                                        "prefixIcon": null,
+                                        "suffixIcon": null,
+                                        "label": null,
+                                        "tabindex": null,
+                                        "validateEvent": true
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
                     }
                   }
                 }
               ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "tag_1618159541972",
+      "tag": "tag",
+      "type": "tag",
+      "fdName": "fd-el-tag",
+      "options": {
+        "key": "200561b9-9f17-49b6-9e71-a516c41db8fd",
+        "ref": "$tag_1618159541972",
+        "class": [],
+        "style": {},
+        "attrs": {
+          "prop_": "tag_1618159541972",
+          "tag_": "div",
+          "text_": null
+        },
+        "props": {}
+      },
+      "children": [
+        {
+          "tag": "slot",
+          "type": "control-slot",
+          "fdName": "fd-el-submit-button",
+          "options": {
+            "props": {
+              "name": "submit_button"
+            }
+          },
+          "children": [
+            {
+              "key": "submit_button",
+              "tag": "el-button",
+              "type": "submit-button",
+              "options": {
+                "key": "5476dd1f-aaef-437c-a84e-f6d15955321e",
+                "ref": "$submit_button",
+                "class": [],
+                "style": {},
+                "attrs": {
+                  "nativeType": "button",
+                  "prop_": "submit_button",
+                  "text_": "提 交",
+                  "submitProp_": "submit"
+                },
+                "props": {
+                  "size": "small",
+                  "type": "primary",
+                  "plain": false,
+                  "round": false,
+                  "circle": false,
+                  "loading": false,
+                  "disabled": false,
+                  "icon": "el-icon-check",
+                  "autofocus": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "tag": "slot",
+          "type": "control-slot",
+          "fdName": "fd-el-reset-button",
+          "options": {
+            "props": {
+              "name": "reset_button"
+            }
+          },
+          "children": [
+            {
+              "key": "reset_button",
+              "tag": "el-button",
+              "type": "reset-button",
+              "options": {
+                "key": "3d4a9078-dd6c-46cb-9ce7-f41956e1b47a",
+                "ref": "$reset_button",
+                "class": [],
+                "style": {},
+                "attrs": {
+                  "nativeType": "button",
+                  "prop_": "reset_button",
+                  "text_": "重 置"
+                },
+                "props": {
+                  "size": "small",
+                  "type": null,
+                  "plain": false,
+                  "round": false,
+                  "circle": false,
+                  "loading": false,
+                  "disabled": false,
+                  "icon": "el-icon-refresh-left",
+                  "autofocus": false
+                }
+              }
             }
           ]
         }

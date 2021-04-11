@@ -17,6 +17,21 @@ const VModel = {
   }
 };
 
+const ArrayFormVModel = {
+  $sync: true,
+  $getValue({$context}) {
+    let $index = $context.parent.parent.parent.slotProps.$index;
+    let form = $context.getParent('j-el-array-form');
+    return form.$props.model[$index];
+  },
+  $setValue(value, {$context}) {
+    let $index = $context.parent.parent.parent.slotProps.$index;
+    let form = $context.getParent('j-el-array-form');
+    form.$props.model[$index] = value;
+    form.$props.model.splice($index, 1, value);
+  }
+};
+
 const initDivider = function (data, context) {
   data.children = [data.options.attrs.text_ || ''];
   return data;
@@ -30,27 +45,11 @@ const initForm = function (data, context) {
 };
 
 const initArrayForm = function (data, context) {
-  data.options.props.value = VModel;
-  data.options.props.column = (() => {
-    let column = data.options.props.column;
-    let _formItem = column.renderData;
-    if (!_formItem || !_formItem.tag) return column;
-    while (_formItem.tag !== 'el-form-item') {
-      _formItem = _formItem.children[0];
-    }
-    _formItem.type = 'array-form-item';   // 更改为 数组表单项
-
-    // 防止控件被初始化和Model绑定
-    // let defaultValue = _formItem.children[0].children[0].options.props.value;
-    // init(_formItem, context);
-    // _formItem.children[0].children[0].options.props.value = defaultValue;
-    return column;
-  })();
-  data.options.props.$context = {
-    $getValue({$context}) {
-      return $context;
-    }
-  };
+  data.options.props.model = VModel;
+  if (data.options.scopedSlots && data.options.scopedSlots.default) {
+    data.options.scopedSlots.default.type = `array-form-${data.options.scopedSlots.default.type}`;
+    init(data.options.scopedSlots.default, context);
+  }
   return data;
 };
 
@@ -216,7 +215,11 @@ const initFormItem = function (data, context) {
   return data;
 };
 
-const initArrayFormItem = function (data, context) {
+const initArrayFormFormItem = function (data, context) {
+  data.tag = 'j-el-array-form-item';
+  (data.children || []).forEach(child => {
+    child.type = `array-form-${child.type}`;
+  });
   return initFormItem(data, context);
 };
 
@@ -226,13 +229,6 @@ const initObjectFormItem = function (data, context) {
 
 const initObjectArrayFormItem = function (data, context) {
   return initFormItem(data, context);
-};
-
-const initInput = function (data, context) {
-  data.options.props.value = VModel;
-  // 使用子组件模式渲染插槽，解决ElInput插槽不支持Render scopedSlots 问题
-  data.scopedSlotsToChildren = true;
-  return data;
 };
 
 const initLayoutRow = function (data, context) {
@@ -254,12 +250,16 @@ const initResetButton = function (data, context) {
     data.options.on = {};
   }
   let _click = data.options.on.click;
-  data.options.on.click = (event, {$context}) => {
-    let _form = $context.getParent('j-el-form');
-    let _formVM = _form.context.parent.$refs[_form.$ref];
-    let _forms = _formVM.getForms();
-    _forms.forEach(form => form.resetFields());
-    _click && _click(event, {$context});
+  data.options.on.click = {
+    $getValue({$context}) {
+      return (event) => {
+        let _form = $context.getParent('j-el-form');
+        let _formVM = _form.context.parent.$refs[_form.$ref];
+        let _forms = _formVM.getForms();
+        _forms.forEach(form => form.resetFields());
+        _click && _click(event, {$context});
+      };
+    }
   };
   data.children = [data.options.attrs.text_ || ''];
   return data;
@@ -313,9 +313,37 @@ const initSelectTree = function (data, context) {
 };
 
 const initSlot = function (data, context) {
-  data.options.props.model = ({$context}) => $context.getParent('j-el-form').$props.model;
+  data.options.props.model = {
+    $getValue: ({$context}) => $context.getParent('j-el-form').$props.model
+  };
   if (data.children) {
     data.children.forEach(child => init(child, context));
+  }
+  return data;
+};
+
+const initArrayFormControlSlot = function (data, context) {
+  data.options.props.model = {
+    $getValue: ({$context}) => $context.getParent('j-el-form').$props.model
+  };
+  if (data.children) {
+    data.children.forEach(child => {
+      init(child, context);
+      child.options.props.value = ArrayFormVModel;
+    });
+  }
+  return data;
+};
+
+const initArrayFormFormItemSlot = function (data, context) {
+  data.options.props.model = {
+    $getValue: ({$context}) => $context.getParent('j-el-form').$props.model
+  };
+  if (data.children) {
+    data.children.forEach(child => {
+      child.type = `array-form-${child.type}`;
+      init(child, context);
+    });
   }
   return data;
 };
@@ -325,45 +353,49 @@ const initSubmitButton = function (data, context) {
     data.options.on = {};
   }
   let _click = data.options.on.click;
-  data.options.on.click = (event, {$context}) => {
-    let {$attrs, $props} = $context;
-    let _submit = $props[$attrs.submitProp_];
-    if (!_submit) return;
-    let _form = $context.getParent('j-el-form');
-    let _formVM = _form.context.parent.$refs[_form.$ref];
-    let _forms = _formVM.getForms();
-    _submit({
-      event, model: _form.$props.model, $form: {
-        forms: _forms,
-        validate: (callback) => {
-          if (callback) {
-            Promise.all(_forms.map(form => new Promise((resolve, reject) => {
-              form.validate((success, fields) => {
-                resolve({
-                  target: form,
-                  success, fields
-                });
-              });
-            }))).then(rs => callback(rs));
-            return;
+  data.options.on.click = {
+    $getValue({$context}) {
+      return (event) => {
+        let {$attrs, $props} = $context;
+        let _submit = $props[$attrs.submitProp_];
+        if (!_submit) return;
+        let _form = $context.getParent('j-el-form');
+        let _formVM = _form.context.parent.$refs[_form.$ref];
+        let _forms = _formVM.getForms();
+        _submit({
+          event, model: _form.$props.model, $form: {
+            forms: _forms,
+            validate: (callback) => {
+              if (callback) {
+                Promise.all(_forms.map(form => new Promise((resolve, reject) => {
+                  form.validate((success, fields) => {
+                    resolve({
+                      target: form,
+                      success, fields
+                    });
+                  });
+                }))).then(rs => callback(rs));
+                return;
+              }
+              return Promise.all(_forms.map(form => form.validate()));
+            },
+            validateField: (props, callback) => {
+              _forms.forEach(form => form.validateField(props, errorMessage => callback(errorMessage)));
+            },
+            resetFields: () => {
+              return Promise.all(_forms.map(_form => new Promise((resolve, reject) => {
+                _form.resetFields();
+                resolve(true);
+              })));
+            },
+            clearValidate: (props) => {
+              _forms.forEach(form => form.clearValidate(props));
+            }
           }
-          return Promise.all(_forms.map(form => form.validate()));
-        },
-        validateField: (props, callback) => {
-          _forms.forEach(form => form.validateField(props, errorMessage => callback(errorMessage)));
-        },
-        resetFields: () => {
-          return Promise.all(_forms.map(_form => new Promise((resolve, reject) => {
-            _form.resetFields();
-            resolve(true);
-          })));
-        },
-        clearValidate: (props) => {
-          _forms.forEach(form => form.clearValidate(props));
-        }
-      }
-    });
-    _click && _click(event, {$context});
+        });
+        _click && _click(event, {$context});
+      };
+    }
   };
   data.children = [data.options.attrs.text_ || ''];
   return data;
@@ -410,8 +442,12 @@ const init = function (data, context) {
       return initSlot(data, context);
     case 'form-item-slot':
       return initSlot(data, context);
+    case 'array-form-form-item-slot':
+      return initArrayFormFormItemSlot(data, context);
     case 'control-slot':
       return initSlot(data, context);
+    case 'array-form-control-slot':
+      return initArrayFormControlSlot(data, context);
     case 'autocomplete':
       return initControl(data, context);
     case 'checkbox-group':
@@ -444,8 +480,8 @@ const init = function (data, context) {
       return initObjectArrayForm(data, context);
     case 'form-item':
       return initFormItem(data, context);
-    case 'array-form-item':
-      return initArrayFormItem(data, context);
+    case 'array-form-form-item':
+      return initArrayFormFormItem(data, context);
     case 'object-form-item':
       return initObjectFormItem(data, context);
     case 'object-array-form-item':
@@ -453,7 +489,7 @@ const init = function (data, context) {
     case 'icon-picker':
       return initControl(data, context);
     case 'input':
-      return initInput(data, context);
+      return initControl(data, context);
     case 'input-number':
       return initControl(data, context);
     case 'layout-row':

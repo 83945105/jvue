@@ -1,4 +1,4 @@
-import {isString, isObject, isFunction, isArray} from "../../../src/utils/util";
+import {isArray, isFunction, isObject, isString} from "../../../src/utils/util";
 import merge from "../../../src/utils/merge";
 import deepMerge from "../../../src/utils/deep-merge";
 
@@ -31,9 +31,6 @@ function style2Object(style) {
   throw new Error(`style: ${JSON.stringify(style)} case to object error, must be object or object array type`);
 }
 
-/**
- * 解析绑定属性
- */
 function parseBindAttrs(dataKey, dataAttrs, root) {
   let data = {
     class: {},
@@ -141,9 +138,6 @@ function parseBindAttrs(dataKey, dataAttrs, root) {
   return data;
 }
 
-/**
- * 解析绑定监听
- */
 function parseBindListeners(dataKey, dataListeners, root) {
   let data = {
     listeners: {},
@@ -242,19 +236,15 @@ function parseBindListeners(dataKey, dataListeners, root) {
 }
 
 /**
- * 解析绑定监听
+ * does not support omission default
  */
-function parseBindScopedSlots(dataKey, dataScopedSlots, root) {
-  let data = {
-    scopedSlots: {}
-  };
-  if (dataKey === 'slot') return data;
-
-  Object.keys(dataScopedSlots).forEach(name => {
+function parseBindSlots(dataKey, dataSlots, root) {
+  let data = {};
+  Object.keys(dataSlots).forEach(name => {
     let key;
     let slotName;
-    let slot = dataScopedSlots[name];
-    if (!isFunction(slot)) return true;
+    let slot = dataSlots[name];
+    if (!isArray(slot)) return true;
 
     let routes = name.split("&");
     if (routes.length === 1) {
@@ -295,39 +285,46 @@ function parseBindScopedSlots(dataKey, dataScopedSlots, root) {
 
     // the key and slotName must exist
 
-    data.scopedSlots[slotName] = slot;
+    data[slotName] = slot;
   });
-
   return data;
+}
+
+function parse$(value, $context) {
+  if (isObject(value)) {
+    if ('$value' in value) {
+      value = value.$value;
+    } else if ('$getValue' in value) {
+      let $getValue = value.$getValue;
+      if (isFunction($getValue)) {
+        value = $getValue({$context});
+      } else {
+        throw new Error('$getValue is not function');
+      }
+    }
+  }
+  return value;
 }
 
 function buildClassOptions(clazz = {}, $context) {
   return Object.keys(clazz).reduce((options, name) => {
-    let _value = clazz[name];
-    if (isFunction(_value)) {
-      _value = _value({$context});
-    }
-    options[name] = _value;
+    options[name] = parse$(clazz[name], $context);
     return options;
   }, {});
 }
 
 function buildStyleOptions(style = {}, $context) {
   return Object.keys(style).reduce((options, name) => {
-    let _value = style[name];
-    if (isFunction(_value)) {
-      _value = _value({$context});
-    }
-    options[name] = _value;
+    options[name] = parse$(style[name], $context);
     return options;
   }, {});
 }
 
 function buildEventOptions(events = {}, $context) {
   return Object.keys(events).reduce((options, name) => {
-    let _value = events[name];
-    if (isFunction(_value)) {
-      options[name] = (...args) => _value(...args, {$context});
+    let value = parse$(events[name], $context);
+    if (isFunction(value)) {
+      options[name] = value;
       return options;
     }
     throw new Error('unsupported event value type.');
@@ -337,18 +334,18 @@ function buildEventOptions(events = {}, $context) {
 function buildAttrOptions(attrs = {}, $context, syncCallback = () => {
 }) {
   return Object.keys(attrs).reduce((options, name) => {
-    let _value = attrs[name];
-    if (isObject(_value)) {
-      if ('$sync' in _value || '$value' in _value || '$getValue' in _value) {
-        if (_value.$sync === true) {
+    let value = attrs[name];
+    if (isObject(value)) {
+      if ('$sync' in value || '$value' in value || '$getValue' in value) {
+        if (value.$sync === true) {
           syncCallback(name);
         }
-        if ('$value' in _value) { // 存在$value
-          _value = _value.$value;
-        } else if ('$getValue' in _value) { // 存在$getValue
-          let $getValue = _value.$getValue;
+        if ('$value' in value) {
+          value = value.$value;
+        } else if ('$getValue' in value) {
+          let $getValue = value.$getValue;
           if (isFunction($getValue)) {
-            _value = $getValue({$context});
+            value = $getValue({$context});
           } else {
             throw new Error('$getValue is not function');
           }
@@ -357,22 +354,22 @@ function buildAttrOptions(attrs = {}, $context, syncCallback = () => {
         }
       }
     }
-    options[name] = _value;
+    options[name] = value;
     return options;
   }, {});
 }
 
 function buildDomPropsOptions(domProps = {}, $context) {
   return Object.keys(domProps).reduce((options, name) => {
-    let _value = domProps[name];
-    if (isObject(_value)) {
-      if ('$sync' in _value || '$value' in _value || '$getValue' in _value) {
-        if ('$value' in _value) { // 存在$value
-          _value = _value.$value;
-        } else if ('$getValue' in _value) { // 存在$getValue
-          let $getValue = _value.$getValue;
+    let value = domProps[name];
+    if (isObject(value)) {
+      if ('$sync' in value || '$value' in value || '$getValue' in value) {
+        if ('$value' in value) {
+          value = value.$value;
+        } else if ('$getValue' in value) {
+          let $getValue = value.$getValue;
           if (isFunction($getValue)) {
-            _value = $getValue({$context});
+            value = $getValue({$context});
           } else {
             throw new Error('$getValue is not function');
           }
@@ -381,57 +378,30 @@ function buildDomPropsOptions(domProps = {}, $context) {
         }
       }
     }
-    options[name] = _value;
+    options[name] = value;
     return options;
   }, {});
 }
 
 function buildDirectivesOptions(directives = [], $context) {
   return directives.reduce((options, directive) => {
-    options.push(directive);
+    options.push(parse$(directive, $context));
     return options;
   }, []);
 }
 
-function buildSlotOptions(slot, $context) {
-  if (isFunction(slot)) {
-    slot = slot({$context});
-  }
-  return slot;
-}
-
-function buildKeyOptions(key, $context) {
-  if (isFunction(key)) {
-    key = key({$context});
-  }
-  return key;
-}
-
-function buildRefOptions(ref, $context) {
-  if (isFunction(ref)) {
-    ref = ref({$context});
-  }
-  return ref;
-}
-
-function buildRefInForOptions(refInFor, $context) {
-  if (isFunction(refInFor)) {
-    refInFor = refInFor({$context});
-  }
-  return refInFor;
-}
-
 function buildScopedSlotOptions(createElement, scopedSlots, $parentContext) {
   return Object.keys(scopedSlots).reduce((options, name) => {
-    let _value = scopedSlots[name];
-    if (isFunction(_value)) {
-      options[name] = _value;
-    } else if (isObject(_value)) {
-      options[name] = _props => {
+    let value = parse$(scopedSlots[name], $parentContext);
+    if (isFunction(value)) {
+      options[name] = value;
+    } else if (isObject(value)) {
+      options[name] = props => {
         return createElement('j-render', {
           props: {
             parent: $parentContext,
-            data: _value
+            data: value,
+            slotProps: props
           },
           attrs: $parentContext.context.data.attrs,
           on: $parentContext.context.listeners,
@@ -440,54 +410,37 @@ function buildScopedSlotOptions(createElement, scopedSlots, $parentContext) {
         });
       };
     } else {
-      throw new Error('unsupported scopedSlots value type.');
+      throw new Error('unsupported scopedSlots value type');
     }
     return options;
   }, {});
 }
 
-/**
- * 将作用域插槽转为children实现
- *
- * 主要用于解决ElementUI库 ElInput 插槽不支持 Render scopedSlots 问题
- * @param h
- * @param scopedSlots
- * @returns {*[]}
- */
-function buildScopedSlotsToChildren(h, scopedSlots) {
-  return Object.keys(scopedSlots).reduce((children, name) => {
-    let value = scopedSlots[name];
-    if (!isFunction(value)) return children;
-    children.push(h('span', {
-      slot: name
-    }, [value()]));
-    return children;
-  }, []);
-}
-
 export default {
-
   name: "j-render",
-
   functional: true,
-
   props: {
-    parent: Object,             // 父级自定义上下文
-    data: {                     // 渲染数据
+    parent: Object,             // parent custom context
+    data: {                     // render data
       type: Object,
       required: true
-    }
+    },
+    slotProps: Object,          // parameters passed by the scope slot
   },
-
   render(h, context) {
-
-    let data = context.props.data;  // 配置数据
+    let data = context.props.data;
     if (!isObject(data)) return;
-    let {key, tag, options = {}, children, scopedSlotsToChildren = false} = data;
+    let {key, tag, options = {}, children} = data;
     if (!tag) return;
 
-    let $parentContext = context.props.parent;              // 父级自定义上下文
-    let $context = {data, context, parent: $parentContext, $root: !($parentContext && !$parentContext.$root)}; // 自定义上下文
+    let $parentContext = context.props.parent;
+    let $context = {
+      context,
+      parent: $parentContext,
+      data,
+      slotProps: context.props.slotProps,
+      $root: !($parentContext && !$parentContext.$root)
+    };
 
     let parseOptions = parseBindAttrs(key, context.data.attrs || {}, $context.$root);
 
@@ -505,8 +458,14 @@ export default {
 
     $context.directives = merge([], options.directives, parseOptions.directives);
 
-    let {scopedSlots} = parseBindScopedSlots(key, context.scopedSlots || {}, $context.$root);
-    $context.scopedSlots = merge({}, options.scopedSlots, parseOptions.scopedSlots, scopedSlots);
+    $context.$slots = parseBindSlots(key, context.slots() || {}, $context.$root);
+
+    let scopedSlots = parseBindSlots(key, context.scopedSlots || {}, $context.$root);
+    scopedSlots = merge({}, options.scopedSlots, parseOptions.scopedSlots, scopedSlots);
+    $context.scopedSlots = Object.keys(scopedSlots).filter(name => !$context.$slots[name]).reduce((ss, name) => {
+      ss[name] = scopedSlots[name];
+      return ss;
+    }, {});
 
     $context.slot = parseOptions.slot || options.slot;
 
@@ -525,24 +484,24 @@ export default {
       return parent;
     };
 
-    let _options = {};          // 解析后的配置
+    let $tag;                   // parsed tag
+    let $options = {};          // parsed configuration
+    let $children;              // parsed children data
 
-    // 构建 class 配置
-    $context.$class = _options.class = buildClassOptions($context.class, $context);
+    $context.$tag = $tag = parse$(tag, $context);
 
-    // 构建 style 配置
-    $context.$style = _options.style = buildStyleOptions($context.style, $context);
+    $context.$class = $options.class = buildClassOptions($context.class, $context);
 
-    // 构建 on 配置
-    $context.$on = _options.on = buildEventOptions($context.on, $context);
+    $context.$style = $options.style = buildStyleOptions($context.style, $context);
 
-    // 构建 nativeOn 配置
+    $context.$on = $options.on = buildEventOptions($context.on, $context);
+
     $context.$nativeOn = buildEventOptions($context.nativeOn, $context);
     if (Object.keys($context.$nativeOn).length > 0) {
-      _options.nativeOn = $context.$nativeOn;
+      $options.nativeOn = $context.$nativeOn;
     }
 
-    // 构建 model 配置, modelProp: v-model 双向绑定属性名(默认value) modelEvent: v-model 双向绑定事件名(默认input)
+    // build model configuration, modelProp: v-model two-way binding property name (default value) modelEvent: v-model two-way binding event name (default input)
     let model = options.model || {};
     let {prop: modelProp = 'value', event: modelEvent = 'input'} = model;
     $context.$model = {
@@ -550,17 +509,15 @@ export default {
       event: modelEvent
     };
 
-    // 构建 attrs 配置
-    $context.$attrs = _options.attrs = buildAttrOptions($context.attrs, $context);
+    $context.$attrs = $options.attrs = buildAttrOptions($context.attrs, $context);
 
-    // 构建 props 配置
-    $context.$props = _options.props = buildAttrOptions($context.props, $context,
-      _propName => {
-        // 给同步属性添加事件监听
-        let eventName = _propName === modelProp ? modelEvent : `update:${_propName}`;
-        let callback = _options.on[eventName];
-        _options.on[eventName] = value => {
-          let propValue = $context.props[_propName];
+    $context.$props = $options.props = buildAttrOptions($context.props, $context,
+      propName => {
+        // add event listener to synchronization properties
+        let eventName = propName === modelProp ? modelEvent : `update:${propName}`;
+        let callback = $options.on[eventName];
+        $options.on[eventName] = value => {
+          let propValue = $context.props[propName];
           if (isObject(propValue)) {
             if ('$setValue' in propValue) {
               propValue.$setValue(value, {$context});
@@ -569,84 +526,60 @@ export default {
             } else if ('$sync' in propValue || '$getValue' in propValue) {
               throw new Error('you must to set prop $value or $setValue for set value.');
             } else {
-              $context.props[_propName] = value;
+              $context.props[propName] = value;
             }
           } else {
-            $context.props[_propName] = value;
+            $context.props[propName] = value;
           }
           callback && callback(value);
         };
       });
 
-    // 给 .sync 修饰的属性添加事件监听
+    // add event listeners to sync modified properties
     if (syncListeners) {
-      Object.keys(syncListeners).forEach(_propName => {
-        let eventName = _propName === modelProp ? modelEvent : `update:${_propName}`;
-        let callback = _options.on[eventName];
-        let syncListener = syncListeners[_propName];
-        _options.on[eventName] = value => {
+      Object.keys(syncListeners).forEach(propName => {
+        let eventName = propName === modelProp ? modelEvent : `update:${propName}`;
+        let callback = $options.on[eventName];
+        let syncListener = syncListeners[propName];
+        $options.on[eventName] = value => {
           syncListener(value);
           callback && callback(value);
         };
       });
     }
 
-    // 构建 domProps 配置
-    $context.$domProps = _options.domProps = buildDomPropsOptions($context.domProps, $context);
+    $context.$domProps = $options.domProps = buildDomPropsOptions($context.domProps, $context);
 
-    // 构建 作用域插槽 配置
-    $context.$scopedSlots = _options.scopedSlots = buildScopedSlotOptions(h, $context.scopedSlots, $context);
+    $context.$scopedSlots = $options.scopedSlots = buildScopedSlotOptions(h, $context.scopedSlots, $context);
 
-    // 构建 directives 配置
-    $context.$directives = _options.directives = buildDirectivesOptions($context.directives, $context);
+    $context.$directives = $options.directives = buildDirectivesOptions($context.directives, $context);
 
-    // 构建 插槽名称 配置
-    $context.$slot = _options.slot = buildSlotOptions($context.slot, $context);
+    $context.$slot = $options.slot = parse$($context.slot, $context);
 
-    // 构建 key 配置
-    $context.$key = _options.key = buildKeyOptions($context.key, $context);
+    $context.$key = $options.key = parse$($context.key, $context);
 
-    // 构建 ref 配置
-    $context.$ref = _options.ref = buildRefOptions($context.ref, $context);
+    $context.$ref = $options.ref = parse$($context.ref, $context);
 
-    // 构建 refInFor 配置
-    $context.$refInFor = _options.refInFor = buildRefInForOptions($context.refInFor, $context);
+    $context.$refInFor = $options.refInFor = parse$($context.refInFor, $context);
 
-    if (isObject(children)) {
-      // children 也要支持 $value、$getValue、$setValue
-      if ('$value' in children) {
-        children = children.$value;
-      } else if ('$getValue' in children) {
-        let $getValue = children.$getValue;
-        if (isFunction($getValue)) {
-          children = $getValue({$context});
-        } else {
-          throw new Error('$getValue is not function');
-        }
-      }
-    }
+    $context.$children = $children = parse$(children, $context);
 
-    if (tag === 'slot') {
-      // 如果组件是插槽
-      let _slot = context.scopedSlots[_options.props.name];
-      if (_slot) {
-        // 使用外部插槽实现 (将当前插槽所有声明的属性处理后作为参数传递给外部插槽实现)
-        let _slotVNode = _slot(Object.keys(_options.props)
-          .filter(name => name !== 'name') // 过滤掉 插槽名称
+    if ($tag === 'slot') {
+      let slot = context.scopedSlots[$options.props.name];
+      if (slot) {
+        // use external slot implementation (pass all declared attributes of the current slot as parameters to the external slot implementation)
+        let slotVNode = slot(Object.keys($options.props)
+          .filter(name => name !== 'name') // filter out slot name
           .reduce((props, name) => {
-            let value = _options.props[name];
-            if (isFunction(value)) {
-              value = value({$context});
-            }
-            props[name] = value;
+            props[name] = parse$($options.props[name], $context);
             return props;
           }, {}));
-        if (_slotVNode) {
-          return _slotVNode;
+        if (slotVNode) {
+          return slotVNode;
         }
       }
-      // 没有外部插槽实现, 使用当前插槽的默认实现
-      return isArray(children) ? children.map(child => {
+      // no external slot implementation, use the default implementation of the current slot
+      return isArray($children) ? $children.map(child => {
         return h('j-render', {
           props: {
             parent: $context,
@@ -660,35 +593,40 @@ export default {
       }) : [];
     }
 
-    if (scopedSlotsToChildren) {
-      let children = buildScopedSlotsToChildren(h, _options.scopedSlots);
-      delete _options.scopedSlots;
-      return h(tag, _options, children)
+    // slots first
+    let slotKeys = Object.keys($context.$slots);
+    if (slotKeys.length > 0) {
+      return h($tag, $options, slotKeys.reduce((elements, name) => {
+        elements.push(h('span', {
+          slot: name
+        }, $context.$slots[name]));
+        return elements;
+      }, []));
     }
-
-    return h(tag, _options, (children && children.length > 0) ?
-      children.filter(childData => {
-        if (isString(childData)) return true;
-        if (!isObject(childData)) return false;
-        let visible = childData.visible;
-        if (isFunction(visible)) {
-          visible = visible({context});
+    if ($children && $children.length > 0) {
+      return h($tag, $options, $children.reduce((elements, child) => {
+        child = parse$(child, $context);
+        if (isString(child)) {
+          elements.push(child);
+        } else if (isObject(child)) {
+          if (!child.visible || child.visible !== false) {
+            elements.push(h('j-render', {
+              props: {
+                parent: $context,
+                data: child
+              },
+              attrs: context.data.attrs,
+              on: context.listeners,
+              nativeOn: {},
+              scopedSlots: context.scopedSlots
+            }));
+          }
+        } else {
+          throw new Error('unsupported sub data type');
         }
-        return visible !== false;
-      }).map(childData => {
-        if (isString(childData)) {
-          return [childData];
-        }
-        return h('j-render', {
-          props: {
-            parent: $context,
-            data: childData
-          },
-          attrs: context.data.attrs,
-          on: context.listeners,
-          nativeOn: {},
-          scopedSlots: context.scopedSlots
-        });
-      }) : []);
+        return elements;
+      }, []));
+    }
+    return h($tag, $options);
   }
 }
