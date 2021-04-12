@@ -1,90 +1,85 @@
 <template>
-  <el-form ref="form" :model="form_" v-bind="formBind__">
-    <el-table :data="form_.data"
-              v-bind="tableBind__"
-              @select="(selection, row) => $emit('select', selection, row)"
-              @select-all="(selection) => $emit('select-all',selection)"
-              @selection-change="(selection) => $emit('selection-change',selection)"
-              @cell-mouse-enter="onCellMouseEnter"
-              @cell-mouse-leave="onCellMouseLeave"
-              @cell-click="(row, column, cell, event) => $emit('cell-click', row, column, cell, event)"
-              @cell-dblclick="(row, column, cell, event) => $emit('cell-dblclick', row, column, cell, event)"
-              @row-click="(row, column, event) => $emit('row-click', row, column, event)"
-              @row-contextmenu="(row, column, event) => $emit('row-contextmenu', row, column, event)"
-              @row-dblclick="(row, column, event) => $emit('row-dblclick', row, column, event)"
-              @header-click="(column, event) => $emit('header-click', column, event)"
-              @header-contextmenu="(column, event) => $emit('header-contextmenu', column, event)"
-              @sort-change="({column, prop, order}) => $emit('sort-change',{column, prop, order})"
-              @filter-change="(filters) => $emit('filter-change', filters)"
-              @current-change="(currentRow, oldCurrentRow) => $emit('current-change', currentRow, oldCurrentRow)"
-              @header-dragend="(newWidth, oldWidth, column, event) => $emit('header-dragend', newWidth, oldWidth, column, event)"
-              @expand-change="(row, expanded) => $emit('expand-change', row, expanded)"
-              class="j-object-array-form"
-    >
+  <el-form ref="form" :model="form_" v-bind="formBind">
+    <el-table :data="tableData" v-bind="tableBind" v-on="tableOn" class="j-object-array-form">
       <template #empty>
-        <slot name="empty" v-bind="{append, data: form_.data}"></slot>
+        <slot name="empty"/>
       </template>
       <template #append>
-        <slot name="append" v-bind="{append, data: form_.data}"></slot>
+        <slot name="append"/>
       </template>
-      <slot name="index">
-        <el-table-column header-align="center" align="center" width="50px" fixed="left">
-          <template #header="{column, $index}">
-            <el-button v-if="appendEnabled"
-                       :disabled="appendButtonDisabled__" type="primary" icon="el-icon-plus"
-                       circle plain size="mini"
-                       @click="append"
-            ></el-button>
-            <span v-else>#</span>
+      <el-table-column header-align="center" align="center" width="50px">
+        <template #header="{column, $index}">
+          <el-button v-if="appendEnabled"
+                     :disabled="appendButtonDisabled" type="primary" icon="el-icon-plus" circle plain size="mini"
+                     @click="append"/>
+          <span v-else>#</span>
+        </template>
+        <template #default="{row, column, $index}">
+          <el-button v-if="removeEnabled && row.visible"
+                     :disabled="removeButtonDisabled" type="danger" icon="el-icon-minus" circle plain size="mini"
+                     @click="remove({$index})"/>
+          <span v-else>{{$index + 1}}</span>
+        </template>
+      </el-table-column>
+      <template v-for="(tableColumn, $columnIndex) in tableColumns">
+        <el-table-column v-bind="tableColumn">
+          <template #header>
+            <span class="j-object-array-form-header"
+                  :class="{required: rows[$columnIndex] && rows[$columnIndex].required}">{{tableColumn.label}}</span>
           </template>
           <template #default="{row, column, $index}">
-            <el-button v-if="removeEnabled && row.__buttonVisible__"
-                       :disabled="removeButtonDisabled_" type="danger" icon="el-icon-minus"
-                       circle plain size="mini"
-                       @click="remove({$index})"
-            ></el-button>
-            <span v-else>{{$index + 1}}</span>
+            <slot :name="tableColumn.prop" v-bind="{row: row.target, column, $index}"/>
           </template>
         </el-table-column>
-      </slot>
-      <template v-for="(column, $index) in columns__">
-        <j-el-object-array-form-column :key="column.key"
-                                       :column="column"
-                                       :$index="$index"
-                                       :parent="$context__"
-        >
-        </j-el-object-array-form-column>
       </template>
     </el-table>
   </el-form>
 </template>
 
 <script>
-  import merge from "../../../src/utils/merge";
-  import deepMerge from "../../../src/utils/deep-merge";
-  import JElObjectArrayFormColumn from "./JElObjectArrayFormColumn";
-
   export default {
     name: "JElObjectArrayForm",
-    components: {JElObjectArrayFormColumn},
+    inheritAttrs: false,
+    provide() {
+      return {
+        jElObjectArrayForm: this
+      };
+    },
+    model: {
+      prop: 'model'
+    },
     props: {
-      columns: {
+      model: {
         type: Array,
         default() {
           return [];
         }
       },
-      value: Array,
+      columns: {
+        type: Object,
+        default() {
+          return {};
+        }
+      },
+      itemDefaultValue: Object,
+
+      rules: Object,                                                      // 表单验证规则
+      hideRequiredAsterisk: Boolean,                                      // 是否显示必填字段的标签旁边的红色星号
+      showMessage: {                                                      // 是否显示校验错误信息
+        type: Boolean,
+        default: true
+      },
+      validateOnRuleChange: {                                             // 是否在 rules 属性改变后立即触发一次验证
+        type: Boolean,
+        default: true
+      },
+      size: String,                                                       // 用于控制该表单内组件的尺寸
+      disabled: Boolean,                                                  // 是否禁用该表单内的所有组件。若设置为 true，则表单内组件上的 disabled 属性不再生效
 
       height: [String, Number],
       maxHeight: [String, Number],
       stripe: Boolean,
       border: {
-        type: Boolean,
-        default: true
-      },
-      size: String,
-      fit: {
         type: Boolean,
         default: true
       },
@@ -98,16 +93,15 @@
       removeEnabled: {
         type: Boolean,
         default: true
-      },
-
-      $context: Object
+      }
     },
     data() {
       return {
-        value_: null,
+        initialValue: null,
         form_: {
           data: []
-        }
+        },
+        fields_: []
       };
     },
     inject: {
@@ -117,7 +111,9 @@
       elFormItem: {
         default: ''
       },
-      form: {default: null}
+      form: {
+        default: ''
+      }
     },
     computed: {
       elFormItemSize__() {
@@ -126,201 +122,106 @@
       size__() {
         return this.size || this.elFormItemSize__ || (this.$ELEMENT || {}).size;
       },
-      $context__() {
-        return this.$context ? Object.keys(this.$context).reduce((context, name) => {
-          let value = this.$context[name];
-          if (name === 'context') {
-            let key = value.data.props.data.key;
-            let names = this.columns.map(column => column.renderData.children[0].children[0].children[0].key);
-            let skipNames = [...names.map(name => `${key}#${name}&header`), ...names.map(name => `${key}#${name}&default`)];
-            key = key + ":";
-            let keyLen = key.length;
-            context[name] = Object.keys(value).reduce((c, n) => {
-              let v = value[n];
-              if (n === 'data') {
-                c[n] = Object.keys(v).reduce((data, n) => {
-                  if (n === 'attrs') {
-                    data[n] = Object.keys(v[n]).reduce((attrs, attrName) => {
-                      if (attrName.startsWith(key)) {
-                        attrs[attrName.substring(keyLen)] = v[n][attrName];
-                      }
-                      return attrs;
-                    }, {});
-                  } else {
-                    data[n] = v[n];
-                  }
-                  return data;
-                }, {});
-              } else if (n === 'listeners') {
-                c[n] = Object.keys(v).reduce((listeners, n) => {
-                  if (n.startsWith(key)) {
-                    listeners[n.substring(keyLen)] = v[n];
-                  }
-                  return listeners;
-                }, {});
-              } else if (n === 'scopedSlots') {
-                c[n] = Object.keys(v).reduce((scopedSlots, n) => {
-                  if (n.startsWith(key)) {
-                    scopedSlots[n.substring(keyLen)] = v[n];
-                  } else if (skipNames.includes(n)) {
-                    scopedSlots[n] = v[n];
-                  }
-                  return scopedSlots;
-                }, {});
-              } else {
-                c[n] = v;
-              }
-              return c;
-            }, {});
-          } else {
-            context[name] = value;
-          }
-          return context;
-        }, {}) : {
-          data: null,
-          context: this,
-          parent: null,
-          $root: true
+      formBind() {
+        return {
+          hideRequiredAsterisk: this.hideRequiredAsterisk,
+          showMessage: this.showMessage,
+          validateOnRuleChange: this.validateOnRuleChange,
+          size: this.size__,
+          disabled: this.disabled
         };
       },
-      columns__() {
-        return this.columns.map((column, $index) => {
-          let _column = deepMerge({}, column, {
-            width: column.width > 0 ? `${column.width}px` : null,
-            minWidth: column.minWidth > 0 ? `${column.minWidth}px` : null
+      tableColumns() {
+        return Object.keys(this.columns).reduce((arr, prop) => {
+          let column = this.columns[prop];
+          arr.push({
+            prop: column.prop || prop,
+            label: column.label || '',
+            width: column.width,
+            minWidth: column.minWidth,
+            headerAlign: column.headerAlign || 'center',
+            align: column.align || 'center'
           });
-          // _column.key = uuid();
-          if (!_column.renderData) return _column;
-
-          let _formItemRenderData = _column.renderData.children[0];
-          if (_formItemRenderData.tag !== 'el-form-item') {
-            throw new Error('The tag must el-form-item');
-          }
-          _column.label = _formItemRenderData.options.props.label;
-          let _prop = _formItemRenderData.options.props.prop;
-          _column.prop = _prop;
-
-          let _required = !!_formItemRenderData.options.attrs.validate_.required;
-          let validate = this.$context__.context.data.attrs[_formItemRenderData.key + '&props&validate'];
-          if (validate && validate.required === true) {
-            _required = true;
-          }
-          _column.required_ = _required;
-
-          if (!_formItemRenderData.options.scopedSlots) {
-            _formItemRenderData.options.scopedSlots = {};
-          }
-
-          // 去除 formItem label
-          _formItemRenderData.options.scopedSlots.label = {
-            tag: 'span'
+          return arr;
+        }, []);
+      },
+      tableData() {
+        return this.form_.data.map(row => {
+          return {
+            visible: false,
+            target: row
           };
-          if (!_formItemRenderData.options.style) {
-            _formItemRenderData.options.style = {};
-          }
-          _formItemRenderData.options.style.marginBottom = '15px';
-
-          _formItemRenderData.options.props.prop = {
-            $getValue: ({$context: {data}}) => {
-              let {$index} = data.options;
-              return `data.${$index}.${_prop}`;
-            }
-          };
-          return _column;
         });
       },
-      formBind__() {
-        return {
-          size: this.size__
-        };
-      },
-      tableBind__() {
+      tableBind() {
         return {
           height: this.height,
           maxHeight: this.maxHeight,
           stripe: this.stripe,
           border: this.border,
           size: this.size__,
-          fit: this.fit
+          fit: true,
+          showHeader: true
         };
       },
-      rowCount__() {
-        return this.form_.data.length;
+      tableOn() {
+        return this.removeEnabled ? {
+          'cell-mouse-enter': row => row.visible = true,
+          'cell-mouse-leave': row => row.visible = false
+        } : {};
       },
-      appendButtonDisabled__() {
-        return !!this.maxRow && this.rowCount__ >= this.maxRow;
+      rowCount() {
+        return this.tableData.length;
       },
-      removeButtonDisabled_() {
-        return !!this.minRow && this.rowCount__ <= this.minRow;
+      appendButtonDisabled() {
+        return !!this.maxRow && this.rowCount >= this.maxRow;
+      },
+      removeButtonDisabled() {
+        return !!this.minRow && this.rowCount <= this.minRow;
+      },
+      rows() {
+        return this.fields_.map(field => {
+          return {
+            required: field.isRequired || field.$props.required
+          };
+        });
       }
     },
     watch: {
-      value: {
+      model: {
         immediate: true,
         handler(val) {
-          if (!val) return;
-          if (JSON.stringify(val) === JSON.stringify(this.value_)) return;
-          this.value_ = val;
-          this.form_.data = this.value_.map(v => {
-            return merge({}, v, {
-              __buttonVisible__: false
-            });
-          });
+          this.form_.data = val || [];
         },
         deep: true
       },
-      'form_.data': {
-        handler(val) {
-          let _value = val.map(v => {
-            let row = merge({}, v);
-            delete row.__buttonVisible__;
-            return row;
-          });
-          if (JSON.stringify(_value) === JSON.stringify(this.value)) return;
-          this.$emit('input', _value);
-        },
-        deep: true
+      fields_(val) {
+        if (val.length !== this.tableColumns.length * this.rowCount) {
+          throw new Error(`Component template should contain exactly one j-el-array-form-item element. If you are using v-if on multiple elements, use v-else-if to chain them instead.`);
+        }
       }
     },
     methods: {
+      addField(field) {
+        this.fields_.push(field);
+      },
+      removeField(field) {
+        this.fields_.splice(this.fields_.indexOf(field), 1);
+      },
       append() {
-        if (this.appendButtonDisabled__) return;
-        this.form_.data.push(this.columns__.reduce((previousValue, currentValue) => {
-          let _valueType = currentValue.renderData.children[0].options.attrs.valueType_;
-          let _defaultValue = currentValue.renderData.children[0].children[0].children[0].options.props.value;
-          switch (_valueType) {
-            case 'string':
-              previousValue[currentValue.prop] = _defaultValue || '';
-              break;
-            case 'number':
-              previousValue[currentValue.prop] = _defaultValue || 0;
-              break;
-            case 'array':
-              previousValue[currentValue.prop] = _defaultValue || [];
-              break;
-            case 'object':
-              previousValue[currentValue.prop] = _defaultValue || {};
-              break;
-            case 'boolean':
-              previousValue[currentValue.prop] = _defaultValue || false;
-              break;
-            default:
-              throw new Error(`不支持的值类型: ${_valueType}`);
-          }
-          return previousValue;
-        }, {__buttonVisible__: false}));
+        if (this.appendButtonDisabled) return;
+        if (this.itemDefaultValue) {
+          this.form_.data.push(this.itemDefaultValue);
+        } else {
+          this.form_.data.push(this.tableColumns.reduce((obj, column) => {
+            obj[column.prop] = null;
+            return obj;
+          }, {}));
+        }
       },
       remove({$index}) {
-        if (this.removeButtonDisabled_) return;
+        if (this.removeButtonDisabled) return;
         this.form_.data.splice($index, 1);
-      },
-      onCellMouseEnter(row, column, cell, event) {
-        row.__buttonVisible__ = true;
-        this.$emit('cell-mouse-enter', row, column, cell, event);
-      },
-      onCellMouseLeave(row, column, cell, event) {
-        row.__buttonVisible__ = false;
-        this.$emit('cell-mouse-leave', row, column, cell, event);
       },
       validate(callback) {
         return this.$refs.form && this.$refs.form.validate(callback);
@@ -329,7 +230,11 @@
         return this.$refs.form && this.$refs.form.validateField(props, callback);
       },
       resetFields() {
-        return this.$refs.form && this.$refs.form.resetFields();
+        if (JSON.stringify(this.form_.data) === JSON.stringify(this.initialValue)) {
+          return this.$refs.form.resetFields();
+        } else {
+          this.form_.data.splice(0, this.form_.data.length, ...JSON.parse(this.initialValue));
+        }
       },
       clearValidate(props) {
         return this.$refs.form && this.$refs.form.clearValidate(props);
@@ -337,6 +242,9 @@
     },
     created() {
       this.form && this.form.addSubForm(this);
+    },
+    mounted() {
+      this.initialValue = JSON.stringify(this.model || []);
     }
   }
 </script>

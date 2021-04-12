@@ -199,7 +199,7 @@
         } else if (this.itemDataType === 'array') {
           this.form_.data.push([]);
         } else {
-          this.form_.data.push('');
+          this.form_.data.push(null);
         }
       },
       remove({$index}) {
@@ -216,7 +216,7 @@
         if (JSON.stringify(this.form_.data) === JSON.stringify(this.initialValue)) {
           return this.$refs.form.resetFields();
         } else {
-          this.form_.data.splice(0, this.form_.data.length, ...JSON.parse(JSON.stringify(this.initialValue)));
+          this.form_.data.splice(0, this.form_.data.length, ...JSON.parse(this.initialValue));
         }
       },
       clearValidate(props) {
@@ -227,7 +227,7 @@
       this.form && this.form.addSubForm(this);
     },
     mounted() {
-      this.initialValue = JSON.parse(JSON.stringify(this.model || []));
+      this.initialValue = JSON.stringify(this.model || []);
     }
   }
 </script>
