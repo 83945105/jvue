@@ -4,9 +4,6 @@
       <template #empty>
         <slot name="empty"/>
       </template>
-      <template #append>
-        <slot name="append"/>
-      </template>
       <el-table-column header-align="center" align="center" width="50px">
         <template #header="{column, $index}">
           <el-button v-if="appendEnabled"
@@ -56,9 +53,9 @@
         }
       },
       columns: {
-        type: Object,
+        type: Array,
         default() {
-          return {};
+          return [];
         }
       },
       itemDefaultValue: Object,
@@ -132,18 +129,16 @@
         };
       },
       tableColumns() {
-        return Object.keys(this.columns).reduce((arr, prop) => {
-          let column = this.columns[prop];
-          arr.push({
-            prop: column.prop || prop,
-            label: column.label || '',
+        return this.columns.map(column => {
+          return {
+            prop: column.prop,
+            label: column.label,
             width: column.width,
             minWidth: column.minWidth,
             headerAlign: column.headerAlign || 'center',
             align: column.align || 'center'
-          });
-          return arr;
-        }, []);
+          };
+        });
       },
       tableData() {
         return this.form_.data.map(row => {
@@ -185,6 +180,9 @@
             required: field.isRequired || field.$props.required
           };
         });
+      },
+      itemDefaultValueStr() {
+        return JSON.stringify(this.itemDefaultValue);
       }
     },
     watch: {
@@ -203,7 +201,7 @@
     },
     methods: {
       addField(field) {
-        this.fields_.push(field);
+        return this.fields_.push(field);
       },
       removeField(field) {
         this.fields_.splice(this.fields_.indexOf(field), 1);
@@ -211,7 +209,7 @@
       append() {
         if (this.appendButtonDisabled) return;
         if (this.itemDefaultValue) {
-          this.form_.data.push(this.itemDefaultValue);
+          this.form_.data.push(JSON.parse(this.itemDefaultValueStr));
         } else {
           this.form_.data.push(this.tableColumns.reduce((obj, column) => {
             obj[column.prop] = null;

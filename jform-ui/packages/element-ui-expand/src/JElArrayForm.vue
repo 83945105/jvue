@@ -163,6 +163,9 @@
             required: field.isRequired || field.$props.required
           };
         });
+      },
+      itemDefaultValueStr() {
+        return JSON.stringify(this.itemDefaultValue);
       }
     },
     watch: {
@@ -189,7 +192,7 @@
       append() {
         if (this.appendButtonDisabled) return;
         if (this.itemDefaultValue) {
-          this.form_.data.push(this.itemDefaultValue);
+          this.form_.data.push(JSON.parse(this.itemDefaultValueStr));
         } else if (this.itemDataType === 'string') {
           this.form_.data.push('');
         } else if (this.itemDataType === 'number') {

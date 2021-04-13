@@ -6,9 +6,9 @@
 
 <script>
   export default {
-    name: "JElObjectArrayFormItem",
+    name: "JElObjectFormItem",
     inject: {
-      jElObjectArrayForm: {
+      jElObjectForm: {
         default: ''
       }
     },
@@ -27,20 +27,16 @@
     },
     data() {
       return {
+        columnIndex: 1,
         cellIndex: null
       };
     },
     computed: {
-      columnIndex() {
-        let count = this.jElObjectArrayForm.tableColumns.length;
-        return this.cellIndex % count;
+      rowIndex() {
+        return this.cellIndex;
       },
       prop() {
-        return this.jElObjectArrayForm.tableColumns[this.columnIndex].prop;
-      },
-      rowIndex() {
-        let count = this.jElObjectArrayForm.tableColumns.length;
-        return Math.floor(this.cellIndex / count);
+        return this.jElObjectForm.tableData[this.rowIndex].prop;
       },
       isRequired() {
         let rules = this.getRules();
@@ -58,7 +54,7 @@
       },
       bind() {
         return {
-          prop: `data.${this.rowIndex}.${this.prop}`,
+          prop: `data.${this.prop}`,
           required: this.required,
           rules: this.getRules(),
           error: this.error,
@@ -69,7 +65,7 @@
     },
     methods: {
       getRules() {
-        let formRules = this.jElObjectArrayForm.rules ? this.jElObjectArrayForm.rules[this.prop] : null;
+        let formRules = this.jElObjectForm.rules ? this.jElObjectForm.rules[this.prop] : null;
         const selfRules = this.rules;
         const requiredRule = this.required !== undefined ? {required: !!this.required} : [];
         return [].concat(selfRules || formRules || []).concat(requiredRule);
@@ -82,10 +78,10 @@
       }
     },
     created() {
-      this.cellIndex = this.jElObjectArrayForm.addField(this) - 1;
+      this.cellIndex = this.jElObjectForm.addField(this) - 1;
     },
     beforeDestroy() {
-      this.jElObjectArrayForm.removeField(this);
+      this.jElObjectForm.removeField(this);
     }
   }
 </script>

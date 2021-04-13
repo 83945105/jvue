@@ -1,74 +1,35 @@
 <template>
   <el-form ref="form" :model="form_" v-bind="formBind__">
-    <el-table :data="form_.data"
-              v-bind="tableBind__"
-              @select="(selection, row) => $emit('select', selection, row)"
-              @select-all="(selection) => $emit('select-all', selection)"
-              @selection-change="(selection) => $emit('selection-change', selection)"
-              @cell-mouse-enter="(row, column, cell, event) => $emit('cell-mouse-enter', row, column, cell, event)"
-              @cell-mouse-leave="(row, column, cell, event) => $emit('cell-mouse-leave', row, column, cell, event)"
-              @cell-click="(row, column, cell, event) => $emit('cell-click', row, column, cell, event)"
-              @cell-dblclick="(row, column, cell, event) => $emit('cell-dblclick', row, column, cell, event)"
-              @row-click="(row, column, event) => $emit('row-click', row, column, event)"
-              @row-contextmenu="(row, column, event) => $emit('row-contextmenu', row, column, event)"
-              @row-dblclick="(row, column, event) => $emit('row-dblclick', row, column, event)"
-              @header-click="(column, event) => $emit('header-click', column, event)"
-              @header-contextmenu="(column, event) => $emit('header-contextmenu', column, event)"
-              @sort-change="({column, prop, order}) => $emit('sort-change',{column, prop, order})"
-              @filter-change="(filters) => $emit('filter-change', filters)"
-              @current-change="(currentRow, oldCurrentRow) => $emit('current-change', currentRow, oldCurrentRow)"
-              @header-dragend="(newWidth, oldWidth, column, event) => $emit('header-dragend', newWidth, oldWidth, column, event)"
-              @expand-change="(row, expanded) => $emit('expand-change', row, expanded)"
-              class="j-object-form"
-    >
-      <j-el-object-form-label-column :column="labelColumn__"
-                                     :parent="$context__"
-                                     v-if="showLabelColumn"
-      >
-      </j-el-object-form-label-column>
-      <j-el-object-form-value-column :column="valueColumn__"
-                                     :parent="$context__"
-                                     :children="children__"
-                                     v-if="showValueColumn"
-      >
-      </j-el-object-form-value-column>
-      <template #append>
-        <slot name="append"></slot>
-      </template>
+    <el-table :data="tableData" v-bind="tableBind__" class="j-object-form">
+      <el-table-column v-bind="labelBind">
+        <template #default="{row, column, $index}">
+          <span>{{row.label}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-bind="valueBind">
+        <slot/>
+      </el-table-column>
     </el-table>
   </el-form>
 </template>
 
 <script>
-  import JElObjectFormLabelColumn from "./JElObjectFormLabelColumn";
-  import JElObjectFormValueColumn from "./JElObjectFormValueColumn";
   import merge from "../../../src/utils/merge";
   import deepMerge from "../../../src/utils/deep-merge";
 
   export default {
     name: "JElObjectForm",
-    components: {JElObjectFormLabelColumn, JElObjectFormValueColumn},
+    inheritAttrs: false,
+    provide() {
+      return {
+        jElObjectForm: this
+      };
+    },
+    model: {
+      prop: 'model'
+    },
     props: {
-      labelColumn: {
-        type: Object,
-        default() {
-          return {
-            label: '属性',
-            prop: 'label'
-          };
-        }
-      },
-      valueColumn: {
-        type: Object,
-        default() {
-          return {
-            label: '值',
-            prop: 'value'
-          };
-        }
-      },
-      children: Array,
-      value: Object,
+      model: Object,
 
       height: [String, Number],
       maxHeight: [String, Number],
@@ -81,25 +42,15 @@
       fit: {
         type: Boolean,
         default: true
-      },
-      showHeader: Boolean,
-      showLabelColumn: {
-        type: Boolean,
-        default: true
-      },
-      showValueColumn: {
-        type: Boolean,
-        default: true,
-      },
-
-      $context: Object
+      }
     },
     data() {
       return {
-        value_: null,
+        initialValue: null,
         form_: {
-          data: []
-        }
+          data: {}
+        },
+        fields_: []
       };
     },
     inject: {
@@ -109,7 +60,9 @@
       elFormItem: {
         default: ''
       },
-      form: {default: null}
+      form: {
+        default: ''
+      }
     },
     computed: {
       elFormItemSize__() {
@@ -118,7 +71,7 @@
       size__() {
         return this.size || this.elFormItemSize__ || (this.$ELEMENT || {}).size;
       },
-      labelColumn__() {
+      labelBind() {
         return merge({}, this.labelColumn, {
           label: this.labelColumn.label || '属性',
           prop: this.labelColumn.prop || 'label',
@@ -126,12 +79,22 @@
           minWidth: this.labelColumn.minWidth > 0 ? `${this.labelColumn.minWidth}px` : null
         });
       },
-      valueColumn__() {
+      valueBind() {
         return merge({}, this.valueColumn, {
           label: this.valueColumn.label || '值',
           prop: this.valueColumn.prop || 'value',
           width: this.valueColumn.width > 0 ? `${this.valueColumn.width}px` : null,
           minWidth: this.valueColumn.minWidth > 0 ? `${this.valueColumn.minWidth}px` : null
+        });
+      },
+      tableData() {
+        return Object.keys(this.rows).map(prop => {
+          let row = this.rows[prop];
+          return {
+            prop,
+            label: row.label,
+            value: this.form_.data[prop]
+          };
         });
       },
       children__() {
@@ -145,57 +108,6 @@
           return child;
         });
       },
-      $context__() {
-        return this.$context ? Object.keys(this.$context).reduce((context, name) => {
-          let value = this.$context[name];
-          if (name === 'context') {
-            let key = value.data.props.data.key;
-            let skipNames = [`${key}#label&header`, `${key}#label&default`, `${key}#value&header`, `${key}#value&default`];
-            key = key + ":";
-            let keyLen = key.length;
-            context[name] = Object.keys(value).reduce((c, n) => {
-              let v = value[n];
-              if (n === 'data') {
-                c[n] = Object.keys(v).reduce((data, n) => {
-                  if (n === 'attrs') {
-                    data[n] = Object.keys(v[n]).reduce((attrs, attrName) => {
-                      if (attrName.startsWith(key)) {
-                        attrs[attrName.substring(keyLen)] = v[n][attrName];
-                      }
-                      return attrs;
-                    }, {});
-                  } else {
-                    data[n] = v[n];
-                  }
-                  return data;
-                }, {});
-              } else if (n === 'listeners') {
-                c[n] = Object.keys(v).reduce((listeners, n) => {
-                  if (n.startsWith(key)) {
-                    listeners[n.substring(keyLen)] = v[n];
-                  }
-                  return listeners;
-                }, {});
-              } else if (n === 'scopedSlots') {
-                c[n] = Object.keys(v).reduce((scopedSlots, n) => {
-                  if (n.startsWith(key)) {
-                    scopedSlots[n.substring(keyLen)] = v[n];
-                  } else if (skipNames.includes(n)) {
-                    scopedSlots[n] = v[n];
-                  }
-                  return scopedSlots;
-                }, {});
-              } else {
-                c[n] = v;
-              }
-              return c;
-            }, {});
-          } else {
-            context[name] = value;
-          }
-          return context;
-        }, {}) : this;
-      },
       formBind__() {
         return {
           size: this.size__
@@ -208,42 +120,27 @@
           stripe: this.stripe,
           border: this.border,
           size: this.size__,
-          fit: this.fit,
-          showHeader: this.showHeader
+          fit: true,
+          showHeader: false
         };
       }
     },
     watch: {
-      value: {
+      model: {
         immediate: true,
         handler(val) {
-          if (!val) return;
-          if (JSON.stringify(val) === JSON.stringify(this.value_)) return;
-          this.value_ = val;
-          this.form_.data = (this.children || []).map(child => {
-            let row = {};
-            let controlItem = child.children[0];
-            row[this.labelColumn__.prop] = controlItem.options.props.label;
-            row[this.valueColumn__.prop] = val[controlItem.options.props.prop] || this.initValue(child);
-            return row;
-          });
-        },
-        deep: true
-      },
-      'form_.data': {
-        handler(val) {
-          let _value = val.reduce((form, row, $index) => {
-            let name = this.children[$index].children[0].options.props.prop;
-            form[name] = row[this.valueColumn__.prop];
-            return form;
-          }, {});
-          if (JSON.stringify(_value) === JSON.stringify(this.value)) return;
-          this.$emit('input', _value);
+          this.form_.data = val || {};
         },
         deep: true
       }
     },
     methods: {
+      addField(field) {
+        return this.fields_.push(field);
+      },
+      removeField(field) {
+        this.fields_.splice(this.fields_.indexOf(field), 1);
+      },
       initValue(child) {
         let _valueType = child.children[0].options.attrs.valueType_;
         let _defaultValue = child.children[0].children[0].children[0].options.props.value;

@@ -4,7 +4,7 @@
   "type": "form",
   "fdName": "fd-el-form",
   "options": {
-    "key": "1d81a4ba-d28e-41ac-9dde-b33459c4680e",
+    "key": "03627562-5f41-4df4-9526-28fbd7739cd3",
     "ref": "$form",
     "class": [],
     "style": {},
@@ -15,7 +15,18 @@
     },
     "props": {
       "model": {
-        "array_form_1618324803212": []
+        "object_array_form_1618321203735": [
+          {
+            "name": "小王",
+            "age": null,
+            "sex": "1"
+          },
+          {
+            "name": "小李",
+            "age": null,
+            "sex": "2"
+          }
+        ]
       },
       "rules": {},
       "inline": false,
@@ -33,33 +44,33 @@
   },
   "children": [
     {
-      "key": "array_form_1618324803212$item$slot",
+      "key": "object_array_form_1618321203735$item$slot",
       "tag": "slot",
       "type": "form-item-slot",
-      "fdName": "fd-el-array-form",
+      "fdName": "fd-el-object-array-form",
       "options": {
         "props": {
-          "name": "array_form_1618324803212$item"
+          "name": "object_array_form_1618321203735$item"
         }
       },
       "children": [
         {
-          "key": "array_form_1618324803212$item",
+          "key": "object_array_form_1618321203735$item",
           "tag": "el-form-item",
           "type": "form-item",
           "options": {
-            "key": "e47aa309-8d3b-4b19-98c0-ae808f396f8f",
-            "ref": "$array_form_1618324803212$item",
+            "key": "41d05111-8802-4889-b42e-1e843c2dbae3",
+            "ref": "$object_array_form_1618321203735$item",
             "class": [],
             "style": {},
             "attrs": {
               "valueType_": "array",
-              "dataType_": "string",
+              "dataType_": "object",
               "labelWidthEnabled_": false,
               "labelWidth_": 100,
-              "controlType_": "array-form",
+              "controlType_": "object-array-form",
               "validate_": {
-                "required": false,
+                "required": true,
                 "requiredError": "{name}不能为空",
                 "requiredTrigger": "blur",
                 "valueUnique": false,
@@ -86,8 +97,8 @@
               }
             },
             "props": {
-              "prop": "array_form_1618324803212",
-              "label": "数组表单",
+              "prop": "object_array_form_1618321203735",
+              "label": "对象数组表单",
               "labelWidth": null,
               "required": false,
               "rules": null,
@@ -99,27 +110,64 @@
           },
           "children": [
             {
-              "key": "array_form_1618324803212$slot",
+              "key": "object_array_form_1618321203735$slot",
               "tag": "slot",
               "type": "control-slot",
               "options": {
                 "props": {
-                  "name": "array_form_1618324803212"
+                  "name": "object_array_form_1618321203735"
                 }
               },
               "children": [
                 {
-                  "key": "array_form_1618324803212",
-                  "tag": "j-el-array-form",
-                  "type": "array-form",
+                  "key": "object_array_form_1618321203735",
+                  "tag": "j-el-object-array-form",
+                  "type": "object-array-form",
                   "options": {
-                    "key": "7d1db26e-f09c-41bd-95f0-4262a022d34f",
-                    "ref": "$array_form_1618324803212",
+                    "key": "2ff19f35-0f13-4161-9545-3e8dcc20ba06",
+                    "ref": "$object_array_form_1618321203735",
                     "class": [],
                     "style": {},
                     "attrs": {},
                     "props": {
-                      "model": [],
+                      "model": [
+                        {
+                          "name": "小王",
+                          "age": null,
+                          "sex": "1"
+                        },
+                        {
+                          "name": "小李",
+                          "age": null,
+                          "sex": "2"
+                        }
+                      ],
+                      "columns": [
+                        {
+                          "prop": "name",
+                          "label": "姓名",
+                          "width": null,
+                          "minWidth": null,
+                          "headerAlign": "center",
+                          "align": "center"
+                        },
+                        {
+                          "prop": "age",
+                          "label": "年龄",
+                          "width": null,
+                          "minWidth": null,
+                          "headerAlign": "center",
+                          "align": "center"
+                        },
+                        {
+                          "prop": "sex",
+                          "label": "性别",
+                          "width": null,
+                          "minWidth": null,
+                          "headerAlign": "center",
+                          "align": "center"
+                        }
+                      ],
                       "hideRequiredAsterisk": false,
                       "showMessage": true,
                       "validateOnRuleChange": true,
@@ -135,24 +183,24 @@
                       "removeEnabled": true
                     },
                     "scopedSlots": {
-                      "default": {
-                        "key": "input_1618324804598$item$slot",
+                      "name": {
+                        "key": "name$item$slot",
                         "tag": "slot",
                         "type": "form-item-slot",
                         "fdName": "fd-el-input",
                         "options": {
                           "props": {
-                            "name": "input_1618324804598$item"
+                            "name": "name$item"
                           }
                         },
                         "children": [
                           {
-                            "key": "input_1618324804598$item",
+                            "key": "name$item",
                             "tag": "el-form-item",
                             "type": "form-item",
                             "options": {
-                              "key": "24daaad2-2069-479b-9745-fa21469e864e",
-                              "ref": "$input_1618324804598$item",
+                              "key": "55618f43-b588-4bb5-852e-d1cf62b7da2a",
+                              "ref": "$name$item",
                               "class": [],
                               "style": {},
                               "attrs": {
@@ -162,7 +210,7 @@
                                 "labelWidth_": 100,
                                 "controlType_": "input",
                                 "validate_": {
-                                  "required": false,
+                                  "required": true,
                                   "requiredError": "{name}不能为空",
                                   "requiredTrigger": "blur",
                                   "valueUnique": false,
@@ -189,8 +237,8 @@
                                 }
                               },
                               "props": {
-                                "prop": "input_1618324804598",
-                                "label": "单行文本",
+                                "prop": "name",
+                                "label": "姓名",
                                 "labelWidth": null,
                                 "required": false,
                                 "rules": null,
@@ -202,22 +250,22 @@
                             },
                             "children": [
                               {
-                                "key": "input_1618324804598$slot",
+                                "key": "name$slot",
                                 "tag": "slot",
                                 "type": "control-slot",
                                 "options": {
                                   "props": {
-                                    "name": "input_1618324804598"
+                                    "name": "name"
                                   }
                                 },
                                 "children": [
                                   {
-                                    "key": "input_1618324804598",
+                                    "key": "name",
                                     "tag": "el-input",
                                     "type": "input",
                                     "options": {
-                                      "key": "f0e11abd-a8ef-4ccd-9a4c-e25fc8960c62",
-                                      "ref": "$input_1618324804598",
+                                      "key": "4e2fbe37-8f2c-4951-9075-b1c14d02bbd0",
+                                      "ref": "$name",
                                       "class": [],
                                       "style": {},
                                       "attrs": {
@@ -235,7 +283,7 @@
                                       },
                                       "props": {
                                         "type": "text",
-                                        "value": "1",
+                                        "value": "233",
                                         "showWordLimit": false,
                                         "clearable": true,
                                         "showPassword": false,
@@ -246,6 +294,262 @@
                                         "label": null,
                                         "tabindex": null,
                                         "validateEvent": true
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "age": {
+                        "key": "age$item$slot",
+                        "tag": "slot",
+                        "type": "form-item-slot",
+                        "fdName": "fd-el-input-number",
+                        "options": {
+                          "props": {
+                            "name": "age$item"
+                          }
+                        },
+                        "children": [
+                          {
+                            "key": "age$item",
+                            "tag": "el-form-item",
+                            "type": "form-item",
+                            "options": {
+                              "key": "1e5e57f4-0a25-48dd-9c3f-78d6c9fbeb4a",
+                              "ref": "$age$item",
+                              "class": [],
+                              "style": {},
+                              "attrs": {
+                                "valueType_": "number",
+                                "dataType_": "number",
+                                "labelWidthEnabled_": false,
+                                "labelWidth_": 100,
+                                "controlType_": "input-number",
+                                "validate_": {
+                                  "required": true,
+                                  "requiredError": "{name}不能为空",
+                                  "requiredTrigger": "blur",
+                                  "valueUnique": false,
+                                  "valueUniqueTrigger": "blur",
+                                  "valueUniqueMethod": "uniqueValidator",
+                                  "validateMinEnabled": false,
+                                  "validateMin": 0,
+                                  "validateMaxEnabled": false,
+                                  "validateMax": 0,
+                                  "validateRangeError": "{name}长度不正确",
+                                  "validateRangeTrigger": "blur",
+                                  "validateType": "",
+                                  "validateTypeError": "{name}格式不正确",
+                                  "validateTypeTrigger": "blur",
+                                  "validateRegex": "",
+                                  "validateRegexError": "{name}格式不正确",
+                                  "validateRegexTrigger": "blur",
+                                  "validates": [
+                                    {
+                                      "method": "",
+                                      "trigger": "blur"
+                                    }
+                                  ]
+                                }
+                              },
+                              "props": {
+                                "prop": "age",
+                                "label": "年龄",
+                                "labelWidth": null,
+                                "required": false,
+                                "rules": null,
+                                "error": null,
+                                "showMessage": true,
+                                "inlineMessage": false,
+                                "size": null
+                              }
+                            },
+                            "children": [
+                              {
+                                "key": "age$slot",
+                                "tag": "slot",
+                                "type": "control-slot",
+                                "options": {
+                                  "props": {
+                                    "name": "age"
+                                  }
+                                },
+                                "children": [
+                                  {
+                                    "key": "age",
+                                    "tag": "el-input-number",
+                                    "type": "input-number",
+                                    "options": {
+                                      "key": "fca42054-60e2-4207-983a-c2b600c43d6f",
+                                      "ref": "$age",
+                                      "class": [],
+                                      "style": {
+                                        "width": "100%"
+                                      },
+                                      "attrs": {
+                                        "name": null,
+                                        "placeholder": "请输入"
+                                      },
+                                      "props": {
+                                        "value": 9,
+                                        "min": null,
+                                        "max": null,
+                                        "step": null,
+                                        "stepStrictly": false,
+                                        "precision": null,
+                                        "size": null,
+                                        "disabled": false,
+                                        "controls": true,
+                                        "controlsPosition": "right",
+                                        "label": null
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "sex": {
+                        "key": "sex$item$slot",
+                        "tag": "slot",
+                        "type": "form-item-slot",
+                        "fdName": "fd-el-select",
+                        "options": {
+                          "props": {
+                            "name": "sex$item"
+                          }
+                        },
+                        "children": [
+                          {
+                            "key": "sex$item",
+                            "tag": "el-form-item",
+                            "type": "form-item",
+                            "options": {
+                              "key": "7c19b854-058b-43e3-89bf-9e9fe305ea80",
+                              "ref": "$sex$item",
+                              "class": [],
+                              "style": {},
+                              "attrs": {
+                                "valueType_": "string",
+                                "dataType_": "string",
+                                "labelWidthEnabled_": false,
+                                "labelWidth_": 100,
+                                "controlType_": "select",
+                                "validate_": {
+                                  "required": true,
+                                  "requiredError": "{name}不能为空",
+                                  "requiredTrigger": "change",
+                                  "valueUnique": false,
+                                  "valueUniqueTrigger": "change",
+                                  "valueUniqueMethod": "uniqueValidator",
+                                  "validateMinEnabled": false,
+                                  "validateMin": 0,
+                                  "validateMaxEnabled": false,
+                                  "validateMax": 0,
+                                  "validateRangeError": "{name}长度不正确",
+                                  "validateRangeTrigger": "change",
+                                  "validateType": "",
+                                  "validateTypeError": "{name}格式不正确",
+                                  "validateTypeTrigger": "change",
+                                  "validateRegex": "",
+                                  "validateRegexError": "{name}格式不正确",
+                                  "validateRegexTrigger": "change",
+                                  "validates": [
+                                    {
+                                      "method": "",
+                                      "trigger": "change"
+                                    }
+                                  ]
+                                }
+                              },
+                              "props": {
+                                "prop": "sex",
+                                "label": "性别",
+                                "labelWidth": null,
+                                "required": false,
+                                "rules": null,
+                                "error": null,
+                                "showMessage": true,
+                                "inlineMessage": false,
+                                "size": null
+                              }
+                            },
+                            "children": [
+                              {
+                                "key": "sex$slot",
+                                "tag": "slot",
+                                "type": "control-slot",
+                                "options": {
+                                  "props": {
+                                    "name": "sex"
+                                  }
+                                },
+                                "children": [
+                                  {
+                                    "key": "sex",
+                                    "tag": "j-el-select",
+                                    "type": "select",
+                                    "options": {
+                                      "key": "4da08979-90e1-400b-a3a7-06fa38ccb8a7",
+                                      "ref": "$sex",
+                                      "class": [],
+                                      "style": {
+                                        "width": "100%"
+                                      },
+                                      "attrs": {
+                                        "dataMethod_": null,
+                                        "filterMethod_": null,
+                                        "remoteMethod_": null
+                                      },
+                                      "props": {
+                                        "value": "1",
+                                        "multiple": false,
+                                        "disabled": false,
+                                        "valueKey": "value",
+                                        "size": null,
+                                        "clearable": false,
+                                        "collapseTags": false,
+                                        "multipleLimit": 0,
+                                        "name": null,
+                                        "autocomplete": "off",
+                                        "placeholder": "请选择",
+                                        "filterable": false,
+                                        "allowCreate": false,
+                                        "filterMethod": null,
+                                        "remote": false,
+                                        "remoteMethod": null,
+                                        "loading": false,
+                                        "loadingText": "加载中",
+                                        "noMatchText": "无匹配数据",
+                                        "noDataText": "无数据",
+                                        "popperClass": null,
+                                        "reserveKeyword": false,
+                                        "defaultFirstOption": false,
+                                        "popperAppendToBody": true,
+                                        "automaticDropdown": false,
+                                        "data": [
+                                          {
+                                            "label": "男",
+                                            "value": "1",
+                                            "disabled": false
+                                          },
+                                          {
+                                            "label": "女",
+                                            "value": "2",
+                                            "disabled": false
+                                          }
+                                        ],
+                                        "dataProp": {
+                                          "label": "label",
+                                          "value": "value",
+                                          "disabled": "disabled"
+                                        }
                                       }
                                     }
                                   }
@@ -265,17 +569,17 @@
       ]
     },
     {
-      "key": "tag_1618324811317",
+      "key": "tag_1618321374433",
       "tag": "tag",
       "type": "tag",
       "fdName": "fd-el-tag",
       "options": {
-        "key": "378e9cd0-2aab-4dac-9bf6-946bf0784702",
-        "ref": "$tag_1618324811317",
+        "key": "8cec619b-e53e-4480-84f3-e18227df32cd",
+        "ref": "$tag_1618321374433",
         "class": [],
         "style": {},
         "attrs": {
-          "prop_": "tag_1618324811317",
+          "prop_": "tag_1618321374433",
           "tag_": "div",
           "text_": null
         },
@@ -297,7 +601,7 @@
               "tag": "el-button",
               "type": "submit-button",
               "options": {
-                "key": "e68d1a53-aadf-4e7d-bbe7-817f727a51fa",
+                "key": "9e385d28-b9ca-4a47-9b78-3a777416f7a3",
                 "ref": "$submit_button",
                 "class": [],
                 "style": {},
@@ -337,7 +641,7 @@
               "tag": "el-button",
               "type": "reset-button",
               "options": {
-                "key": "250b035e-89eb-48ab-b8fa-fb1c8c847b5a",
+                "key": "4a1bd3bf-81d8-4a69-9d03-5d454c3f94ee",
                 "ref": "$reset_button",
                 "class": [],
                 "style": {},
