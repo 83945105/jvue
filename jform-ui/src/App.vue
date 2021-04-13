@@ -1,23 +1,23 @@
 <template>
   <div id="app">
-    <j-el-object-array-form ref="objectArrayForm"
-                            :model="objectArrayForm" size="mini"
-                            :columns="{name: {label: '姓名'}, age: {label: '年龄'}}"
-    >
-      <template #name="{row, column, $index}">
-        <j-el-object-array-form-item prop="name" :rules="{required: true, message: 'xxx'}">
-          <el-input v-model="row[column.property]"></el-input>
-        </j-el-object-array-form-item>
-      </template>
-      <template #age="{row, column, $index}">
-        <j-el-object-array-form-item prop="age">
-          <el-input-number v-model="row[column.property]" style="width: 100%"></el-input-number>
-        </j-el-object-array-form-item>
-      </template>
-    </j-el-object-array-form>
-    <el-button type="primary" @click="$refs.objectArrayForm.validate()">校验</el-button>
-    <el-button @click="$refs.objectArrayForm.resetFields()">重置</el-button>
-    <el-button @click="objectArrayFormSubmit">提交</el-button>
+<!--    <j-el-object-array-form ref="objectArrayForm"-->
+<!--                            :model="objectArrayForm" size="mini"-->
+<!--                            :columns="{name: {label: '姓名'}, age: {label: '年龄'}}"-->
+<!--    >-->
+<!--      <template #name="{row, column, $index}">-->
+<!--        <j-el-object-array-form-item prop="name" :rules="{required: true, message: 'xxx'}">-->
+<!--          <el-input v-model="row[column.property]"></el-input>-->
+<!--        </j-el-object-array-form-item>-->
+<!--      </template>-->
+<!--      <template #age="{row, column, $index}">-->
+<!--        <j-el-object-array-form-item prop="age">-->
+<!--          <el-input-number v-model="row[column.property]" style="width: 100%"></el-input-number>-->
+<!--        </j-el-object-array-form-item>-->
+<!--      </template>-->
+<!--    </j-el-object-array-form>-->
+<!--    <el-button type="primary" @click="$refs.objectArrayForm.validate()">校验</el-button>-->
+<!--    <el-button @click="$refs.objectArrayForm.resetFields()">重置</el-button>-->
+<!--    <el-button @click="objectArrayFormSubmit">提交</el-button>-->
 
 <!--        <j-el-array-form ref="form"-->
 <!--                         :model="form" size="mini"-->
@@ -37,11 +37,10 @@
 <!--        <el-button type="primary" @click="$refs.form.validate()">校验</el-button>-->
 <!--        <el-button @click="$refs.form.resetFields()">重置</el-button>-->
 
-    <!--    <j-form :data="data"-->
-    <!--            :submit_button&props&submit="submit"-->
-    <!--    >-->
-    <!--    </j-form>-->
-
+    <j-form :data="data"
+            :submit_button&props&submit="submit"
+    >
+    </j-form>
   </div>
 </template>
 
@@ -82,9 +81,9 @@
         // console.log(val);
       },
       submit({$form, model}) {
-        console.log(model);
+        console.log(JSON.stringify(model));
         $form.validate().then(() => {
-          console.log(model);
+          console.log(JSON.stringify(model));
         });
       },
       objectArrayFormSubmit() {

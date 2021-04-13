@@ -1,6 +1,6 @@
 import ElementInit from '../../element-ui-expand/src/init';
 import deepMerge from "../../../src/utils/deep-merge";
-import {isString} from "../../../src/utils/util";
+import {isArray, isObject, isString} from "../../../src/utils/util";
 
 const removeEmptyStringProps = function (obj) {
   Object.keys(obj).forEach(name => {
@@ -17,9 +17,18 @@ const removeEmptyStringProps = function (obj) {
 };
 
 export const recursionRemoveEmptyStringProps = function (data = {}) {
-  let {options = {}, children = []} = data;
+  let {options = {}, children} = data;
   removeEmptyStringProps(options.props || {});
-  children.forEach(child => recursionRemoveEmptyStringProps(child));
+  if (isArray(children)) {
+    children.forEach(child => recursionRemoveEmptyStringProps(child));
+  }
+  if (isObject(options.scopedSlots)) {
+    Object.keys(options.scopedSlots).forEach(name => {
+      if (isObject(options.scopedSlots[name])) {
+        recursionRemoveEmptyStringProps(options.scopedSlots[name]);
+      }
+    });
+  }
 };
 
 export const init = function (data, context) {

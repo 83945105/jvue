@@ -4,7 +4,7 @@
   "type": "form",
   "fdName": "fd-el-form",
   "options": {
-    "key": "ef4d196c-b5a4-4a0e-aa78-f5e06649ee12",
+    "key": "1d81a4ba-d28e-41ac-9dde-b33459c4680e",
     "ref": "$form",
     "class": [],
     "style": {},
@@ -15,7 +15,7 @@
     },
     "props": {
       "model": {
-        "array_form_1618159144356": []
+        "array_form_1618324803212": []
       },
       "rules": {},
       "inline": false,
@@ -33,22 +33,23 @@
   },
   "children": [
     {
+      "key": "array_form_1618324803212$item$slot",
       "tag": "slot",
       "type": "form-item-slot",
       "fdName": "fd-el-array-form",
       "options": {
         "props": {
-          "name": "array_form_1618159144356$item"
+          "name": "array_form_1618324803212$item"
         }
       },
       "children": [
         {
-          "key": "array_form_1618159144356$item",
+          "key": "array_form_1618324803212$item",
           "tag": "el-form-item",
           "type": "form-item",
           "options": {
-            "key": "3e61e759-9338-4d26-8aff-7e099b80e3d3",
-            "ref": "$array_form_1618159144356$item",
+            "key": "e47aa309-8d3b-4b19-98c0-ae808f396f8f",
+            "ref": "$array_form_1618324803212$item",
             "class": [],
             "style": {},
             "attrs": {
@@ -58,7 +59,7 @@
               "labelWidth_": 100,
               "controlType_": "array-form",
               "validate_": {
-                "required": true,
+                "required": false,
                 "requiredError": "{name}不能为空",
                 "requiredTrigger": "blur",
                 "valueUnique": false,
@@ -82,11 +83,10 @@
                     "trigger": "blur"
                   }
                 ]
-              },
-              "defaultValue_": ""
+              }
             },
             "props": {
-              "prop": "array_form_1618159144356",
+              "prop": "array_form_1618324803212",
               "label": "数组表单",
               "labelWidth": null,
               "required": false,
@@ -99,21 +99,22 @@
           },
           "children": [
             {
+              "key": "array_form_1618324803212$slot",
               "tag": "slot",
               "type": "control-slot",
               "options": {
                 "props": {
-                  "name": "array_form_1618159144356"
+                  "name": "array_form_1618324803212"
                 }
               },
               "children": [
                 {
-                  "key": "array_form_1618159144356",
+                  "key": "array_form_1618324803212",
                   "tag": "j-el-array-form",
                   "type": "array-form",
                   "options": {
-                    "key": "a5d5cbfc-89e4-4276-8af4-9f4c09ba0e06",
-                    "ref": "$array_form_1618159144356",
+                    "key": "7d1db26e-f09c-41bd-95f0-4262a022d34f",
+                    "ref": "$array_form_1618324803212",
                     "class": [],
                     "style": {},
                     "attrs": {},
@@ -135,22 +136,23 @@
                     },
                     "scopedSlots": {
                       "default": {
+                        "key": "input_1618324804598$item$slot",
                         "tag": "slot",
                         "type": "form-item-slot",
                         "fdName": "fd-el-input",
                         "options": {
                           "props": {
-                            "name": "input_1618159145466$item"
+                            "name": "input_1618324804598$item"
                           }
                         },
                         "children": [
                           {
-                            "key": "input_1618159145466$item",
+                            "key": "input_1618324804598$item",
                             "tag": "el-form-item",
                             "type": "form-item",
                             "options": {
-                              "key": "97545dbf-67ea-4f21-9b52-5f1d8d23472a",
-                              "ref": "$input_1618159145466$item",
+                              "key": "24daaad2-2069-479b-9745-fa21469e864e",
+                              "ref": "$input_1618324804598$item",
                               "class": [],
                               "style": {},
                               "attrs": {
@@ -160,7 +162,7 @@
                                 "labelWidth_": 100,
                                 "controlType_": "input",
                                 "validate_": {
-                                  "required": true,
+                                  "required": false,
                                   "requiredError": "{name}不能为空",
                                   "requiredTrigger": "blur",
                                   "valueUnique": false,
@@ -184,11 +186,10 @@
                                       "trigger": "blur"
                                     }
                                   ]
-                                },
-                                "defaultValue_": ""
+                                }
                               },
                               "props": {
-                                "prop": "input_1618159145466",
+                                "prop": "input_1618324804598",
                                 "label": "单行文本",
                                 "labelWidth": null,
                                 "required": false,
@@ -201,21 +202,22 @@
                             },
                             "children": [
                               {
+                                "key": "input_1618324804598$slot",
                                 "tag": "slot",
                                 "type": "control-slot",
                                 "options": {
                                   "props": {
-                                    "name": "input_1618159145466"
+                                    "name": "input_1618324804598"
                                   }
                                 },
                                 "children": [
                                   {
-                                    "key": "input_1618159145466",
+                                    "key": "input_1618324804598",
                                     "tag": "el-input",
                                     "type": "input",
                                     "options": {
-                                      "key": "8096ae64-4a86-434c-a69c-f15130bb187c",
-                                      "ref": "$input_1618159145466",
+                                      "key": "f0e11abd-a8ef-4ccd-9a4c-e25fc8960c62",
+                                      "ref": "$input_1618324804598",
                                       "class": [],
                                       "style": {},
                                       "attrs": {
@@ -233,7 +235,7 @@
                                       },
                                       "props": {
                                         "type": "text",
-                                        "value": "",
+                                        "value": "1",
                                         "showWordLimit": false,
                                         "clearable": true,
                                         "showPassword": false,
@@ -263,17 +265,17 @@
       ]
     },
     {
-      "key": "tag_1618159541972",
+      "key": "tag_1618324811317",
       "tag": "tag",
       "type": "tag",
       "fdName": "fd-el-tag",
       "options": {
-        "key": "200561b9-9f17-49b6-9e71-a516c41db8fd",
-        "ref": "$tag_1618159541972",
+        "key": "378e9cd0-2aab-4dac-9bf6-946bf0784702",
+        "ref": "$tag_1618324811317",
         "class": [],
         "style": {},
         "attrs": {
-          "prop_": "tag_1618159541972",
+          "prop_": "tag_1618324811317",
           "tag_": "div",
           "text_": null
         },
@@ -295,7 +297,7 @@
               "tag": "el-button",
               "type": "submit-button",
               "options": {
-                "key": "5476dd1f-aaef-437c-a84e-f6d15955321e",
+                "key": "e68d1a53-aadf-4e7d-bbe7-817f727a51fa",
                 "ref": "$submit_button",
                 "class": [],
                 "style": {},
@@ -335,7 +337,7 @@
               "tag": "el-button",
               "type": "reset-button",
               "options": {
-                "key": "3d4a9078-dd6c-46cb-9ce7-f41956e1b47a",
+                "key": "250b035e-89eb-48ab-b8fa-fb1c8c847b5a",
                 "ref": "$reset_button",
                 "class": [],
                 "style": {},

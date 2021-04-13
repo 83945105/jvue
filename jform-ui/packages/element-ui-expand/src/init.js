@@ -4,16 +4,14 @@ import merge from "../../../src/utils/merge";
 const VModel = {
   $sync: true,
   $getValue({$context}) {
-    let _formItem = $context.getParent('el-form-item');
-    let _prop = _formItem.props.prop;
-    let _form = _formItem.getParent('j-el-form');
-    return _form.$props.model[_prop];
+    let form = $context.getParent('j-el-form');
+    let formItem = $context.getParent('el-form-item');
+    return form.$props.model[formItem.$props.prop];
   },
   $setValue(value, {$context}) {
-    let _formItem = $context.getParent('el-form-item');
-    let _prop = _formItem.props.prop;
-    let _form = _formItem.getParent('j-el-form');
-    _form.$props.model[_prop] = value;
+    let form = $context.getParent('j-el-form');
+    let formItem = $context.getParent('el-form-item');
+    form.$props.model[formItem.$props.prop] = value;
   }
 };
 
@@ -29,6 +27,22 @@ const ArrayFormVModel = {
     let form = $context.getParent('j-el-array-form');
     form.$props.model[$index] = value;
     form.$props.model.splice($index, 1, value);
+  }
+};
+
+const ObjectArrayFormVModel = {
+  $sync: true,
+  $getValue({$context}) {
+    let $index = $context.parent.parent.parent.slotProps.$index;
+    let form = $context.getParent('j-el-object-array-form');
+    let formItem = $context.getParent('j-el-object-array-form-item');
+    return form.$props.model[$index][formItem.$props.prop];
+  },
+  $setValue(value, {$context}) {
+    let $index = $context.parent.parent.parent.slotProps.$index;
+    let form = $context.getParent('j-el-object-array-form');
+    let formItem = $context.getParent('j-el-object-array-form-item');
+    form.$props.model[$index][formItem.$props.prop] = value;
   }
 };
 
@@ -48,6 +62,8 @@ const initArrayForm = function (data, context) {
   data.options.props.model = VModel;
   if (data.options.scopedSlots && data.options.scopedSlots.default) {
     data.options.scopedSlots.default.type = `array-form-${data.options.scopedSlots.default.type}`;
+    let control = data.options.scopedSlots.default.children[0].children[0].children[0];
+    data.options.props.itemDefaultValue = control.options.props.value;
     init(data.options.scopedSlots.default, context);
   }
   return data;
@@ -78,25 +94,20 @@ const initObjectForm = function (data, context) {
 };
 
 const initObjectArrayForm = function (data, context) {
-  data.options.props.value = VModel;
-  data.options.props.columns = (data.options.props.columns || []).map(column => {
-    let _formItem = column.renderData;
-    while (_formItem.tag !== 'el-form-item') {
-      _formItem = _formItem.children[0];
-    }
-    _formItem.type = 'object-array-form-item';   // 更改为 对象数组表单项
-
-    // 防止控件被初始化和Model绑定
-    let defaultValue = _formItem.children[0].children[0].options.props.value;
-    init(_formItem, context);
-    _formItem.children[0].children[0].options.props.value = defaultValue;
-    return column;
-  });
-  data.options.props.$context = {
-    $getValue({$context}) {
-      return $context;
-    }
-  };
+  data.options.props.model = VModel;
+  data.options.props.itemDefaultValue = {};
+  if (data.options.scopedSlots) {
+    let itemDefaultValue = {};
+    Object.keys(data.options.scopedSlots).forEach(name => {
+      let slot = data.options.scopedSlots[name];
+      slot.type = `object-array-form-${slot.type}`;
+      let formItem = slot.children[0];
+      let control = formItem.children[0].children[0];
+      itemDefaultValue[formItem.options.props.prop] = control.options.props.value;
+      init(slot, context);
+    });
+    data.options.props.itemDefaultValue = itemDefaultValue;
+  }
   return data;
 };
 
@@ -227,7 +238,11 @@ const initObjectFormItem = function (data, context) {
   return initFormItem(data, context);
 };
 
-const initObjectArrayFormItem = function (data, context) {
+const initObjectArrayFormFormItem = function (data, context) {
+  data.tag = 'j-el-object-array-form-item';
+  (data.children || []).forEach(child => {
+    child.type = `object-array-form-${child.type}`;
+  });
   return initFormItem(data, context);
 };
 
@@ -335,6 +350,19 @@ const initArrayFormControlSlot = function (data, context) {
   return data;
 };
 
+const initObjectArrayFormControlSlot = function (data, context) {
+  data.options.props.model = {
+    $getValue: ({$context}) => $context.getParent('j-el-form').$props.model
+  };
+  if (data.children) {
+    data.children.forEach(child => {
+      init(child, context);
+      child.options.props.value = ObjectArrayFormVModel;
+    });
+  }
+  return data;
+};
+
 const initArrayFormFormItemSlot = function (data, context) {
   data.options.props.model = {
     $getValue: ({$context}) => $context.getParent('j-el-form').$props.model
@@ -342,6 +370,19 @@ const initArrayFormFormItemSlot = function (data, context) {
   if (data.children) {
     data.children.forEach(child => {
       child.type = `array-form-${child.type}`;
+      init(child, context);
+    });
+  }
+  return data;
+};
+
+const initObjectArrayFormFormItemSlot = function (data, context) {
+  data.options.props.model = {
+    $getValue: ({$context}) => $context.getParent('j-el-form').$props.model
+  };
+  if (data.children) {
+    data.children.forEach(child => {
+      child.type = `object-array-form-${child.type}`;
       init(child, context);
     });
   }
@@ -444,10 +485,14 @@ const init = function (data, context) {
       return initSlot(data, context);
     case 'array-form-form-item-slot':
       return initArrayFormFormItemSlot(data, context);
+    case 'object-array-form-form-item-slot':
+      return initObjectArrayFormFormItemSlot(data, context);
     case 'control-slot':
       return initSlot(data, context);
     case 'array-form-control-slot':
       return initArrayFormControlSlot(data, context);
+    case 'object-array-form-control-slot':
+      return initObjectArrayFormControlSlot(data, context);
     case 'autocomplete':
       return initControl(data, context);
     case 'checkbox-group':
@@ -484,8 +529,8 @@ const init = function (data, context) {
       return initArrayFormFormItem(data, context);
     case 'object-form-item':
       return initObjectFormItem(data, context);
-    case 'object-array-form-item':
-      return initObjectArrayFormItem(data, context);
+    case 'object-array-form-form-item':
+      return initObjectArrayFormFormItem(data, context);
     case 'icon-picker':
       return initControl(data, context);
     case 'input':
