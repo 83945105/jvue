@@ -1,5 +1,5 @@
 <template>
-  <el-form-item v-bind="bind">
+  <el-form-item v-bind="bind" :class="{'no-message': hideMessage}">
     <slot/>
   </el-form-item>
 </template>
@@ -35,13 +35,16 @@
       rowIndex() {
         return this.cellIndex;
       },
+      hideMessage() {
+        return !this.showMessage || !this.jElArrayForm.showMessage;
+      },
       bind() {
         return {
           prop: `data.${this.rowIndex}`,
           required: this.required,
           rules: this.getRules(),
           error: this.error,
-          showMessage: this.showMessage,
+          showMessage: !this.hideMessage,
           size: this.size
         };
       }
@@ -80,3 +83,9 @@
     }
   }
 </script>
+
+<style scoped>
+  .no-message {
+    margin-bottom: 0;
+  }
+</style>

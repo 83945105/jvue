@@ -1,5 +1,5 @@
 <template>
-  <el-form-item v-bind="bind">
+  <el-form-item v-bind="bind" :class="{'no-message': hideMessage}">
     <slot/>
   </el-form-item>
 </template>
@@ -38,13 +38,16 @@
       prop() {
         return this.jElObjectForm.tableRows[this.rowIndex] && this.jElObjectForm.tableRows[this.rowIndex].prop;
       },
+      hideMessage() {
+        return !this.showMessage || !this.jElObjectForm.showMessage;
+      },
       bind() {
         return {
           prop: `data.${this.prop}`,
           required: this.required,
           rules: this.getRules(),
           error: this.error,
-          showMessage: this.showMessage,
+          showMessage: !this.hideMessage,
           size: this.size
         };
       }
@@ -83,3 +86,9 @@
     }
   }
 </script>
+
+<style scoped>
+  .no-message {
+    margin-bottom: 0;
+  }
+</style>
