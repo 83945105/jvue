@@ -15,6 +15,20 @@ const VModel = {
   }
 };
 
+const ObjectFormVModel = {
+  $sync: true,
+  $getValue({$context}) {
+    let form = $context.getParent('j-el-object-form');
+    let formItem = $context.getParent('j-el-object-form-item');
+    return form.$props.model[formItem.$props.prop];
+  },
+  $setValue(value, {$context}) {
+    let form = $context.getParent('j-el-object-form');
+    let formItem = $context.getParent('j-el-object-form-item');
+    form.$props.model[formItem.$props.prop] = value;
+  }
+};
+
 const ArrayFormVModel = {
   $sync: true,
   $getValue({$context}) {
@@ -70,26 +84,19 @@ const initArrayForm = function (data, context) {
 };
 
 const initObjectForm = function (data, context) {
-  data.options.props.value = VModel;
-  data.options.props.children = (data.children || []).map(child => {
-    let _formItem = child;
-    while (_formItem.tag !== 'el-form-item') {
-      _formItem = _formItem.children[0];
-    }
-    _formItem.type = 'object-form-item';   // 更改为 对象表单项
-    // 防止控件被初始化和Model绑定
-    let defaultValue = child.children[0].children[0].children[0].options.props.value;
-    init(child, context);
-    _formItem.children[0].children[0].options.props.value = defaultValue;
-    return child;
-  });
-  data.options.props.$context = {
-    $getValue({$context}) {
-      return $context;
-    }
-  };
-  // 取消渲染默认子级，否则会有获取到错误插槽导致model异常
-  delete data.children;
+  data.options.props.model = VModel;
+  if (data.options.scopedSlots) {
+    let itemDefaultValue = {};
+    Object.keys(data.options.scopedSlots).forEach(name => {
+      let slot = data.options.scopedSlots[name];
+      slot.type = `object-form-${slot.type}`;
+      let formItem = slot.children[0];
+      let control = formItem.children[0].children[0];
+      itemDefaultValue[formItem.options.props.prop] = control.options.props.value;
+      init(slot, context);
+    });
+    data.options.props.itemDefaultValue = itemDefaultValue;
+  }
   return data;
 };
 
@@ -234,6 +241,14 @@ const initArrayFormFormItem = function (data, context) {
   return initFormItem(data, context);
 };
 
+const initObjectFormFormItem = function (data, context) {
+  data.tag = 'j-el-object-form-item';
+  (data.children || []).forEach(child => {
+    child.type = `object-form-${child.type}`;
+  });
+  return initFormItem(data, context);
+};
+
 const initObjectFormItem = function (data, context) {
   return initFormItem(data, context);
 };
@@ -337,6 +352,19 @@ const initSlot = function (data, context) {
   return data;
 };
 
+const initObjectFormControlSlot = function (data, context) {
+  data.options.props.model = {
+    $getValue: ({$context}) => $context.getParent('j-el-form').$props.model
+  };
+  if (data.children) {
+    data.children.forEach(child => {
+      init(child, context);
+      child.options.props.value = ObjectFormVModel;
+    });
+  }
+  return data;
+};
+
 const initArrayFormControlSlot = function (data, context) {
   data.options.props.model = {
     $getValue: ({$context}) => $context.getParent('j-el-form').$props.model
@@ -358,6 +386,19 @@ const initObjectArrayFormControlSlot = function (data, context) {
     data.children.forEach(child => {
       init(child, context);
       child.options.props.value = ObjectArrayFormVModel;
+    });
+  }
+  return data;
+};
+
+const initObjectFormFormItemSlot = function (data, context) {
+  data.options.props.model = {
+    $getValue: ({$context}) => $context.getParent('j-el-form').$props.model
+  };
+  if (data.children) {
+    data.children.forEach(child => {
+      child.type = `object-form-${child.type}`;
+      init(child, context);
     });
   }
   return data;
@@ -483,12 +524,16 @@ const init = function (data, context) {
       return initSlot(data, context);
     case 'form-item-slot':
       return initSlot(data, context);
+    case 'object-form-form-item-slot':
+      return initObjectFormFormItemSlot(data, context);
     case 'array-form-form-item-slot':
       return initArrayFormFormItemSlot(data, context);
     case 'object-array-form-form-item-slot':
       return initObjectArrayFormFormItemSlot(data, context);
     case 'control-slot':
       return initSlot(data, context);
+    case 'object-form-control-slot':
+      return initObjectFormControlSlot(data, context);
     case 'array-form-control-slot':
       return initArrayFormControlSlot(data, context);
     case 'object-array-form-control-slot':
@@ -527,8 +572,8 @@ const init = function (data, context) {
       return initFormItem(data, context);
     case 'array-form-form-item':
       return initArrayFormFormItem(data, context);
-    case 'object-form-item':
-      return initObjectFormItem(data, context);
+    case 'object-form-form-item':
+      return initObjectFormFormItem(data, context);
     case 'object-array-form-form-item':
       return initObjectArrayFormFormItem(data, context);
     case 'icon-picker':

@@ -1,36 +1,36 @@
 <template>
   <div id="app">
 
-    <j-el-object-form ref="objectForm"
-                      :model="objectForm"
-                      :label-column="{width: '120px'}"
-                      :rows="[
-                        {label: '姓名', prop: 'name'},
-                        {label: '年龄', prop: 'age'},
-                        {label: '性别', prop: 'sex'}
-                      ]"
+<!--    <j-el-object-form ref="objectForm"-->
+<!--                      :model="objectForm"-->
+<!--                      :label-column="{width: '120px'}"-->
+<!--                      :rows="[-->
+<!--                        {label: '姓名', prop: 'name'},-->
+<!--                        {label: '年龄', prop: 'age'},-->
+<!--                        {label: '性别', prop: 'sex'}-->
+<!--                      ]"-->
 
-                      :rules="{name: [{required: true, message: '请输入姓名'}]}"
-    >
-      <template #name>
-        <j-el-object-form-item>
-          <el-input v-model="objectForm.name"/>
-        </j-el-object-form-item>
-      </template>
-      <template #age>
-        <j-el-object-form-item :rules="{required: true, message: '请输入年龄'}">
-          <el-input v-model="objectForm.age"/>
-        </j-el-object-form-item>
-      </template>
-      <template #sex>
-        <j-el-object-form-item>
-          <el-input v-model="objectForm.sex"/>
-        </j-el-object-form-item>
-      </template>
-    </j-el-object-form>
-    <el-button type="primary" @click="$refs.objectForm.validate()">校验</el-button>
-    <el-button @click="$refs.objectForm.resetFields()">重置</el-button>
-    <el-button @click="objectFormSubmit">提交</el-button>
+<!--                      :rules="{name: [{required: true, message: '请输入姓名'}]}"-->
+<!--    >-->
+<!--      <template #name>-->
+<!--        <j-el-object-form-item>-->
+<!--          <el-input v-model="objectForm.name"/>-->
+<!--        </j-el-object-form-item>-->
+<!--      </template>-->
+<!--      <template #age>-->
+<!--        <j-el-object-form-item :rules="{required: true, message: '请输入年龄'}">-->
+<!--          <el-input v-model="objectForm.age"/>-->
+<!--        </j-el-object-form-item>-->
+<!--      </template>-->
+<!--      <template #sex>-->
+<!--        <j-el-object-form-item>-->
+<!--          <el-input v-model="objectForm.sex"/>-->
+<!--        </j-el-object-form-item>-->
+<!--      </template>-->
+<!--    </j-el-object-form>-->
+<!--    <el-button type="primary" @click="$refs.objectForm.validate()">校验</el-button>-->
+<!--    <el-button @click="$refs.objectForm.resetFields()">重置</el-button>-->
+<!--    <el-button @click="objectFormSubmit">提交</el-button>-->
 
 <!--        <j-el-object-array-form ref="objectArrayForm"-->
 <!--                                :model="objectArrayForm" size="mini"-->
@@ -71,10 +71,10 @@
 <!--    <el-button type="primary" @click="$refs.form.validate()">校验</el-button>-->
 <!--    <el-button @click="$refs.form.resetFields()">重置</el-button>-->
 
-    <!--    <j-form :data="data"-->
-    <!--            :submit_button&props&submit="submit"-->
-    <!--    >-->
-    <!--    </j-form>-->
+    <j-form :data="data"
+            :submit_button&props&submit="submit"
+    >
+    </j-form>
   </div>
 </template>
 

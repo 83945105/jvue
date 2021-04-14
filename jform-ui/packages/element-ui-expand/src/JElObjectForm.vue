@@ -9,7 +9,8 @@
       </el-table-column>
       <el-table-column v-bind="valueBind">
         <template #default="{$index}">
-          <slot :name="tableRows[$index].prop"/>
+          <slot :name="tableRows[$index].prop"
+                v-bind="{row: form_.data, column: {property: tableRows[$index].prop}, $index}"/>
         </template>
       </el-table-column>
     </el-table>
@@ -62,8 +63,6 @@
       size: String,                                                       // 用于控制该表单内组件的尺寸
       disabled: Boolean,                                                  // 是否禁用该表单内的所有组件。若设置为 true，则表单内组件上的 disabled 属性不再生效
 
-      height: [String, Number],
-      maxHeight: [String, Number],
       stripe: Boolean,
       border: {
         type: Boolean,
@@ -145,8 +144,6 @@
       },
       tableBind() {
         return {
-          height: this.height,
-          maxHeight: this.maxHeight,
           stripe: this.stripe,
           border: this.border,
           size: this.size__,
