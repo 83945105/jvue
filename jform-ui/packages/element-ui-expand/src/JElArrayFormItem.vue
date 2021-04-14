@@ -1,5 +1,5 @@
 <template>
-  <el-form-item v-bind="bind__">
+  <el-form-item v-bind="bind">
     <slot/>
   </el-form-item>
 </template>
@@ -26,32 +26,18 @@
       size: String                       // 用于控制该表单域下组件的尺寸
     },
     data() {
-      let rules = this.getRules();
-      let isRequired = false;
-
-      if (rules && rules.length) {
-        rules.every(rule => {
-          if (rule.required) {
-            isRequired = true;
-            return false;
-          }
-          return true;
-        });
-      }
       return {
-        isRequired
+        cellIndex: null,
+        isRequired: null
       };
     },
     computed: {
-      bind__() {
-        let options = this.jElArrayForm.fields_.reduce((options, field, $index) => {
-          if (field === this) {
-            options.$index = $index;
-          }
-          return options;
-        }, {});
+      rowIndex() {
+        return this.cellIndex;
+      },
+      bind() {
         return {
-          prop: `data.${options.$index}`,
+          prop: `data.${this.rowIndex}`,
           required: this.required,
           rules: this.getRules(),
           error: this.error,
@@ -75,7 +61,19 @@
       }
     },
     created() {
-      this.jElArrayForm.addField(this);
+      this.cellIndex = this.jElArrayForm.addField(this) - 1;
+      let rules = this.getRules();
+      let isRequired = false;
+      if (rules && rules.length) {
+        rules.every(rule => {
+          if (rule.required) {
+            isRequired = true;
+            return false;
+          }
+          return true;
+        });
+      }
+      this.isRequired = isRequired;
     },
     beforeDestroy() {
       this.jElArrayForm.removeField(this);

@@ -184,7 +184,7 @@
     },
     methods: {
       addField(field) {
-        this.fields_.push(field);
+        return this.fields_.push(field);
       },
       removeField(field) {
         this.fields_.splice(this.fields_.indexOf(field), 1);

@@ -27,8 +27,8 @@
     },
     data() {
       return {
-        columnIndex: 1,
-        cellIndex: null
+        cellIndex: null,
+        isRequired: false
       };
     },
     computed: {
@@ -36,21 +36,7 @@
         return this.cellIndex;
       },
       prop() {
-        return this.jElObjectForm.tableData[this.rowIndex].prop;
-      },
-      isRequired() {
-        let rules = this.getRules();
-        let isRequired = false;
-        if (rules && rules.length) {
-          rules.every(rule => {
-            if (rule.required) {
-              isRequired = true;
-              return false;
-            }
-            return true;
-          });
-        }
-        return isRequired;
+        return this.jElObjectForm.tableRows[this.rowIndex] && this.jElObjectForm.tableRows[this.rowIndex].prop;
       },
       bind() {
         return {
@@ -79,6 +65,18 @@
     },
     created() {
       this.cellIndex = this.jElObjectForm.addField(this) - 1;
+      let rules = this.getRules();
+      let isRequired = false;
+      if (rules && rules.length) {
+        rules.every(rule => {
+          if (rule.required) {
+            isRequired = true;
+            return false;
+          }
+          return true;
+        });
+      }
+      this.isRequired = isRequired;
     },
     beforeDestroy() {
       this.jElObjectForm.removeField(this);

@@ -22,7 +22,7 @@
         <el-table-column v-bind="tableColumn">
           <template #header>
             <span class="j-object-array-form-header"
-                  :class="{required: rows[$columnIndex] && rows[$columnIndex].required}">{{tableColumn.label}}</span>
+                  :class="{required: !hideRequiredAsterisk && rows[$columnIndex] && rows[$columnIndex].required}">{{tableColumn.label}}</span>
           </template>
           <template #default="{row, column, $index}">
             <slot :name="tableColumn.prop" v-bind="{row: row.target, column, $index}"/>

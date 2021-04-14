@@ -1,22 +1,22 @@
 <template>
-  <el-form ref="form" :model="form_" v-bind="formBind__">
-    <el-table :data="tableData" v-bind="tableBind__" class="j-object-form">
+  <el-form ref="form" :model="form_" v-bind="formBind">
+    <el-table :data="tableData" v-bind="tableBind" class="j-object-form">
       <el-table-column v-bind="labelBind">
-        <template #default="{row, column, $index}">
-          <span>{{row.label}}</span>
+        <template #default="{$index}">
+          <span class="j-object-form-label"
+                :class="{required: !hideRequiredAsterisk && rows__[$index] && rows__[$index].required}">{{tableRows[$index].label}}</span>
         </template>
       </el-table-column>
       <el-table-column v-bind="valueBind">
-        <slot/>
+        <template #default="{$index}">
+          <slot :name="tableRows[$index].prop"/>
+        </template>
       </el-table-column>
     </el-table>
   </el-form>
 </template>
 
 <script>
-  import merge from "../../../src/utils/merge";
-  import deepMerge from "../../../src/utils/deep-merge";
-
   export default {
     name: "JElObjectForm",
     inheritAttrs: false,
@@ -30,6 +30,37 @@
     },
     props: {
       model: Object,
+      labelColumn: {
+        type: Object,
+        default() {
+          return {};
+        }
+      },
+      valueColumn: {
+        type: Object,
+        default() {
+          return {};
+        }
+      },
+      rows: {
+        type: Array,
+        default() {
+          return [];
+        }
+      },
+
+      rules: Object,                                                      // 表单验证规则
+      hideRequiredAsterisk: Boolean,                                      // 是否显示必填字段的标签旁边的红色星号
+      showMessage: {                                                      // 是否显示校验错误信息
+        type: Boolean,
+        default: true
+      },
+      validateOnRuleChange: {                                             // 是否在 rules 属性改变后立即触发一次验证
+        type: Boolean,
+        default: true
+      },
+      size: String,                                                       // 用于控制该表单内组件的尺寸
+      disabled: Boolean,                                                  // 是否禁用该表单内的所有组件。若设置为 true，则表单内组件上的 disabled 属性不再生效
 
       height: [String, Number],
       maxHeight: [String, Number],
@@ -37,16 +68,10 @@
       border: {
         type: Boolean,
         default: true
-      },
-      size: String,
-      fit: {
-        type: Boolean,
-        default: true
       }
     },
     data() {
       return {
-        initialValue: null,
         form_: {
           data: {}
         },
@@ -72,48 +97,53 @@
         return this.size || this.elFormItemSize__ || (this.$ELEMENT || {}).size;
       },
       labelBind() {
-        return merge({}, this.labelColumn, {
-          label: this.labelColumn.label || '属性',
-          prop: this.labelColumn.prop || 'label',
-          width: this.labelColumn.width > 0 ? `${this.labelColumn.width}px` : null,
-          minWidth: this.labelColumn.minWidth > 0 ? `${this.labelColumn.minWidth}px` : null
-        });
+        return {
+          width: this.labelColumn.width,
+          minWidth: this.labelColumn.minWidth,
+          headerAlign: this.labelColumn.headerAlign || 'center',
+          align: this.labelColumn.align || 'center'
+        };
       },
       valueBind() {
-        return merge({}, this.valueColumn, {
-          label: this.valueColumn.label || '值',
-          prop: this.valueColumn.prop || 'value',
-          width: this.valueColumn.width > 0 ? `${this.valueColumn.width}px` : null,
-          minWidth: this.valueColumn.minWidth > 0 ? `${this.valueColumn.minWidth}px` : null
+        return {
+          width: this.valueColumn.width,
+          minWidth: this.valueColumn.minWidth,
+          headerAlign: this.valueColumn.headerAlign || 'center',
+          align: this.valueColumn.align || 'center'
+        };
+      },
+      tableRows() {
+        return this.rows.map(row => {
+          return {
+            prop: row.prop,
+            label: row.label
+          };
         });
       },
       tableData() {
-        return Object.keys(this.rows).map(prop => {
-          let row = this.rows[prop];
+        return this.tableRows.map(row => {
           return {
-            prop,
-            label: row.label,
-            value: this.form_.data[prop]
+            value: this.form_.data[row.prop]
           };
         });
       },
-      children__() {
-        return (this.children || []).map((child, $index) => {
-          child = deepMerge({}, child);
-          child.children[0].options.props.prop = {
-            $getValue: () => {
-              return `data.${$index}.value`;
-            }
+      rows__() {
+        return this.fields_.map(field => {
+          return {
+            required: field.isRequired || field.$props.required
           };
-          return child;
         });
       },
-      formBind__() {
+      formBind() {
         return {
-          size: this.size__
+          hideRequiredAsterisk: this.hideRequiredAsterisk,
+          showMessage: this.showMessage,
+          validateOnRuleChange: this.validateOnRuleChange,
+          size: this.size__,
+          disabled: this.disabled
         };
       },
-      tableBind__() {
+      tableBind() {
         return {
           height: this.height,
           maxHeight: this.maxHeight,
@@ -140,24 +170,6 @@
       },
       removeField(field) {
         this.fields_.splice(this.fields_.indexOf(field), 1);
-      },
-      initValue(child) {
-        let _valueType = child.children[0].options.attrs.valueType_;
-        let _defaultValue = child.children[0].children[0].children[0].options.props.value;
-        switch (_valueType) {
-          case 'string':
-            return _defaultValue || '';
-          case 'number':
-            return _defaultValue || 0;
-          case 'array':
-            return _defaultValue || [];
-          case 'object':
-            return _defaultValue || {};
-          case 'boolean':
-            return _defaultValue || false;
-          default:
-            throw new Error(`不支持的值类型: ${_valueType}`);
-        }
       },
       validate(callback) {
         return this.$refs.form && this.$refs.form.validate(callback);

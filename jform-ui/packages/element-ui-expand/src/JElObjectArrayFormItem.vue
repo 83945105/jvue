@@ -36,7 +36,7 @@
         return this.cellIndex % count;
       },
       prop() {
-        return this.jElObjectArrayForm.tableColumns[this.columnIndex].prop;
+        return this.jElObjectArrayForm.tableColumns[this.columnIndex] && this.jElObjectArrayForm.tableColumns[this.columnIndex].prop;
       },
       rowIndex() {
         let count = this.jElObjectArrayForm.tableColumns.length;

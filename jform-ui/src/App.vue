@@ -1,56 +1,75 @@
 <template>
   <div id="app">
 
-    <j-el-object-form ref="object-form"
+    <j-el-object-form ref="objectForm"
                       :model="objectForm"
+                      :label-column="{width: '120px'}"
+                      :rows="[
+                        {label: '姓名', prop: 'name'},
+                        {label: '年龄', prop: 'age'},
+                        {label: '性别', prop: 'sex'}
+                      ]"
+
+                      :rules="{name: [{required: true, message: '请输入姓名'}]}"
     >
-        <j-el-object-form-item label="姓名" prop="name">
-          <el-input v-model="objectForm.name"></el-input>
+      <template #name>
+        <j-el-object-form-item>
+          <el-input v-model="objectForm.name"/>
         </j-el-object-form-item>
-        <j-el-object-form-item label="年龄" prop="age">
-          <el-input v-model="objectForm.age"></el-input>
+      </template>
+      <template #age>
+        <j-el-object-form-item :rules="{required: true, message: '请输入年龄'}">
+          <el-input v-model="objectForm.age"/>
         </j-el-object-form-item>
-        <j-el-object-form-item label="性别" prop="sex">
-          <el-input v-model="objectForm.sex"></el-input>
+      </template>
+      <template #sex>
+        <j-el-object-form-item>
+          <el-input v-model="objectForm.sex"/>
         </j-el-object-form-item>
+      </template>
     </j-el-object-form>
+    <el-button type="primary" @click="$refs.objectForm.validate()">校验</el-button>
+    <el-button @click="$refs.objectForm.resetFields()">重置</el-button>
+    <el-button @click="objectFormSubmit">提交</el-button>
 
-    <!--    <j-el-object-array-form ref="objectArrayForm"-->
-    <!--                            :model="objectArrayForm" size="mini"-->
-    <!--                            :columns="[{label: '姓名', prop: 'name'}, {label: '年龄', prop: 'age'}]"-->
-    <!--    >-->
-    <!--      <template #name="{row, column, $index}">-->
-    <!--        <j-el-object-array-form-item :rules="{required: true, message: 'xxx'}">-->
-    <!--          <el-input v-model="row[column.property]"></el-input>-->
-    <!--        </j-el-object-array-form-item>-->
-    <!--      </template>-->
-    <!--      <template #age="{row, column, $index}">-->
-    <!--        <j-el-object-array-form-item>-->
-    <!--          <el-input-number v-model="row[column.property]" style="width: 100%"></el-input-number>-->
-    <!--        </j-el-object-array-form-item>-->
-    <!--      </template>-->
-    <!--    </j-el-object-array-form>-->
-    <!--    <el-button type="primary" @click="$refs.objectArrayForm.validate()">校验</el-button>-->
-    <!--    <el-button @click="$refs.objectArrayForm.resetFields()">重置</el-button>-->
-    <!--    <el-button @click="objectArrayFormSubmit">提交</el-button>-->
+<!--        <j-el-object-array-form ref="objectArrayForm"-->
+<!--                                :model="objectArrayForm" size="mini"-->
+<!--                                :columns="[{label: '姓名', prop: 'name'}, {label: '年龄', prop: 'age'}]"-->
+<!--                                :rules="{name: {required: true, message: '请输入姓名'}}"-->
+<!--        >-->
+<!--          <template #name="{row, column, $index}">-->
+<!--            <j-el-object-array-form-item>-->
+<!--              <el-input v-model="row[column.property]"></el-input>-->
+<!--            </j-el-object-array-form-item>-->
+<!--          </template>-->
+<!--          <template #age="{row, column, $index}">-->
+<!--            <j-el-object-array-form-item :rules="{required: true, message: '请输入年龄'}">-->
+<!--              <el-input-number v-model="row[column.property]" style="width: 100%"></el-input-number>-->
+<!--            </j-el-object-array-form-item>-->
+<!--          </template>-->
+<!--        </j-el-object-array-form>-->
+<!--        <el-button type="primary" @click="$refs.objectArrayForm.validate()">校验</el-button>-->
+<!--        <el-button @click="$refs.objectArrayForm.resetFields()">重置</el-button>-->
+<!--        <el-button @click="objectArrayFormSubmit">提交</el-button>-->
 
-    <!--        <j-el-array-form ref="form"-->
-    <!--                         :model="form" size="mini"-->
-    <!--        >-->
-    <!--          <template #default="{$index}">-->
-    <!--            <j-el-array-form-item :rules="{required: $index%2===0}">-->
-    <!--              <el-input v-model="form[$index]">-->
-    <!--                <template #append>-->
-    <!--                  <i class="el-icon-delete"></i>-->
-    <!--                </template>-->
-    <!--              </el-input>-->
-    <!--            </j-el-array-form-item>-->
-    <!--          </template>-->
-    <!--        </j-el-array-form>-->
-    <!--    <el-button @click="$set(form, 0, form[0] + 1)">递增</el-button>-->
+<!--    <j-el-array-form ref="form"-->
+<!--                     :model="form"-->
+<!--                     :rules="{required: true, message: '请输入'}"-->
+<!--    >-->
+<!--      <template #default="{$index}">-->
+<!--        <j-el-array-form-item :rules="{required: true, message: '请输入值'}">-->
+<!--          <el-input v-model="form[$index]">-->
+<!--            <template #append>-->
+<!--              <i class="el-icon-delete"></i>-->
+<!--            </template>-->
+<!--          </el-input>-->
+<!--        </j-el-array-form-item>-->
+<!--      </template>-->
+<!--    </j-el-array-form>-->
+<!--    <el-button @click="$set(form, 0, form[0] + 1)">递增</el-button>-->
 
-    <!--        <el-button type="primary" @click="$refs.form.validate()">校验</el-button>-->
-    <!--        <el-button @click="$refs.form.resetFields()">重置</el-button>-->
+<!--    <el-button type="primary" @click="$refs.form.validate()">校验</el-button>-->
+<!--    <el-button @click="$refs.form.resetFields()">重置</el-button>-->
 
     <!--    <j-form :data="data"-->
     <!--            :submit_button&props&submit="submit"-->
@@ -67,7 +86,7 @@
     data() {
       return {
         data: formData,
-        form: [0],
+        form: [],
         objectArrayForm: [],
         objectForm: {
           name: '1',
@@ -108,6 +127,9 @@
       },
       objectArrayFormSubmit() {
         console.log(this.objectArrayForm);
+      },
+      objectFormSubmit() {
+        console.log(this.objectForm)
       }
     }
 
