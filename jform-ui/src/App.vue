@@ -1,41 +1,46 @@
 <template>
   <div id="app">
-    <div style="height: 1000px">
-      <j-el-split :value="0.5">
+    <div style="width: 1000px;height: 1000px">
+      <j-el-split v-model="value1" :min="0.2" :max="0.2">
         <template #left="{width, height}">
           <div style="width: 100%;height: 500px;background-color: #3bff52">
+            value: {{value1}}
             width: {{width}}
             height: {{height}}
           </div>
         </template>
         <template #right="{width, height}">
-          <j-el-split mode="vertical" :value="0.5">
+          <j-el-split mode="vertical" v-model="value2" :min="0.2" :max="0.2">
             <template #top="{width, height}">
               <div style="width: 100%;height: 100%;background-color: #ff9030">
+                value: {{value2}}
                 width: {{width}}
                 height: {{height}}
               </div>
             </template>
-<!--            <template #bottom="{width, height}">-->
-<!--              <j-el-split :value="0.5">-->
-<!--                <template #left="{width, height}">-->
-<!--                  <div style="width: 100%;height: 100%;background-color: #ff525c">-->
-<!--                    width: {{width}}-->
-<!--                    height: {{height}}-->
-<!--                  </div>-->
-<!--                </template>-->
-<!--                <template #right="{width, height}">-->
-<!--                  <div style="width: 100%;height: 100%;background-color: #ffabfd">-->
-<!--                    width: {{width}}-->
-<!--                    height: {{height}}-->
-<!--                  </div>-->
-<!--                </template>-->
-<!--              </j-el-split>-->
-<!--            </template>-->
+            <template #bottom="{width, height}">
+              <j-el-split :value="0.5">
+                <template #left="{width, height}">
+                  <div style="width: 100%;height: 100%;background-color: #ff525c">
+                    width: {{width}}
+                    height: {{height}}
+                  </div>
+                </template>
+                <template #right="{width, height}">
+                  <div style="width: 100%;height: 100%;background-color: #ffabfd">
+                    width: {{width}}
+                    height: {{height}}
+                  </div>
+                </template>
+              </j-el-split>
+            </template>
           </j-el-split>
         </template>
       </j-el-split>
     </div>
+
+    <el-button @click="value1 = value1 - 0.1">向左偏移</el-button>
+    <el-button @click="value1 = value1 + 0.1">向右偏移</el-button>
 
     <!--    <j-el-object-form ref="objectForm"-->
     <!--                      :model="objectForm"-->
@@ -132,7 +137,10 @@
         renderData: {
           key: 'name',
           tag: 'el-input'
-        }
+        },
+        value1: 0.5,
+        value2: 0.5,
+        value3: 0.5,
       }
     },
     watch: {

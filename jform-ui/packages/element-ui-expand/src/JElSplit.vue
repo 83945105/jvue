@@ -1,6 +1,5 @@
 <script>
   /* istanbul ignore next */
-
   import Vue from 'vue';
 
   const isServer = Vue.prototype.$isServer;
@@ -82,6 +81,8 @@
 
     data() {
       return {
+        width: 0,
+        height: 0,
         offset: 0,
         oldOffset: 0,
         isMoving: false,
@@ -108,8 +109,10 @@
         return this.isHorizontal ? 'offsetWidth' : 'offsetHeight';
       },
       slotArgs() {
-        let offsetWidth = this.$refs.outerWrapper.offsetWidth;
-        let offsetHeight = this.$refs.outerWrapper.offsetHeight;
+        // let offsetWidth = this.$refs.outerWrapper.offsetWidth;
+        // let offsetHeight = this.$refs.outerWrapper.offsetHeight;
+        let offsetWidth = this.width;
+        let offsetHeight = this.height;
         return this.isHorizontal ? {
           width: this.valueIsPx ? parseFloat(this.currentValue) : this.currentValue * offsetWidth,
           height: offsetHeight,
@@ -153,6 +156,9 @@
       },
       removeChild(child) {
         this.children.splice(this.children.indexOf(child), 1);
+      },
+      computedChildren() {
+        this.children.forEach(child => child.computeOffset());
       },
       px2percent(numerator, denominator) {
         return parseFloat(numerator) / parseFloat(denominator);
@@ -211,25 +217,32 @@
         on(document, 'mouseup', this.handleUp);
         this.$emit('move-start');
       },
-      computeOffset() {
+      computedSize() {
         this.$nextTick(() => {
-          this.computedMin = this.getComputedThresholdValue('min');
-          this.computedMax = this.getComputedThresholdValue('max');
-          let value = this.valueIsPx ? this.px2percent(this.currentValue, this.$refs.outerWrapper[this.offsetSize]) : this.currentValue;
-          let anotherValue = this.getAnotherOffset(this.currentValue);
-          if (parseFloat(this.currentValue) <= parseFloat(this.computedMin)) {
-            value = this.getMax(value, this.computedMin);
-          }
-          if (parseFloat(anotherValue) <= parseFloat(this.computedMax)) {
-            value = this.getAnotherOffset(this.getMax(anotherValue, this.computedMax));
-          }
-          this.offset = value * 10000 / 100;
-          this.$emit('input', value);
+          this.width = this.$refs.outerWrapper.offsetWidth;
+          this.height = this.$refs.outerWrapper.offsetHeight;
         });
+      },
+      computeOffset() {
+        this.computedSize();
+        this.computedMin = this.getComputedThresholdValue('min');
+        this.computedMax = this.getComputedThresholdValue('max');
+        let value = this.valueIsPx ? this.px2percent(this.currentValue, this.$refs.outerWrapper[this.offsetSize]) : this.currentValue;
+        let anotherValue = this.getAnotherOffset(this.currentValue);
+        if (parseFloat(this.currentValue) <= parseFloat(this.computedMin)) {
+          value = this.getMax(value, this.computedMin);
+        }
+        if (parseFloat(anotherValue) <= parseFloat(this.computedMax)) {
+          value = this.getAnotherOffset(this.getMax(anotherValue, this.computedMax));
+        }
+        this.offset = value * 10000 / 100;
+        this.$emit('input', value);
+        this.computedChildren();
       }
     },
 
     mounted() {
+      this.computedSize();
       this.$nextTick(() => {
         this.computeOffset();
       });
