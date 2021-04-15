@@ -112,10 +112,18 @@
     <!--    <el-button type="primary" @click="$refs.form.validate()">校验</el-button>-->
     <!--    <el-button @click="$refs.form.resetFields()">重置</el-button>-->
 
-    <j-form :data="data"
-            :submit_button&props&submit="submit"
-    >
-    </j-form>
+<!--    <j-form :data="data"-->
+<!--            :submit_button&props&submit="submit"-->
+<!--    >-->
+<!--    </j-form>-->
+
+
+    <el-select value="" size="mini" @focus="onFocus">
+      <template #prefix>
+        <i class="el-icon-delete"></i>
+      </template>
+      <el-option label="选项一" value="1" hidden/>
+    </el-select>
   </div>
 </template>
 
@@ -174,6 +182,9 @@
       },
       objectFormSubmit() {
         console.log(this.objectForm)
+      },
+      onFocus() {
+        console.log(1)
       }
     }
 

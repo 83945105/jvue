@@ -109,8 +109,6 @@
         return this.isHorizontal ? 'offsetWidth' : 'offsetHeight';
       },
       slotArgs() {
-        // let offsetWidth = this.$refs.outerWrapper.offsetWidth;
-        // let offsetHeight = this.$refs.outerWrapper.offsetHeight;
         let offsetWidth = this.width;
         let offsetHeight = this.height;
         return this.isHorizontal ? {
@@ -332,7 +330,6 @@
 </script>
 
 <style scoped>
-
   .split-wrapper {
     position: relative;
     width: 100%;
