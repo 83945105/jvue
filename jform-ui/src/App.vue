@@ -1,46 +1,46 @@
 <template>
   <div id="app">
-    <div style="width: 1000px;height: 1000px">
-      <j-el-split v-model="value1" :min="0.2" :max="0.2">
-        <template #left="{width, height}">
-          <div style="width: 100%;height: 500px;background-color: #3bff52">
-            value: {{value1}}
-            width: {{width}}
-            height: {{height}}
-          </div>
-        </template>
-        <template #right="{width, height}">
-          <j-el-split mode="vertical" v-model="value2" :min="0.2" :max="0.2">
-            <template #top="{width, height}">
-              <div style="width: 100%;height: 100%;background-color: #ff9030">
-                value: {{value2}}
-                width: {{width}}
-                height: {{height}}
-              </div>
-            </template>
-            <template #bottom="{width, height}">
-              <j-el-split :value="0.5">
-                <template #left="{width, height}">
-                  <div style="width: 100%;height: 100%;background-color: #ff525c">
-                    width: {{width}}
-                    height: {{height}}
-                  </div>
-                </template>
-                <template #right="{width, height}">
-                  <div style="width: 100%;height: 100%;background-color: #ffabfd">
-                    width: {{width}}
-                    height: {{height}}
-                  </div>
-                </template>
-              </j-el-split>
-            </template>
-          </j-el-split>
-        </template>
-      </j-el-split>
-    </div>
+<!--    <div style="width: 1000px;height: 1000px">-->
+<!--      <j-el-split v-model="value1" :min="0.2" :max="0.2">-->
+<!--        <template #left="{width, height}">-->
+<!--          <div style="width: 100%;height: 500px;background-color: #3bff52">-->
+<!--            value: {{value1}}-->
+<!--            width: {{width}}-->
+<!--            height: {{height}}-->
+<!--          </div>-->
+<!--        </template>-->
+<!--        <template #right="{width, height}">-->
+<!--          <j-el-split mode="vertical" v-model="value2" :min="0.2" :max="0.2">-->
+<!--            <template #top="{width, height}">-->
+<!--              <div style="width: 100%;height: 100%;background-color: #ff9030">-->
+<!--                value: {{value2}}-->
+<!--                width: {{width}}-->
+<!--                height: {{height}}-->
+<!--              </div>-->
+<!--            </template>-->
+<!--            <template #bottom="{width, height}">-->
+<!--              <j-el-split :value="0.5">-->
+<!--                <template #left="{width, height}">-->
+<!--                  <div style="width: 100%;height: 100%;background-color: #ff525c">-->
+<!--                    width: {{width}}-->
+<!--                    height: {{height}}-->
+<!--                  </div>-->
+<!--                </template>-->
+<!--                <template #right="{width, height}">-->
+<!--                  <div style="width: 100%;height: 100%;background-color: #ffabfd">-->
+<!--                    width: {{width}}-->
+<!--                    height: {{height}}-->
+<!--                  </div>-->
+<!--                </template>-->
+<!--              </j-el-split>-->
+<!--            </template>-->
+<!--          </j-el-split>-->
+<!--        </template>-->
+<!--      </j-el-split>-->
+<!--    </div>-->
 
-    <el-button @click="value1 = value1 - 0.1">向左偏移</el-button>
-    <el-button @click="value1 = value1 + 0.1">向右偏移</el-button>
+<!--    <el-button @click="value1 = value1 - 0.1">向左偏移</el-button>-->
+<!--    <el-button @click="value1 = value1 + 0.1">向右偏移</el-button>-->
 
     <!--    <j-el-object-form ref="objectForm"-->
     <!--                      :model="objectForm"-->
@@ -112,10 +112,10 @@
     <!--    <el-button type="primary" @click="$refs.form.validate()">校验</el-button>-->
     <!--    <el-button @click="$refs.form.resetFields()">重置</el-button>-->
 
-    <!--    <j-form :data="data"-->
-    <!--            :submit_button&props&submit="submit"-->
-    <!--    >-->
-    <!--    </j-form>-->
+    <j-form :data="data"
+            :submit_button&props&submit="submit"
+    >
+    </j-form>
   </div>
 </template>
 
