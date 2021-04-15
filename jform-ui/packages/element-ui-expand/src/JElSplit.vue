@@ -42,6 +42,18 @@
   export default {
     name: "JElSplit",
 
+    provide() {
+      return {
+        jElSplit: this
+      };
+    },
+
+    inject: {
+      jElSplit: {
+        default: ''
+      }
+    },
+
     props: {
       value: {            // 面板位置 0 ~ 1 代表百分比 其余代表像素值
         type: [Number, String],
@@ -77,7 +89,8 @@
         computedMax: 0,
         currentValue: 0.5,
         verticalImgBase64: 'data:image/jpg;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAASAQMAAABCRT2GAAAABlBMVEUAAABmZmZ+SwYRAAAAAXRSTlMAQObYZgAAAA9JREFUCNdjOAOEQICPBgCPlAf5BmzbZQAAAABJRU5ErkJggg==',
-        horizontalImgBase64: 'data:image/jpg;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAGAQMAAAD0R1yZAAAABlBMVEUAAABmZmZ+SwYRAAAAAXRSTlMAQObYZgAAABFJREFUCNdjOHPmABhDAYwPAHDICWEre84CAAAAAElFTkSuQmCC'
+        horizontalImgBase64: 'data:image/jpg;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAGAQMAAAD0R1yZAAAABlBMVEUAAABmZmZ+SwYRAAAAAXRSTlMAQObYZgAAABFJREFUCNdjOHPmABhDAYwPAHDICWEre84CAAAAAElFTkSuQmCC',
+        children: []
       };
     },
 
@@ -103,7 +116,7 @@
           offsetWidth, offsetHeight
         } : {
           width: offsetWidth,
-          height: this.valueIsPx ? parseFloat(this.currentValue) : this.currentValue * offsetWidth,
+          height: this.valueIsPx ? parseFloat(this.currentValue) : this.currentValue * offsetHeight,
           offsetWidth, offsetHeight
         };
       },
@@ -135,6 +148,12 @@
     },
 
     methods: {
+      addChild(child) {
+        return this.children.push(child);
+      },
+      removeChild(child) {
+        this.children.splice(this.children.indexOf(child), 1);
+      },
       px2percent(numerator, denominator) {
         return parseFloat(numerator) / parseFloat(denominator);
       },
@@ -214,11 +233,12 @@
       this.$nextTick(() => {
         this.computeOffset();
       });
-
       on(window, 'resize', this.computeOffset);
+      this.jElSplit && this.jElSplit.addChild(this);
     },
     beforeDestroy() {
       off(window, 'resize', this.computeOffset);
+      this.jElSplit && this.jElSplit.removeChild(this);
     },
 
     render(h) {

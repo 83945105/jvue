@@ -1,5 +1,41 @@
 <template>
   <div id="app">
+    <div style="height: 1000px">
+      <j-el-split :value="0.5">
+        <template #left="{width, height}">
+          <div style="width: 100%;height: 500px;background-color: #3bff52">
+            width: {{width}}
+            height: {{height}}
+          </div>
+        </template>
+        <template #right="{width, height}">
+          <j-el-split mode="vertical" :value="0.5">
+            <template #top="{width, height}">
+              <div style="width: 100%;height: 100%;background-color: #ff9030">
+                width: {{width}}
+                height: {{height}}
+              </div>
+            </template>
+<!--            <template #bottom="{width, height}">-->
+<!--              <j-el-split :value="0.5">-->
+<!--                <template #left="{width, height}">-->
+<!--                  <div style="width: 100%;height: 100%;background-color: #ff525c">-->
+<!--                    width: {{width}}-->
+<!--                    height: {{height}}-->
+<!--                  </div>-->
+<!--                </template>-->
+<!--                <template #right="{width, height}">-->
+<!--                  <div style="width: 100%;height: 100%;background-color: #ffabfd">-->
+<!--                    width: {{width}}-->
+<!--                    height: {{height}}-->
+<!--                  </div>-->
+<!--                </template>-->
+<!--              </j-el-split>-->
+<!--            </template>-->
+          </j-el-split>
+        </template>
+      </j-el-split>
+    </div>
 
     <!--    <j-el-object-form ref="objectForm"-->
     <!--                      :model="objectForm"-->
@@ -32,25 +68,25 @@
     <!--    <el-button @click="$refs.objectForm.resetFields()">重置</el-button>-->
     <!--    <el-button @click="objectFormSubmit">提交</el-button>-->
 
-    <j-el-object-array-form ref="objectArrayForm"
-                            :model="objectArrayForm" size="mini"
-                            :columns="[{label: '姓名', prop: 'name'}, {label: '年龄', prop: 'age'}]"
-                            :rules="{name: {required: true, message: '请输入姓名'}}"
-    >
-      <template #name="{row, column, $index}">
-        <j-el-object-array-form-item>
-          <el-input v-model="row[column.property]"></el-input>
-        </j-el-object-array-form-item>
-      </template>
-      <template #age="{row, column, $index}">
-        <j-el-object-array-form-item :rules="{required: true, message: '请输入年龄'}">
-          <el-input-number v-model="row[column.property]" style="width: 100%"></el-input-number>
-        </j-el-object-array-form-item>
-      </template>
-    </j-el-object-array-form>
-    <el-button type="primary" @click="$refs.objectArrayForm.validate()">校验</el-button>
-    <el-button @click="$refs.objectArrayForm.resetFields()">重置</el-button>
-    <el-button @click="objectArrayFormSubmit">提交</el-button>
+    <!--    <j-el-object-array-form ref="objectArrayForm"-->
+    <!--                            :model="objectArrayForm" size="mini"-->
+    <!--                            :columns="[{label: '姓名', prop: 'name'}, {label: '年龄', prop: 'age'}]"-->
+    <!--                            :rules="{name: {required: true, message: '请输入姓名'}}"-->
+    <!--    >-->
+    <!--      <template #name="{row, column, $index}">-->
+    <!--        <j-el-object-array-form-item>-->
+    <!--          <el-input v-model="row[column.property]"></el-input>-->
+    <!--        </j-el-object-array-form-item>-->
+    <!--      </template>-->
+    <!--      <template #age="{row, column, $index}">-->
+    <!--        <j-el-object-array-form-item :rules="{required: true, message: '请输入年龄'}">-->
+    <!--          <el-input-number v-model="row[column.property]" style="width: 100%"></el-input-number>-->
+    <!--        </j-el-object-array-form-item>-->
+    <!--      </template>-->
+    <!--    </j-el-object-array-form>-->
+    <!--    <el-button type="primary" @click="$refs.objectArrayForm.validate()">校验</el-button>-->
+    <!--    <el-button @click="$refs.objectArrayForm.resetFields()">重置</el-button>-->
+    <!--    <el-button @click="objectArrayFormSubmit">提交</el-button>-->
 
     <!--    <j-el-array-form ref="form"-->
     <!--                     :model="form"-->
