@@ -23,7 +23,12 @@
     name: "JElCheckboxGroup",
 
     props: {
-      value: Array,                       // 绑定值
+      value: {                            // 绑定值
+        type: Array,
+        default() {
+          return [];
+        }
+      },
       size: String,                       // 单选框组尺寸，仅对按钮形式的 Radio 或带有边框的 Radio 有效
       disabled: Boolean,                  // 是否禁用
       min: Number,                        // 可被勾选的 checkbox 的最小数量
